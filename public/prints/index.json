@@ -1,0 +1,184 @@
+[
+  {
+    "id": "exhibition-wall-panel",
+    "title": "Exposición — El trabajo invisible",
+    "dimensions": {
+      "trimWidthMm": 841,
+      "trimHeightMm": 594,
+      "bleedMm": 5,
+      "safeMarginMm": 0,
+      "cropMarks": false
+    },
+    "dpi": 150,
+    "updatedAt": "2026-05-31T01:04:44.422Z"
+  },
+  {
+    "id": "agi-timeline",
+    "title": "El Año Cero — ¿Cuándo llegará la AGI?",
+    "dimensions": {
+      "trimWidthMm": 6000,
+      "trimHeightMm": 2500,
+      "bleedMm": 0,
+      "safeMarginMm": 180,
+      "cropMarks": false
+    },
+    "dpi": 60,
+    "updatedAt": "2026-05-31T01:49:55.020Z"
+  },
+  {
+    "id": "aikit-live-mural",
+    "title": "AiKit Live — mural 3 × 2 m",
+    "dimensions": {
+      "trimWidthMm": 3000,
+      "trimHeightMm": 2000,
+      "bleedMm": 0,
+      "safeMarginMm": 150,
+      "cropMarks": false
+    },
+    "dpi": 100,
+    "updatedAt": "2026-05-31T02:14:52.728Z"
+  },
+  {
+    "id": "signage",
+    "title": "AiKit Live — Señalética / directorio",
+    "dimensions": {
+      "trimWidthMm": 460,
+      "trimHeightMm": 1150,
+      "bleedMm": 5,
+      "safeMarginMm": 36,
+      "cropMarks": true
+    },
+    "dpi": 150,
+    "updatedAt": "2026-05-31T01:06:14.065Z"
+  },
+  {
+    "id": "bienvenida",
+    "title": "AiKit Live — Bienvenida (entrada)",
+    "dimensions": {
+      "trimWidthMm": 594,
+      "trimHeightMm": 841,
+      "bleedMm": 5,
+      "safeMarginMm": 38,
+      "cropMarks": true
+    },
+    "dpi": 150,
+    "updatedAt": "2026-05-31T06:01:25.471Z"
+  },
+  {
+    "id": "llegada",
+    "title": "AiKit Live — Llegada y parking",
+    "dimensions": {
+      "trimWidthMm": 594,
+      "trimHeightMm": 420,
+      "bleedMm": 5,
+      "safeMarginMm": 30,
+      "cropMarks": true
+    },
+    "dpi": 150,
+    "updatedAt": "2026-05-31T10:45:39.754Z"
+  },
+  {
+    "id": "direccional",
+    "title": "AiKit Live — Señal direccional (cruce)",
+    "dimensions": {
+      "trimWidthMm": 594,
+      "trimHeightMm": 420,
+      "bleedMm": 5,
+      "safeMarginMm": 30,
+      "cropMarks": true
+    },
+    "dpi": 150,
+    "updatedAt": "2026-05-31T06:01:25.482Z"
+  },
+  {
+    "id": "plano",
+    "title": "AiKit Live — Estás aquí / recorrido",
+    "dimensions": {
+      "trimWidthMm": 594,
+      "trimHeightMm": 420,
+      "bleedMm": 5,
+      "safeMarginMm": 30,
+      "cropMarks": true
+    },
+    "dpi": 150,
+    "updatedAt": "2026-05-31T10:45:39.775Z"
+  },
+  {
+    "id": "identificador-sala",
+    "title": "AiKit Live — Identificador de sala (plantilla)",
+    "dimensions": {
+      "trimWidthMm": 297,
+      "trimHeightMm": 420,
+      "bleedMm": 5,
+      "safeMarginMm": 24,
+      "cropMarks": true
+    },
+    "dpi": 150,
+    "updatedAt": "2026-05-31T10:45:39.795Z"
+  },
+  {
+    "id": "acreditacion",
+    "title": "AiKit Live — Acreditación / check-in",
+    "dimensions": {
+      "trimWidthMm": 420,
+      "trimHeightMm": 594,
+      "bleedMm": 5,
+      "safeMarginMm": 30,
+      "cropMarks": true
+    },
+    "dpi": 150,
+    "updatedAt": "2026-05-31T10:45:39.808Z"
+  },
+  {
+    "id": "aseos",
+    "title": "AiKit Live — Aseos",
+    "dimensions": {
+      "trimWidthMm": 297,
+      "trimHeightMm": 420,
+      "bleedMm": 5,
+      "safeMarginMm": 24,
+      "cropMarks": true
+    },
+    "dpi": 150,
+    "updatedAt": "2026-05-31T10:45:39.826Z"
+  },
+  {
+    "id": "acceso-restringido",
+    "title": "AiKit Live — Acceso privado",
+    "dimensions": {
+      "trimWidthMm": 297,
+      "trimHeightMm": 420,
+      "bleedMm": 5,
+      "safeMarginMm": 24,
+      "cropMarks": true
+    },
+    "dpi": 150,
+    "updatedAt": "2026-05-31T10:45:39.846Z"
+  },
+  {
+    "id": "wifi",
+    "title": "AiKit Live — WiFi",
+    "dimensions": {
+      "trimWidthMm": 148,
+      "trimHeightMm": 210,
+      "bleedMm": 3,
+      "safeMarginMm": 11,
+      "cropMarks": true
+    },
+    "dpi": 300,
+    "updatedAt": "2026-05-31T10:45:39.871Z"
+  },
+  {
+    "id": "mesa",
+    "title": "AiKit Live — Numerador de mesa (plantilla)",
+    "dimensions": {
+      "trimWidthMm": 148,
+      "trimHeightMm": 210,
+      "bleedMm": 3,
+      "safeMarginMm": 11,
+      "cropMarks": true
+    },
+    "dpi": 300,
+    "updatedAt": "2026-05-31T10:45:39.895Z"
+  }
+]
