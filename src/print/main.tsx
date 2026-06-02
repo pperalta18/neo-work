@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { Agentation } from 'agentation'
 import { PrintsApp } from '@/print/ui/PrintsApp'
 import '../index.css'
+import '../tailwind.css'
 
 /** Standalone entry for the print generator — its own page (prints.html), separate
  * from the keynote/grid app. Mounts the operator GUI directly. Agentation (visual

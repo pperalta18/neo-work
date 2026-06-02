@@ -2,6 +2,10 @@ import type { Preview } from '@storybook/react-vite'
 import { THEMES, type LightSource } from '../src/lib/neumorphism'
 import { NeoThemeProvider } from '../src/stories/neo/NeoTheme'
 import '../src/index.css'
+// Tailwind (shadcn/Tailark) — preflight is OFF in tailwind.config.ts, so this
+// only provides utilities for the few shadcn/Tailark components used in stories
+// (e.g. the document illustration); the inline-styled neo widgets are untouched.
+import '../src/tailwind.css'
 
 const preview: Preview = {
   globalTypes: {
@@ -70,6 +74,9 @@ const preview: Preview = {
       return (
         <NeoThemeProvider theme={theme} lightSource={lightSource} intensity={intensity}>
           <div
+            // `.dark` drives the Tailark/shadcn CSS-var token set (src/tailwind.css)
+            // so those components follow the Storybook theme toggle.
+            className={themeName === 'dark' ? 'dark' : undefined}
             style={{
               background: theme.surface,
               minHeight: '100vh',
