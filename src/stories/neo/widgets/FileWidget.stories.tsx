@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { FileWidget, FILE_KINDS } from './FileWidget'
+import { DocumentIllustration } from '@/components/illustrations/document'
 
 const meta = {
   title: 'Neo/Widgets/FileWidget',
@@ -55,31 +56,16 @@ export const AllTypes: Story = {
   ),
 }
 
-/** A fanned stack of mixed file types — a "documents" hero illustration. */
-export const Stack: Story = {
+/**
+ * The document illustration — now the Tailark Pro `document` component
+ * (@tailark-pro/document), replacing the former neumorphic FileWidget drawing.
+ * Lives here as the canonical "document" illustration; see also the dedicated
+ * Neo/Widgets/DocumentIllustration story.
+ */
+export const Document: Story = {
   render: () => (
-    <div style={{ position: 'relative', width: 320, height: 280 }}>
-      {(
-        [
-          { kind: 'png' as const, rotate: -16, x: -70, y: 24, z: 1 },
-          { kind: 'xlsx' as const, rotate: 8, x: 78, y: 14, z: 1 },
-          { kind: 'pdf' as const, rotate: -4, x: 0, y: 0, z: 2 },
-        ]
-      ).map(({ kind, rotate, x, y, z }) => (
-        <div
-          key={kind}
-          style={{
-            position: 'absolute',
-            top: 30 + y,
-            left: 90 + x,
-            zIndex: z,
-            transform: `rotate(${rotate}deg)`,
-            transformOrigin: 'bottom center',
-          }}
-        >
-          <FileWidget kind={kind} width={150} showName={false} />
-        </div>
-      ))}
+    <div style={{ transform: 'scale(3)', transformOrigin: 'center' }}>
+      <DocumentIllustration />
     </div>
   ),
 }
