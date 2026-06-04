@@ -7,7 +7,7 @@
  *     code typographic page in S1, a non-adjacent funnel jump, and an unknown room
  *     are all flagged, while the documented double-sided / junction exceptions and a
  *     legitimate adjacent transition are not.
- *   • **The real committed registry** (`REGISTERED_WALLS`) — every one of the 24
+ *   • **The real committed registry** (`REGISTERED_WALLS`) — every one of the 25
  *     walls is covered, the funnel is fully walked, and the venue trips zero spoiler
  *     warnings; plus a drift guard tying the double-sided set to `doublesided.ts`.
  *
@@ -422,16 +422,16 @@ describe('drift guard', () => {
 describe('the real venue — REGISTERED_WALLS', () => {
   const rows = buildCoverage(REGISTERED_WALLS)
 
-  it('has exactly the 24 event walls (invId 17 retired)', () => {
-    expect(rows.length).toBe(24)
-    expect(rows.map((r) => r.invId)).toEqual([...Array.from({ length: 16 }, (_, i) => i + 1), 18, 19, 20, 21, 22, 23, 24, 25])
+  it('has exactly the 25 event walls (invId 17 retired)', () => {
+    expect(rows.length).toBe(25)
+    expect(rows.map((r) => r.invId)).toEqual([...Array.from({ length: 16 }, (_, i) => i + 1), 18, 19, 20, 21, 22, 23, 24, 25, 26])
   })
 
-  it('NO blank walls — all 24 carry a decided piece', () => {
+  it('NO blank walls — all 25 carry a decided piece', () => {
     const blank = blankWalls(rows)
     expect(blank.map((r) => r.invId)).toEqual([])
     expect(() => assertNoBlankWalls(rows)).not.toThrow()
-    expect(coverageSummary(rows).covered).toBe(24)
+    expect(coverageSummary(rows).covered).toBe(25)
   })
 
   it('every wall has resolvable rooms (no typo in any sala)', () => {
@@ -456,7 +456,7 @@ describe('the real venue — REGISTERED_WALLS', () => {
 
   it('the S1 sensory rooms are textless (no single-room S1 code page)', () => {
     const s1Only = rows.filter((r) => r.rooms.length === 1 && r.rooms[0] === 'S1')
-    expect(s1Only.map((r) => r.invId)).toEqual([1, 9, 18])
+    expect(s1Only.map((r) => r.invId)).toEqual([1, 9, 18, 26])
     for (const r of s1Only) expect(r.track, `#${r.invId}`).not.toBe('C')
   })
 
@@ -479,18 +479,18 @@ describe('the real venue — REGISTERED_WALLS', () => {
   it('renders the deliverable Markdown + CSV with consistent arity', () => {
     const md = formatCoverageMarkdown(rows).split('\n')
     const headerCols = mdCols(md[0]).length
-    expect(md.length).toBe(2 + 24)
+    expect(md.length).toBe(2 + 25)
     for (const line of md.slice(2)) expect(mdCols(line).length).toBe(headerCols)
 
     const csv = formatCoverageCsv(rows).split('\n')
-    expect(csv.length).toBe(1 + 24)
+    expect(csv.length).toBe(1 + 25)
     const csvCols = csv[0].split(',').length
     for (const line of csv.slice(1)) expect(line.split(',').length).toBeGreaterThanOrEqual(csvCols)
   })
 
   it('summarises as covered + funnel complete', () => {
     const line = summaryLine(coverageSummary(rows))
-    expect(line).toContain('24/24 cubiertos')
+    expect(line).toContain('25/25 cubiertos')
     expect(line).toContain('0 en blanco')
     expect(line).toContain('funnel completo')
   })

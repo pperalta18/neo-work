@@ -1,11 +1,11 @@
 {
   "id": "marco-15-e-1",
-  "title": "Marco vacío 15-E-1 — Acento vertical S5/S6 — identidad cálida (2.50×2.50 m)",
+  "title": "Marco vacío 15-E-1 — Acento vertical S5/S6 — identidad cálida (4×2.50 m)",
   "createdAt": "2026-06-04T00:00:00.000Z",
   "pageComponentId": "blank",
   "theme": "dark",
   "dimensions": {
-    "trimWidthMm": 2500,
+    "trimWidthMm": 4000,
     "trimHeightMm": 2500,
     "bleedMm": 10,
     "safeMarginMm": 0,

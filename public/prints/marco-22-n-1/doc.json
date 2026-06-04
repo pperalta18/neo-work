@@ -1,11 +1,11 @@
 {
   "id": "marco-22-n-1",
-  "title": "Cubo central S2 — 03 · 22-N-1 (2×2.50 m)",
+  "title": "Cubo central S2 — 03 · 22-N-1 (2.50×2.50 m)",
   "createdAt": "2026-06-04T00:00:00.000Z",
   "pageComponentId": "cubo-cara",
   "theme": "light",
   "dimensions": {
-    "trimWidthMm": 2000,
+    "trimWidthMm": 2500,
     "trimHeightMm": 2500,
     "bleedMm": 10,
     "safeMarginMm": 0,

@@ -57,33 +57,35 @@ describe('coverage', () => {
 })
 
 describe('abutment cuts', () => {
-  it('splits wall 9 into two interior panels where wall 18 meets it', () => {
+  it('splits wall 9 east face into three interior panels where other walls meet it', () => {
     const east = forWall(9).filter((f) => f.id.startsWith('9-E'))
-    expect(east).toHaveLength(2) // 9-E-1 + 9-E-2
+    expect(east).toHaveLength(3) // 9-E-1 + 9-E-2 + 9-E-3
     // The back face is uncut (nothing touches it).
     expect(forWall(9).filter((f) => f.id.startsWith('9-W'))).toHaveLength(1)
   })
 
-  it("splits wall 2's S1 face where wall 10 meets it (2 panels)", () => {
+  it("splits wall 2's S1 face where walls 10 and 1 meet it (3 panels)", () => {
     const w = forWall(2).filter((f) => f.side === -1) // W / S1 face
-    expect(w).toHaveLength(2)
+    expect(w).toHaveLength(3)
   })
 })
 
 describe('nave zone projection', () => {
-  it('cuts wall 2 nave face into the three cámaras', () => {
+  it('cuts wall 2 nave face into the three cámaras (unequal bays)', () => {
     const naveBays = forWall(2).filter((f) => f.zone)
     expect(naveBays.map((f) => f.zone)).toEqual([...NAVE_ZONE_ORDER])
-    // wall 2 nave bays are equal thirds (the divisorias land on the thirds here).
-    naveBays.forEach((f) => expect(f.widthM).toBeCloseTo(7.5, 1))
+    const widths = naveBays.map((f) => f.widthM)
+    // Cut at the real divisoria projections → 6.75 / 7 / 8.75, no longer equal thirds.
+    expect(widths).toEqual([6.75, 7, 8.75])
+    expect(sumWidth(naveBays)).toBeCloseTo(findWallByInvId(2)!.length, 5)
   })
 
   it('cuts wall 11 nave face at the divisoria positions (unequal bays)', () => {
     const naveBays = forWall(11).filter((f) => f.zone)
     expect(naveBays.map((f) => f.zone)).toEqual([...NAVE_ZONE_ORDER])
     const widths = naveBays.map((f) => f.widthM)
-    // Cut at the real divisoria projections → 10 / 7.5 / 5.5, not equal thirds.
-    expect(widths).toEqual([10, 7.5, 5.5])
+    // Cut at the real divisoria projections → 9.25 / 7 / 5.75, not equal thirds.
+    expect(widths).toEqual([9.25, 7, 5.75])
     expect(sumWidth(naveBays)).toBeCloseTo(findWallByInvId(11)!.length, 5)
   })
 

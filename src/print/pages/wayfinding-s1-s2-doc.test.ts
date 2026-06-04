@@ -19,9 +19,9 @@ import { DEFAULT_WALL_HEIGHT_M, findWallByInvId, resolveWallHeight } from '../sp
  * (the South face of wall 10) and its registration. The unbiased checks here prove the
  * authored **dimensions are honest and renderable** — the page resolves from the registry,
  * exports through the existing CMYK / FOGRA39 / PDF/X contract, physically fits wall 10
- * (the 6.0 m S1→S2 threshold) on its eye band, sizes every text level legibly for the
+ * (the 6.5 m S1→S2 threshold) on its eye band, sizes every text level legibly for the
  * wall's reading distance, and renders the real directional content (room name + arrow),
- * not a blank page.
+ * not a blank page. (Wall 10 is the 6.5 m S1→S2 threshold in the current layout.)
  */
 
 // public/ lives outside the src bundle root → read the committed file directly.
@@ -91,7 +91,7 @@ describe('wayfinding-s1-s2 — physical fit to wall 10 (S1→S2 threshold)', () 
     expect(wall?.registry?.track).toBe('C') // code track
   })
 
-  it('spans the full 6 m × 2.5 m wall face as a full-bleed vinyl', () => {
+  it('spans the full 6.5 m × 2.5 m wall face as a full-bleed vinyl', () => {
     if (!wall) throw new Error('wall 10 missing')
     const wallHeightMm = resolveWallHeight(wall) * 1000
     const wallLengthMm = wall.length * 1000
@@ -99,7 +99,7 @@ describe('wayfinding-s1-s2 — physical fit to wall 10 (S1→S2 threshold)', () 
 
     // Wall 10 has no measured alturaM yet → the 2.5 m default governs.
     expect(wallHeightMm).toBe(DEFAULT_WALL_HEIGHT_M * 1000)
-    expect(wallLengthMm).toBeCloseTo(6000, 6)
+    expect(wallLengthMm).toBeCloseTo(6500, 6)
     // The trim is the *visible* wall face: a full-bleed vinyl covers the whole
     // 6 m run × 2.5 m height, edge to edge.
     expect(trimWidthMm).toBeCloseTo(wallLengthMm, 6)

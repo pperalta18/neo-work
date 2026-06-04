@@ -1,11 +1,11 @@
 {
   "id": "marco-11-w-inversion",
-  "title": "Galaxia de mercados — 11-W-inversión · canicas (mitad galaxia) (5.50×2.50 m)",
+  "title": "Galaxia de mercados — 11-W-inversión · canicas (mitad galaxia) (5.75×2.50 m)",
   "createdAt": "2026-06-04T00:00:00.000Z",
   "pageComponentId": "galaxy",
   "theme": "light",
   "dimensions": {
-    "trimWidthMm": 5500,
+    "trimWidthMm": 5750,
     "trimHeightMm": 2500,
     "bleedMm": 10,
     "safeMarginMm": 0,

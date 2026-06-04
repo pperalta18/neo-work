@@ -28,7 +28,7 @@ const UNANNOTATED_INV_IDS = [3, 5, 14, 15] as const
 const DECIDED_TRACK: Record<number, Track> = { 3: 'C', 5: 'H', 14: 'C', 15: 'I' }
 
 /** Committed footprint length (m) per wall — geometry guard against clobbering. */
-const LARGO_M: Record<number, number> = { 3: 8.5, 5: 9.5, 14: 1.5, 15: 2.5 }
+const LARGO_M: Record<number, number> = { 3: 4.0, 5: 9.5, 14: 1.5, 15: 4.0 }
 
 describe('Phase 0 — the four formerly-unannotated walls are decided', () => {
   for (const invId of UNANNOTATED_INV_IDS) {

@@ -1,7 +1,7 @@
 /**
  * Unit tests for the wall-graphics registry (Phase 0, single source of truth).
  *
- * These pin the *contract downstream code relies on* — that every one of the 20
+ * These pin the *contract downstream code relies on* — that every one of the 25
  * event walls carries a complete, well-typed registry; that the stable `invId`
  * is looked up from data (not assumed from array order); that each wall resolves
  * to its array-order code id; and that the by-room lookup understands walls that
@@ -30,12 +30,12 @@ const VALID_ESTADO: Estado[] = ['ok', 'prop', 'pend']
 const VALID_TRACK: Track[] = ['C', 'I', 'H', 'C/I']
 
 describe('wall registry — coverage & shape', () => {
-  it('registers all 24 event walls (invId 17 retired)', () => {
-    expect(REGISTERED_WALLS).toHaveLength(24)
+  it('registers all 25 event walls (invId 17 retired)', () => {
+    expect(REGISTERED_WALLS).toHaveLength(25)
   })
 
   it('every WALLS element carries a registry (no blank walls)', () => {
-    // All 24 footprint walls are inventory walls; none should be unannotated.
+    // All 25 footprint walls are inventory walls; none should be unannotated.
     expect(WALLS.every((w) => w.registry != null)).toBe(true)
   })
 
@@ -45,12 +45,13 @@ describe('wall registry — coverage & shape', () => {
     expect(MOUNTABLE.length).toBe(WALLS.length + GLASS.length)
   })
 
-  it('exposes invIds 1..25 minus the retired #17, unique', () => {
+  it('exposes invIds 1..26 minus the retired #17, unique', () => {
     const ids = REGISTERED_WALLS.map((w) => w.registry!.invId).sort((a, b) => a - b)
     // The confesionario (#17) was retired (folded into wall 12's reverse face), so
-    // the inventory skips it: 24 walls, ids 1..16 + 18..25 (22..25 = the S2 central cube).
-    expect(ids).toEqual([...Array.from({ length: 16 }, (_, i) => i + 1), 18, 19, 20, 21, 22, 23, 24, 25])
-    expect(new Set(ids).size).toBe(24)
+    // the inventory skips it: 25 walls, ids 1..16 + 18..26 (22..25 = the S2 central
+    // cube, 26 = the added S1 Bici/combustión backdrop wall).
+    expect(ids).toEqual([...Array.from({ length: 16 }, (_, i) => i + 1), 18, 19, 20, 21, 22, 23, 24, 25, 26])
+    expect(new Set(ids).size).toBe(25)
   })
 
   it('every registry field is present and well-typed', () => {
@@ -79,7 +80,7 @@ describe('wall registry — id convention (invId N ↔ wall-(N-1))', () => {
 
 describe('findWallByInvId', () => {
   it('resolves every live id to the matching wall (#17 retired ⇒ undefined)', () => {
-    for (let n = 1; n <= 25; n++) {
+    for (let n = 1; n <= 26; n++) {
       const w = findWallByInvId(n)
       if (n === 17) {
         expect(w).toBeUndefined()
@@ -92,7 +93,7 @@ describe('findWallByInvId', () => {
 
   it('returns undefined for out-of-range / invalid ids', () => {
     expect(findWallByInvId(0)).toBeUndefined()
-    expect(findWallByInvId(26)).toBeUndefined()
+    expect(findWallByInvId(27)).toBeUndefined()
     expect(findWallByInvId(-1)).toBeUndefined()
   })
 

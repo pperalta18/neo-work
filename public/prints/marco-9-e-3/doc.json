@@ -1,11 +1,11 @@
 {
-  "id": "marco-4-e-2",
-  "title": "Marco vacío 4-E-2 — Cuellos — Naranja Mecánica (21.25×2.50 m)",
+  "id": "marco-9-e-3",
+  "title": "Marco vacío 9-E-3 — Perímetro O — combustión (1.75×2.50 m)",
   "createdAt": "2026-06-04T00:00:00.000Z",
   "pageComponentId": "blank",
   "theme": "light",
   "dimensions": {
-    "trimWidthMm": 21250,
+    "trimWidthMm": 1750,
     "trimHeightMm": 2500,
     "bleedMm": 10,
     "safeMarginMm": 0,
@@ -19,9 +19,9 @@
     "pdfxVariant": "x1a"
   },
   "props": {
-    "frameWallInvId": 4,
-    "wallId": "wall-3",
-    "frameId": "4-E-2",
+    "frameWallInvId": 9,
+    "wallId": "wall-8",
+    "frameId": "9-E-3",
     "side": 1
   }
 }

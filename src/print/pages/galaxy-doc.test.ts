@@ -65,8 +65,8 @@ describe('galaxy — registration & contract', () => {
 describe('galaxy — physical fit', () => {
   it('panels carry their wall widths and ride within the 2.5 m wall height', () => {
     expect(DOCS.back.dimensions.trimWidthMm).toBe(9500)
-    expect(DOCS.left.dimensions.trimWidthMm).toBe(7500)
-    expect(DOCS.right.dimensions.trimWidthMm).toBe(5500)
+    expect(DOCS.left.dimensions.trimWidthMm).toBe(8750)
+    expect(DOCS.right.dimensions.trimWidthMm).toBe(5750)
     for (const doc of Object.values(DOCS)) expect(doc.dimensions.trimHeightMm).toBeLessThanOrEqual(2500)
   })
 })

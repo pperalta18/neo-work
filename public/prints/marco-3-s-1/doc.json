@@ -1,11 +1,11 @@
 {
   "id": "marco-3-s-1",
-  "title": "Marco vacío 3-S-1 — Umbral S2→S3 — banda-título de la nave (8.50×2.50 m)",
+  "title": "Marco vacío 3-S-1 — Umbral S2→S3 — banda-título de la nave (4×2.50 m)",
   "createdAt": "2026-06-04T00:00:00.000Z",
   "pageComponentId": "blank",
   "theme": "light",
   "dimensions": {
-    "trimWidthMm": 8500,
+    "trimWidthMm": 4000,
     "trimHeightMm": 2500,
     "bleedMm": 10,
     "safeMarginMm": 0,

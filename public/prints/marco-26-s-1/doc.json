@@ -1,11 +1,11 @@
 {
-  "id": "marco-4-w-1",
-  "title": "Marco vacío 4-W-1 — Cuellos — Naranja Mecánica (7.75×2.50 m)",
+  "id": "marco-26-s-1",
+  "title": "Marco vacío 26-S-1 — Bici / combustión (4.50×2.50 m)",
   "createdAt": "2026-06-04T00:00:00.000Z",
   "pageComponentId": "blank",
   "theme": "light",
   "dimensions": {
-    "trimWidthMm": 7750,
+    "trimWidthMm": 4500,
     "trimHeightMm": 2500,
     "bleedMm": 10,
     "safeMarginMm": 0,
@@ -19,9 +19,9 @@
     "pdfxVariant": "x1a"
   },
   "props": {
-    "frameWallInvId": 4,
-    "wallId": "wall-3",
-    "frameId": "4-W-1",
-    "side": -1
+    "frameWallInvId": 26,
+    "wallId": "wall-25",
+    "frameId": "26-S-1",
+    "side": 1
   }
 }

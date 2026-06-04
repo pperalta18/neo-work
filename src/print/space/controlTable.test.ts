@@ -261,12 +261,15 @@ describe('control table — real committed data', () => {
   const docs = loadRealDocs()
   const rows = buildControlTable(REGISTERED_WALLS, docs)
 
-  it('has one row per registered wall (all 24), invId-ordered', () => {
+  it('has one row per registered wall (all 25), invId-ordered', () => {
     expect(rows.length).toBe(REGISTERED_WALLS.length)
-    expect(rows.length).toBe(24)
+    expect(rows.length).toBe(25)
     const invIds = rows.map((r) => r.invId)
     expect([...invIds].sort((a, b) => a - b)).toEqual(invIds)
-    expect(new Set(invIds).size).toBe(24) // unique
+    expect(new Set(invIds).size).toBe(25) // unique
+    // #17 is retired; the new combustión backdrop wall is invId 26.
+    expect(invIds).toContain(26)
+    expect(invIds).not.toContain(17)
   })
 
   it('has no orphan prints — every authored wall print maps to a real wall', () => {
@@ -274,15 +277,13 @@ describe('control table — real committed data', () => {
   })
 
   it('the authored code-track pages are present, built, with their declared dpi/size', () => {
-    // The pages built so far in Phase 4/5 (each doc.props.invId → its wall).
+    // The authored pages that ship in the committed data (each doc.props.invId →
+    // its wall). The earlier Phase 4/5 standalone pages (umbral, model-sizes,
+    // wayfinding, aceleración, micro-acento, código) were migrated into the
+    // marco-* fill workflow; the surviving authored hero page is hero-solar on
+    // wall 2. inv26 (the new combustión backdrop) carries no authored page.
     const expected: Record<number, { id: string; dpi: number; w: number; h: number }> = {
       2: { id: 'hero-solar', dpi: 60, w: 6, h: 2.2 },
-      3: { id: 'umbral', dpi: 60, w: 7.6, h: 1.8 },
-      8: { id: 'model-sizes', dpi: 60, w: 6, h: 2 },
-      10: { id: 'wayfinding-s1-s2', dpi: 60, w: 5.8, h: 1.8 },
-      11: { id: 'aceleracion', dpi: 60, w: 6, h: 2 },
-      14: { id: 'micro-acento', dpi: 60, w: 1.3, h: 1 },
-      16: { id: 'codigo', dpi: 60, w: 3.2, h: 1.8 },
     }
     for (const [invId, exp] of Object.entries(expected)) {
       const r = rows.find((x) => x.invId === Number(invId))
@@ -323,12 +324,12 @@ describe('control table — real committed data', () => {
 
   it('the summary is consistent with the rows and reflects current progress', () => {
     const s = controlTableSummary(rows)
-    expect(s.total).toBe(24)
-    expect(s.built + s.pending).toBe(24)
-    expect(s.byEstado.ok + s.byEstado.prop + s.byEstado.pend).toBe(24)
-    // 7 code-track pages authored so far (hero, umbral, model-sizes, wayfinding,
-    // aceleracion, micro-acento, codigo). A new image-track page only raises this.
-    expect(s.built).toBeGreaterThanOrEqual(7)
+    expect(s.total).toBe(25)
+    expect(s.built + s.pending).toBe(25)
+    expect(s.byEstado.ok + s.byEstado.prop + s.byEstado.pend).toBe(25)
+    // At least the hero page is authored (hero-solar on wall 2). Most walls are now
+    // filled through the marco-* workflow; a new authored page only raises this.
+    expect(s.built).toBeGreaterThanOrEqual(1)
     // Every built data wall must have its figures (the research:true + built set).
     expect(s.researchBuilt).toBeLessThanOrEqual(s.research)
   })
@@ -336,7 +337,7 @@ describe('control table — real committed data', () => {
   it('renders a Markdown deliverable with a row per wall and no broken columns', () => {
     const md = formatControlTableMarkdown(rows)
     const lines = md.split('\n')
-    expect(lines.length).toBe(2 + 24)
+    expect(lines.length).toBe(2 + 25)
     const cols = mdCols(lines[0])
     for (const l of lines) expect(mdCols(l)).toBe(cols)
     // The required columns are present.
@@ -353,7 +354,7 @@ describe('control table — real committed data', () => {
   it('renders a CSV deliverable parseable to one record per wall', () => {
     const csv = formatControlTableCsv(rows)
     const lines = csv.split('\n')
-    expect(lines.length).toBe(1 + 24)
+    expect(lines.length).toBe(1 + 25)
     expect(lines[0].split(',')[0]).toBe('invId')
   })
 

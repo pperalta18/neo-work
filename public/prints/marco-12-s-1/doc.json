@@ -1,11 +1,11 @@
 {
   "id": "marco-12-s-1",
-  "title": "Marco vacío 12-S-1 — Divisoria 1 IMAGE (doble cara) (4×2 m)",
+  "title": "Marco vacío 12-S-1 — Divisoria 1 IMAGE (doble cara) (3.50×2 m)",
   "createdAt": "2026-06-04T00:00:00.000Z",
   "pageComponentId": "blank",
   "theme": "light",
   "dimensions": {
-    "trimWidthMm": 4000,
+    "trimWidthMm": 3500,
     "trimHeightMm": 2000,
     "bleedMm": 10,
     "safeMarginMm": 0,

@@ -1,11 +1,11 @@
 {
   "id": "marco-10-s-1",
-  "title": "Marco 10-S-1 — Wayfinding S1→S2 · Sala 2 (6×2.50 m)",
+  "title": "Marco 10-S-1 — Wayfinding S1→S2 · Sala 2 (6.50×2.50 m)",
   "createdAt": "2026-06-04T00:00:00.000Z",
   "pageComponentId": "wayfinding-s1-s2",
   "theme": "dark",
   "dimensions": {
-    "trimWidthMm": 6000,
+    "trimWidthMm": 6500,
     "trimHeightMm": 2500,
     "bleedMm": 10,
     "safeMarginMm": 0,

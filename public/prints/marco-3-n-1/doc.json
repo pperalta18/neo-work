@@ -5,7 +5,7 @@
   "pageComponentId": "cuadro",
   "theme": "light",
   "dimensions": {
-    "trimWidthMm": 8500,
+    "trimWidthMm": 4000,
     "trimHeightMm": 2500,
     "bleedMm": 10,
     "safeMarginMm": 0,
