@@ -4,21 +4,12 @@ import {
   useViewModel,
   useViewModelInstance,
   useViewModelInstanceColor,
-  useViewModelInstanceTrigger,
   Fit,
   Alignment,
   Layout,
 } from '@rive-app/react-canvas'
 import { useNeoTheme } from '../NeoTheme'
-import {
-  RIVE_SRC,
-  RIVE_ARTBOARD,
-  RIVE_STATE_MACHINE,
-  RIVE_VIEW_MODEL,
-  MODULES,
-  type ModuleName,
-  type ModuleSpec,
-} from './modules'
+import { RIVE_STATE_MACHINE, MODULES, type ModuleName, type ModuleSpec } from './modules'
 
 export type RiveModuleIconProps = {
   /** Which module to play. */
@@ -27,7 +18,7 @@ export type RiveModuleIconProps = {
   size: number
   /**
    * Autoplay the state machine on mount. When false the icon stays on its first
-   * frame and only plays on click (via the `click` trigger).
+   * frame and only plays on click (via the file's pointer listener).
    */
   autoplay?: boolean
 }
@@ -45,32 +36,31 @@ function hexToRgb(hex: string): [number, number, number] {
 /**
  * RiveModuleIcon — the animated counterpart to a module's baked SVG.
  * ──────────────────────────────────────────────────────────────────
- * The Rive file is a single artboard (`FeedbackLoop 2`) driven by data binding:
- * a `SlotVM` view model with one named instance per module. We bind the module's
- * instance to swap which icon renders, tint its `colorBackground` to the active
- * NeoTheme surface (so the plate blends into the canvas), and fire its `click`
- * trigger on tap to re-play the reveal.
+ * Each module ships its own Rive file (`./riv/<module>.riv`). The single
+ * artboard's `State Machine 1` autoplays the reveal on mount and a built-in
+ * pointer listener re-plays it on click. We bind the file's default view-model
+ * instance so we can tint its optional `colorBackground` plate to the active
+ * NeoTheme surface (so the plate blends into the canvas, esp. in dark mode).
  */
 export function RiveModuleIcon({ module, size, autoplay = true }: RiveModuleIconProps) {
   const theme = useNeoTheme()
   const spec: ModuleSpec = MODULES[module]
 
   const { rive, RiveComponent } = useRive({
-    src: RIVE_SRC,
-    artboard: RIVE_ARTBOARD,
+    src: spec.riveSrc,
     stateMachines: RIVE_STATE_MACHINE,
     autoplay,
-    // We bind a specific named instance ourselves (below), so disable auto-bind.
+    // We bind the default instance ourselves (below) to drive the tint.
     autoBind: false,
     layout: new Layout({ fit: Fit.Contain, alignment: Alignment.Center }),
   })
 
-  // Bind this module's SlotVM instance — this is what selects the icon.
-  const vm = useViewModel(rive, { name: RIVE_VIEW_MODEL })
-  const vmi = useViewModelInstance(vm, { name: spec.instance, rive })
+  // Bind the file's default view-model instance (one per module file).
+  const vm = useViewModel(rive, { useDefault: true })
+  const vmi = useViewModelInstance(vm, { useDefault: true, rive })
 
-  // Re-tint the plate to the theme surface (keeps it from sitting on a
-  // hard-coded background, esp. in dark mode).
+  // Re-tint the optional background plate to the theme surface (keeps it from
+  // sitting on a hard-coded background). No-op on files without `colorBackground`.
   const bg = useViewModelInstanceColor('colorBackground', vmi)
   useEffect(() => {
     if (!bg?.setRgb) return
@@ -78,21 +68,16 @@ export function RiveModuleIcon({ module, size, autoplay = true }: RiveModuleIcon
     bg.setRgb(r, g, b)
   }, [bg, theme.surface])
 
-  // The `click` trigger re-plays the icon when tapped.
-  const click = useViewModelInstanceTrigger('click', vmi)
-
   return (
     <RiveComponent
       role="img"
       aria-label={spec.name}
-      onClick={() => click?.trigger?.()}
       style={{
         width: size,
         height: size,
         display: 'block',
         flexShrink: 0,
         cursor: 'pointer',
-        transform: spec.rotate ? `rotate(${spec.rotate}deg)` : undefined,
       }}
     />
   )

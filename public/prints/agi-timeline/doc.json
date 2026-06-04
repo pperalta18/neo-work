@@ -14,7 +14,8 @@
   "dpi": 60,
   "color": {
     "mode": "cmyk",
-    "iccProfile": "icc/GenericCMYK.icc",
+    "iccProfile": "icc/CoatedFOGRA39.icc",
+    "renderIntent": "relative",
     "pdfxVariant": "x1a"
   },
   "props": {}

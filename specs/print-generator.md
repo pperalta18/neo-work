@@ -60,12 +60,23 @@ preserves the neumorphic relief exactly, then color is converted for press:
    gs -dPDFX -dBATCH -dNOPAUSE -dNOSAFER -dPDFXCompatibilityPolicy=1 \
       -sColorConversionStrategy=CMYK -sProcessColorModel=DeviceCMYK \
       -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress \
+      -dRenderIntent=<0..3> \
       -sDefaultRGBProfile=public/icc/sRGB.icc \
       -sOutputICCProfile=public/icc/<CMYK>.icc \
       -sOutputFile=<cmyk>.pdf  <PDFX_def.ps>  <rgb>.pdf
    ```
    `PDFX_def.ps` declares the CMYK OutputIntent (`/N 4`). PDF/X-1a is the default
    (max compatibility, PDF 1.3); PDF/X-4 is an opt-in for shops that allow it.
+   **The output profile is the single biggest lever on vivacity**: the gamut and
+   gamut-mapping tables of `<CMYK>.icc` decide how much saturation survives. The
+   default is a coated **FOGRA39** profile (the European coated standard, ≈ ISO
+   Coated v2); the old Apple `GenericCMYK.icc` placeholder is narrow-gamut and
+   desaturated badly (e.g. mean artwork saturation 56% vs 71% on FOGRA39, and
+   KIT_BLUE 49%→61%). **`-dRenderIntent`** (`color.renderIntent`: perceptual 0 /
+   relative 1 / saturation 2 / absolute 3) maps colour into that gamut: `relative`
+   (default) keeps in-gamut colour at full strength and clips only what's outside;
+   `saturation` is marginally punchier for flat graphics; `perceptual` compresses
+   everything and looks duller — use it only for photographic content.
 5. **Boxes** — `MediaBox` = full canvas, `BleedBox` = trim+bleed, `TrimBox` =
    finished size, set via `mutool`/pdf-lib (1 mm = 2.8346 pt).
 6. **Verify** — `pdfinfo` (page size + boxes) and `mutool info` (image colorspace
@@ -80,14 +91,19 @@ preserves the neumorphic relief exactly, then color is converted for press:
 - **Text is rasterized** (baked to pixels) — the cost of keeping the neumorphic
   look. Acceptable for design material; not searchable/selectable.
 - **CMYK gamut shift is expected** — e.g. `KIT_BLUE #0070f9` cannot be reproduced
-  exactly in CMYK; soft-proof before a press run.
+  exactly in CMYK *by any profile* (it's outside the printable gamut); soft-proof
+  before a press run. The profile choice still matters a lot for how close you get
+  — FOGRA39 lands far closer than the old generic placeholder.
 - **Rich black**: because text is flattened into the raster, dark text converts to
   CMYK via the ICC profile (usually a 4-colour rich black). For crisp pure-K (100K)
   small text and to avoid registration halos, use the hybrid vector-text overlay
   (a future option) — not v1.
-- The bundled `public/icc/GenericCMYK.icc` is a **dev placeholder**. For
-  production, drop the print shop's real profile (e.g. ISO Coated v2 / FOGRA39,
-  PSO Coated v3 / FOGRA51) into `public/icc/` and point `doc.json` at it.
+- The default `public/icc/CoatedFOGRA39.icc` is a **good placeholder** (the
+  European coated standard, ≈ ISO Coated v2), not the legacy narrow-gamut Apple
+  `GenericCMYK.icc`. For a production run, drop the print shop's exact profile
+  (e.g. their PSO Coated v3 / FOGRA51) into `public/icc/` and point each
+  `doc.json`'s `color.iccProfile` at it — a **one-line swap, no code change**.
+  See `public/icc/README.md` for profile provenance.
 - **Rive** module icons can't be deterministically stilled — a print using them
   must use a pre-baked static SVG instead.
 - For 300 DPI sharpness the `PrintRenderer` freezes animations/interactive
@@ -97,8 +113,8 @@ preserves the neumorphic relief exactly, then color is converted for press:
 
 - `public/prints/<id>/doc.json` — the document spec: `id`, `title`, `createdAt`,
   `pageComponentId`, `theme`, `dimensions { trimWidthMm, trimHeightMm, bleedMm,
-  safeMarginMm, cropMarks }`, `dpi`, `color { mode, iccProfile, pdfxVariant }`,
-  and `props` (page data; images referenced by path, not inlined).
+  safeMarginMm, cropMarks }`, `dpi`, `color { mode, iccProfile, renderIntent?,
+  pdfxVariant }`, and `props` (page data; images referenced by path, not inlined).
 - `public/prints/<id>/assets/` — document-specific high-res imagery.
 - `public/prints/index.json` — generated list (`id`, `title`, `thumb`,
   `dimensions`, `updatedAt`) the index view fetches.
@@ -130,7 +146,9 @@ OutputIntent, BleedBox = MediaBox, and TrimBox = finished size inset by the blee
 - [src/print/geometry.ts](../src/print/geometry.ts) · [src/print/types.ts](../src/print/types.ts) — units/presets · `PrintDoc` model
 - [src/print/pages/](../src/print/pages/) — page registry + authored pages (e.g. `sample-a4.tsx`)
 - [src/remotion/PrintPageVideo.tsx](../src/remotion/PrintPageVideo.tsx) — the `PrintPage` composition + `calculatePrintMetadata`
-- [src/print/ui/PrintsApp.tsx](../src/print/ui/PrintsApp.tsx) — index + viewport (zoom/fit) + export panel (the operator GUI)
+- [src/print/ui/PrintsApp.tsx](../src/print/ui/PrintsApp.tsx) — index + viewport (zoom/fit) + export panel (the operator GUI); the index opens the **event-space 3D preview**
+- [src/print/ui/EventSpaceScene.tsx](../src/print/ui/EventSpaceScene.tsx) — the venue in 3D (walls, furniture, crowd) from the space-planner layout; **arm a print, click a wall** to mount it at true scale (live page via drei `<Html transform occlude="blending">`, like `PrintScaleScene`). Raycast occlusion hides wall-mounted Html, so blending is required.
+- [src/print/space/eventLayout.ts](../src/print/space/eventLayout.ts) + [event-layout.json](../src/print/space/event-layout.json) — the space-planner export (30×40 m: walls, glass, tables, bar, plant, spawn, 115 people) parsed to 3D-ready boxes + per-wall mount geometry
 - [prints.html](../prints.html) + [src/print/main.tsx](../src/print/main.tsx) — the standalone generator page (separate from `index.html`; both registered in `vite.config.ts` build inputs)
 - [vite-plugin-prints.ts](../vite-plugin-prints.ts) — dev API (`/api/prints`, `/api/export-print`, `/api/prints-output`)
 - [scripts/export-print.mjs](../scripts/export-print.mjs) — render → CMYK PDF/X + PNG/JPG (`npm run export -- <id>`)

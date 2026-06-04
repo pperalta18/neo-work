@@ -14,7 +14,9 @@ import type { PrintPageProps } from '../types'
  * Remotion `renderStill` — no async image load. Sized in millimetres via `geo`.
  *
  * Props (doc.props): `logoWidthMm` (mark width on the wall), `background` (field
- * colour), `tone` (`light` → ink wordmark · `dark` → white), `wordmark` (override).
+ * colour), `tone` (`light` → ink wordmark · `dark` → white), `wordmark` (override),
+ * `offsetYmm` (raise the mark above dead centre by N mm — positive lifts it up;
+ * used by the S1 welcome wall so the lockup clears the reception desk below).
  */
 
 const LIGHT_BG = '#f4f4fa' // brand light surface (Figma "06 Grid" light mode)
@@ -27,6 +29,8 @@ type LiveProps = {
   background?: string
   tone?: 'light' | 'dark'
   wordmark?: string
+  /** Raise the mark above dead centre by N mm (positive = up). Default 0. */
+  offsetYmm?: number
 }
 
 export function AikitLiveMural({ doc, geo }: PrintPageProps) {
@@ -37,15 +41,17 @@ export function AikitLiveMural({ doc, geo }: PrintPageProps) {
   const background = p.background ?? (tone === 'dark' ? '#161a20' : LIGHT_BG)
   const word = p.wordmark ?? (tone === 'dark' ? PAPER_WHITE : INK)
   const logoWidthMm = p.logoWidthMm ?? 2000 // 2 m wide → ~270 mm tall, 0.5 m margins
+  const offsetYmm = p.offsetYmm ?? 0 // positive lifts the mark above dead centre
 
   const logoWidthPx = mm(logoWidthMm)
+  const offsetYpx = mm(offsetYmm)
 
   return (
     <>
       {/* brand field, bled to the media edge */}
       <div style={{ position: 'absolute', inset: 0, background }} />
 
-      {/* centre the mark over the whole media (works at any bleed) */}
+      {/* centre the mark over the whole media (works at any bleed); offsetY lifts it */}
       <div
         style={{
           position: 'absolute',
@@ -53,6 +59,7 @@ export function AikitLiveMural({ doc, geo }: PrintPageProps) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          transform: offsetYpx ? `translateY(${-offsetYpx}px)` : undefined,
         }}
       >
         <AikitLiveMark width={logoWidthPx} word={word} />

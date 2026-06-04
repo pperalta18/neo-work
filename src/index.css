@@ -21,9 +21,16 @@
 }
 @font-face {
   font-family: 'Universal Sans Display';
+  src: url('/fonts/Universal-Sans-Display-250.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 250;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Universal Sans Display';
   src: url('/fonts/Universal-Sans-Display-400.otf') format('opentype');
   font-style: normal;
-  font-weight: 250 400;
+  font-weight: 400;
   font-display: swap;
 }
 @font-face {
