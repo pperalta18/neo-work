@@ -6,6 +6,20 @@ composition tool built on a neumorphic grid that represents concepts (e.g.
 
 ---
 
+## ⭐ [Operations Manual](./operations-manual.md) — empieza aquí
+
+**Documento de estado compartido**: cárgalo al inicio de cada tarea de
+animaciones/módulos. Registro maestro de los **16 módulos AiKit** (categoría del
+pitch Controla/Delega/Construye → icono SVG → animación Rive `.riv` → instance del
+combinado → estado), arquitectura de assets (`modules.ts`, `icons/`, `rive/`,
+`RiveModuleIcon` individual+fallback), **checklist para añadir un módulo** (icono +
+Rive obligatorios), iconos de paso HugeIcons, estado de los flujos de la landing y
+log de pendientes. Pareja de [Flow Blueprints](./flow-blueprints.md).
+
+**Source**: `specs/operations-manual.md`, `src/stories/neo/modules/`
+
+---
+
 ## [Neumorphism Engine](./neumorphism-engine.md)
 
 Themes, light source (tl/tr/bl/br), elevation depths (raised / recessed / pressed
@@ -52,6 +66,30 @@ Remotion compositions, MP4 render, product tour, scene transitions (slide / wipe
 deterministic render, reused widgets.
 
 **Source**: `src/remotion/`, `remotion.config.ts`
+
+---
+
+## [Flow Blueprints](./flow-blueprints.md)
+
+Unified blueprint for the landing's flow animations. Per example (Contabilidad,
+E-Commerce, Punto de venta, Soporte, …): the list of steps, the AiKit module, the
+icon (HugeIcons Pro) and whether there's a **detalle** (and which widget). Shared
+icon kit, detalle→widget catalogue, mechanics (serpentine route, one arrow
+between items, start disc → blue goal). The base for building each flow as a
+`concept` + a thin `ConceptFlowVideo` wrapper.
+
+**Source**: `specs/flow-blueprints.md`, `src/content/concepts.ts`, `src/remotion/ConceptFlowVideo.tsx`
+
+---
+
+## [Cabeceras extraídas](./cabeceras-extraidas.md)
+
+Registro de las **tarjetas-título estáticas (H1 + subtítulo)** que se sacaron de
+los vídeos de flujo (cierres de Accounting, Email, Support, Scheduling) porque se
+inyectan de otra forma en la landing. Guarda el texto literal, en qué clip/escena
+y en qué vídeo estaba — para no perderlo y poder reponerlo.
+
+**Source**: `specs/cabeceras-extraidas.md`, `src/remotion/*CloseScene.tsx` / `*ResolvedScene.tsx` / `CampaignLiveScene.tsx` / `ScheduleOutputScene.tsx`
 
 ---
 

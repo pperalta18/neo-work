@@ -17,7 +17,8 @@ every render is deterministic.
 ```
 src/remotion/
   index.ts              Remotion entry — registers all compositions
-  Root.tsx              <Composition> registrations (id, fps, dimensions, duration)
+  Root.tsx              <Composition> registrations (id, fps, dimensions, duration),
+                        agrupadas por flujo en <Folder> (organización del Studio)
   ProductTourVideo.tsx  The product-tour composition (beat-driven)
   AudioTrack.tsx        <Audio> mount + BeatMap context + music-sync hooks
 src/lib/
@@ -90,9 +91,33 @@ so renders are reproducible and can be distributed across machines.
 
 1. Build the visual with neumorphic widgets (reuse `src/components`).
 2. Register a `<Composition>` in `Root.tsx` with id, fps, dimensions, duration.
+   Si pertenece a un flujo (Accounting, Ecommerce, EmailMarketing, Support,
+   Scheduling), colócalo **dentro de su `<Folder name="…">`** para que aparezca
+   agrupado en la sidebar del Studio (los nombres de `Folder` solo admiten
+   letras, números y guiones; no afectan al `id` ni al render).
 3. To sync to music, wrap it in `<AudioTrack>` and place motion with the beat
    hooks (see `specs/music-sync.md`).
 4. Render via `npx remotion render … out/<name>.mp4`.
+
+## Exportar los clips de cada flujo (montaje en web)
+
+Los 5 flujos (Accounting · Ecommerce · Email · Support · Scheduling) son
+mini-películas que encadenan sus actos con `<TransitionSeries>`. Para montarlos en
+la web se exporta **cada acto como un clip independiente** (sin los fundidos, que
+viven en el orquestador), nombrado por orden:
+
+```
+pnpm run export:clips                 # los 25 clips
+pnpm run export:clips ecommerce email # solo esos flujos
+```
+
+- Salida: `out/clips/<flujo>/<NN>-<slug>.mp4` (MP4 H.264, 1920×1080, 30 fps).
+- El mapa flujo → actos en orden vive en `scripts/export-clips.mjs` (`CLIPS`).
+- El acto del **grid de recorrido** no era una escena suelta; está registrado en
+  `Root.tsx` como `<Flow>Grid` (`AccountingGrid`, `EcommerceGrid`, `EmailGrid`,
+  `SupportGrid`, `SchedulingGrid`) = `ConceptFlowVideo` con `teaserBeats=1` vía
+  `defaultProps`. Al añadir/quitar un acto, actualiza tanto su `<Composition>` en
+  `Root.tsx` como la lista `CLIPS` del script.
 
 ## Related
 
