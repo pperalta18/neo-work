@@ -23,6 +23,15 @@ para añadir un módulo) junto a `specs/flow-blueprints.md` (recetas de cada flu
 **Mantenlos vivos**: al añadir un módulo se añade su **icono y su `.riv`**; al
 iterar un flujo, actualiza el blueprint.
 
+## Print styles
+
+Print pieces (wall graphics, signage, editorial text walls) share one **print-only**
+type & style system — grounds/palette, a distance-anchored four-heading scale, and
+print-owned fonts (hairline Universal Sans Display). **Read `specs/print-typography.md`
+before laying out print text.** Size text via `eventTypeScale` (never hand-pick pt),
+use the `tipografia-kit` styles + `PRINT_*` fonts (`<PrintFonts/>`), and keep it in
+`src/print/` — do **not** wire these styles or fonts into the Remotion videos.
+
 ## Generated Assets
 
 When a scene, mockup or layout needs imagery that doesn't exist yet (photos,

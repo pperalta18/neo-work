@@ -23,17 +23,15 @@
  * sRGB→CMYK PDF/X + OutputIntent + Trim/Bleed boxes. Verified with pdfinfo/mutool.
  */
 import { execFileSync } from 'node:child_process'
-import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs'
-import os from 'node:os'
+import { existsSync, mkdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { PDFDocument } from 'pdf-lib'
-import { mmToPt } from '../src/print/geometry.ts'
+import { pngToCmykPdfX, buildPdfxDef } from './lib/cmyk-pdf.mjs'
+import { posterPdfBoxesPt } from '../src/print/pdfBoxes.ts'
 
 const ROOT = process.cwd()
 const ENTRY = 'src/remotion/index.ts'
 const COMPOSITION_ID = 'PrintPage'
-const SRGB_PROFILE = path.join(ROOT, 'public', 'icc', 'sRGB.icc')
 
 /** Mirror remotion.config.ts for the programmatic bundle: @→src + .riv + ?raw. */
 function applyProjectWebpack(current) {
@@ -112,85 +110,6 @@ function toJpg(png, jpg, dpi, quality) {
   run('magick', ['-units', 'PixelsPerInch', '-density', String(dpi), png, '-quality', String(quality), jpg])
 }
 
-/** PNG → RGB PDF whose page is exactly the media physical size (px / dpi). */
-function toRgbPdf(png, rgbPdf, dpi) {
-  // -density/-units must precede the raster input: placed after it, ImageMagick
-  // ignores them for the raster→PDF page size and the page comes out mis-scaled.
-  run('magick', ['-units', 'PixelsPerInch', '-density', String(dpi), png, rgbPdf])
-}
-
-/**
- * Set the PDF page boxes (pdf-lib): MediaBox/BleedBox = full media (art bleeds to
- * the edge), TrimBox = finished size inset by the bleed. Applied to the RGB PDF
- * before the CMYK step; Ghostscript preserves the source boxes. Points: 1mm=2.8346pt.
- */
-async function boxPdf(inPdf, outPdf, doc) {
-  const pdf = await PDFDocument.load(readFileSync(inPdf))
-  const page = pdf.getPage(0)
-  const { width: W, height: H } = page.getSize()
-  const b = mmToPt(doc.dimensions.bleedMm)
-  page.setMediaBox(0, 0, W, H)
-  page.setBleedBox(0, 0, W, H)
-  page.setTrimBox(b, b, W - 2 * b, H - 2 * b) // (x, y, width, height)
-  writeFileSync(outPdf, await pdf.save())
-}
-
-/** The PostScript prologue declaring a CMYK (N=4) ICC OutputIntent for PDF/X. */
-function buildPdfxDef(iccAbsPath, label) {
-  return `%!
-/ICCProfile (${iccAbsPath}) def
-
-[/_objdef {icc_PDFX} /type /stream /OBJ pdfmark
-[{icc_PDFX} <</N 4>> /PUT pdfmark
-[{icc_PDFX} ICCProfile (r) file /PUT pdfmark
-
-[/_objdef {OutputIntent_PDFX} /type /dict /OBJ pdfmark
-[{OutputIntent_PDFX} <<
-  /Type /OutputIntent
-  /S /GTS_PDFX
-  /OutputCondition (Commercial and specialty printing)
-  /OutputConditionIdentifier (${label})
-  /RegistryName (http://www.color.org)
-  /Info (${label})
-  /DestOutputProfile {icc_PDFX}
->> /PUT pdfmark
-[{Catalog} <</OutputIntents [ {OutputIntent_PDFX} ]>> /PUT pdfmark
-`
-}
-
-/** RGB PDF → CMYK PDF/X with ICC OutputIntent + Trim/Bleed boxes. */
-function toCmykPdf(rgbPdf, cmykPdf, doc) {
-  const icc = path.join(ROOT, 'public', doc.color.iccProfile)
-  if (!existsSync(icc)) throw new Error(`ICC profile not found: ${icc}`)
-  const label = path.basename(icc).replace(/\.icc$/i, '')
-  const defPath = path.join(os.tmpdir(), `pdfx-${doc.id}-${process.pid}.ps`)
-  writeFileSync(defPath, buildPdfxDef(icc, label))
-
-  if (doc.color.pdfxVariant === 'x4') {
-    console.error('note: PDF/X-4 not fully implemented — producing an X-1a-style CMYK PDF (F5).')
-  }
-  try {
-    run('gs', [
-      '-dPDFX',
-      '-dBATCH',
-      '-dNOPAUSE',
-      '-dNOSAFER',
-      '-dPDFXCompatibilityPolicy=1',
-      '-sColorConversionStrategy=CMYK',
-      '-sProcessColorModel=DeviceCMYK',
-      '-sDEVICE=pdfwrite',
-      '-dPDFSETTINGS=/prepress',
-      `-sDefaultRGBProfile=${SRGB_PROFILE}`,
-      `-sOutputICCProfile=${icc}`,
-      `-sOutputFile=${cmykPdf}`,
-      defPath,
-      rgbPdf,
-    ])
-  } finally {
-    rmSync(defPath, { force: true })
-  }
-}
-
 /** Print a verification summary: page boxes (pdfinfo) + image colorspace (mutool). */
 function verifyPdf(pdf) {
   console.log('— verify —')
@@ -245,14 +164,17 @@ async function main() {
   }
 
   if (args.format === 'pdf') {
-    const rgbPdf = path.join(os.tmpdir(), `${doc.id}-rgb-${process.pid}.pdf`)
-    const boxedPdf = path.join(os.tmpdir(), `${doc.id}-boxed-${process.pid}.pdf`)
     const outPdf = path.join(outDir, `${doc.id}.pdf`)
-    toRgbPdf(outPng, rgbPdf, doc.dpi)
-    await boxPdf(rgbPdf, boxedPdf, doc)
-    toCmykPdf(boxedPdf, outPdf, doc)
-    rmSync(rgbPdf, { force: true })
-    rmSync(boxedPdf, { force: true })
+    // Whole poster: MediaBox/BleedBox = full media (art bleeds to the edge),
+    // TrimBox = finished size inset by the bleed on every side.
+    await pngToCmykPdfX({
+      png: outPng,
+      outPdf,
+      dpi: doc.dpi,
+      makeBoxes: (W, H) => posterPdfBoxesPt(W, H, doc.dimensions.bleedMm),
+      color: doc.color,
+      idTag: doc.id,
+    })
     console.log(`CMYK PDF/X → ${outPdf} (${doc.color.pdfxVariant}, ICC ${path.basename(doc.color.iccProfile)})`)
     verifyPdf(outPdf)
     return

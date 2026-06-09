@@ -15,6 +15,13 @@ export type PrintTheme = 'light' | 'dark'
 export type PrintColorMode = 'cmyk' | 'rgb'
 /** PDF/X conformance level. X-1a = max compatibility (PDF 1.3); X-4 = modern. */
 export type PdfxVariant = 'x1a' | 'x4'
+/**
+ * sRGB→CMYK gamut-mapping rendering intent (ICC). For our flat, vivid brand
+ * graphics `relative` (clip only out-of-gamut colours, keep in-gamut at full
+ * strength) or `saturation` (max punch) preserve the most vivacity; `perceptual`
+ * compresses the whole gamut inward and looks duller — prefer it only for photos.
+ */
+export type RenderIntent = 'perceptual' | 'relative' | 'saturation' | 'absolute'
 
 export type PrintDimensions = {
   /** Finished (cut) width in millimetres. */
@@ -31,8 +38,16 @@ export type PrintDimensions = {
 
 export type PrintColor = {
   mode: PrintColorMode
-  /** Path to the ICC profile under `public/`, e.g. `icc/GenericCMYK.icc`. */
+  /**
+   * Path to the CMYK output ICC profile under `public/`, e.g.
+   * `icc/CoatedFOGRA39.icc`. This is the single biggest lever on print
+   * vivacity — a narrow-gamut profile (the old Apple `GenericCMYK.icc`)
+   * desaturates badly. Default is a coated FOGRA39 placeholder; drop the
+   * print shop's real profile into `public/icc/` and point here for the run.
+   */
   iccProfile: string
+  /** sRGB→CMYK rendering intent. Default `relative`. */
+  renderIntent?: RenderIntent
   pdfxVariant: PdfxVariant
 }
 

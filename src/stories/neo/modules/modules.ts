@@ -15,51 +15,40 @@ import smartProcess from './icons/smart-process.svg'
 import forge from './icons/forge.svg'
 import skillHub from './icons/skill-hub.svg'
 
-// Per-module Rive animations (one richer `.riv` each, delivered alongside the
-// brand SVGs). These are the primary animated variant; the combined
-// `aikit-modules.riv` below stays as a fallback. See specs/operations-manual.md.
-import hotpotRive from './rive/hotpot.riv?url'
-import sqlsenseRive from './rive/sqlsense.riv?url'
-import udonRive from './rive/udon.riv?url'
-import sushimiRive from './rive/sushimi.riv?url'
-import docusenseRive from './rive/docusense.riv?url'
-import junctionRive from './rive/junction.riv?url'
-import glimpseRive from './rive/glimpse.riv?url'
-import foresightRive from './rive/foresight.riv?url'
-import actionRunnerRive from './rive/action-runner.riv?url'
-import actionScriptRive from './rive/action-script.riv?url'
-import teamworkRive from './rive/teamwork.riv?url'
-import feedbackLoopRive from './rive/feedback-loop.riv?url'
-import heartbeatRive from './rive/heartbeat.riv?url'
-import smartProcessRive from './rive/smart-process.riv?url'
-import forgeRive from './rive/forge.riv?url'
-import skillHubRive from './rive/skill-hub.riv?url'
-
-/** Combined animated source (one Rive file, all icons). Fallback variant. */
-export { default as RIVE_SRC } from './aikit-modules.riv?url'
+// Animated source for every module — one self-contained Rive file per module
+// (the "good" exports). Each file ships a single artboard, a `State Machine 1`
+// that autoplays its reveal, and a default view-model instance.
+import hotpotRive from './riv/hotpot.riv?url'
+import sqlsenseRive from './riv/sqlsense.riv?url'
+import udonRive from './riv/udon.riv?url'
+import sushimiRive from './riv/sushimi.riv?url'
+import docusenseRive from './riv/docusense.riv?url'
+import junctionRive from './riv/junction.riv?url'
+import glimpseRive from './riv/glimpse.riv?url'
+import foresightRive from './riv/foresight.riv?url'
+import actionRunnerRive from './riv/action-runner.riv?url'
+import actionScriptRive from './riv/action-script.riv?url'
+import teamworkRive from './riv/teamwork.riv?url'
+import feedbackLoopRive from './riv/feedback-loop.riv?url'
+import heartbeatRive from './riv/heartbeat.riv?url'
+import smartProcessRive from './riv/smart-process.riv?url'
+import forgeRive from './riv/forge.riv?url'
+import skillHubRive from './riv/skill-hub.riv?url'
 
 /**
- * Every per-module `.riv` ships its own artboard + `State Machine 1`, so the
- * animation autoplays standalone — no shared default to override.
+ * Every module's Rive file uses the same conventions: a single artboard whose
+ * `State Machine 1` autoplays the reveal, a pointer listener that re-plays it on
+ * click, and a default view-model instance exposing the module colours
+ * (`colorMain`, `colorB`, …) and — on a few — a `colorBackground` plate.
  */
-export const RIVE_MODULE_STATE_MACHINE = 'State Machine 1'
-
-/**
- * The Rive file is a single artboard driven by data binding: one `View Model`
- * (`SlotVM`) holds 16 named instances — one per module — and binding an instance
- * by name swaps which icon the artboard shows. Each instance exposes a `click`
- * trigger (re-plays the reveal) and a `colorBackground` colour.
- */
-export const RIVE_ARTBOARD = 'FeedbackLoop 2'
 export const RIVE_STATE_MACHINE = 'State Machine 1'
-export const RIVE_VIEW_MODEL = 'SlotVM'
 
 /**
  * AiKit module catalogue (from the "Economía de guerra" Figma library,
  * node 1293:1975). Each module is a brand icon + a wordmark. The icons are
  * vector SVGs exported from Figma; their fills/strokes are baked in, so they
- * render verbatim regardless of the active NeoTheme. Each module also maps to a
- * `SlotVM` instance in `aikit-modules.riv` for the animated variant.
+ * render verbatim regardless of the active NeoTheme. Each module also ships a
+ * self-contained Rive file (`./riv/<module>.riv`) for the animated variant.
  */
 export type ModuleGroup = 'data' | 'action' | 'orchestration'
 
@@ -68,37 +57,31 @@ export type ModuleSpec = {
   name: string
   /** Imported SVG asset URL (static variant). */
   icon: string
-  /** Imported per-module `.riv` URL (primary animated variant). */
-  rive: string
-  /**
-   * `SlotVM` instance name inside `aikit-modules.riv` (combined fallback
-   * variant). Names match the Rive file verbatim — including its quirks
-   * (`Juction`, `SQL Sense`).
-   */
-  instance: string
+  /** Imported Rive asset URL (animated variant). */
+  riveSrc: string
   /** Family the module belongs to — used to order the gallery. */
   group: ModuleGroup
-  /** Extra rotation (deg) baked into the Figma frame. */
+  /** Extra rotation (deg) baked into the Figma SVG frame (static variant only). */
   rotate?: number
 }
 
 export const MODULES = {
-  hotpot: { name: 'Hotpot', icon: hotpot, rive: hotpotRive, instance: 'Hotpot', group: 'data' },
-  sqlsense: { name: 'SQLSense', icon: sqlsense, rive: sqlsenseRive, instance: 'SQL Sense', group: 'data' },
-  udon: { name: 'Udon', icon: udon, rive: udonRive, instance: 'Udon', group: 'data' },
-  sushimi: { name: 'Sushimi', icon: sushimi, rive: sushimiRive, instance: 'Sushimi', group: 'data' },
-  docusense: { name: 'Docusense', icon: docusense, rive: docusenseRive, instance: 'Docusense', group: 'data' },
-  junction: { name: 'Junction', icon: junction, rive: junctionRive, instance: 'Juction', group: 'data' },
-  glimpse: { name: 'Glimpse', icon: glimpse, rive: glimpseRive, instance: 'Glimpse', group: 'data' },
-  foresight: { name: 'Foresight', icon: foresight, rive: foresightRive, instance: 'Foresight', group: 'data', rotate: -90 },
-  actionRunner: { name: 'Action Runner', icon: actionRunner, rive: actionRunnerRive, instance: 'Action Runner', group: 'action' },
-  actionScript: { name: 'Action Script', icon: actionScript, rive: actionScriptRive, instance: 'ActionScript', group: 'action' },
-  teamwork: { name: 'TeamWork', icon: teamwork, rive: teamworkRive, instance: 'TeamWork', group: 'action' },
-  feedbackLoop: { name: 'Feedback Loop', icon: feedbackLoop, rive: feedbackLoopRive, instance: 'FeedbackLoop', group: 'action' },
-  heartbeat: { name: 'Heartbeat', icon: heartbeat, rive: heartbeatRive, instance: 'Heartbeat', group: 'action' },
-  smartProcess: { name: 'Smart Process', icon: smartProcess, rive: smartProcessRive, instance: 'SmartProcess', group: 'orchestration' },
-  forge: { name: 'Forge', icon: forge, rive: forgeRive, instance: 'Forge', group: 'orchestration' },
-  skillHub: { name: 'Skill Hub', icon: skillHub, rive: skillHubRive, instance: 'SkillHub', group: 'orchestration' },
+  hotpot: { name: 'Hotpot', icon: hotpot, riveSrc: hotpotRive, group: 'data' },
+  sqlsense: { name: 'SQLSense', icon: sqlsense, riveSrc: sqlsenseRive, group: 'data' },
+  udon: { name: 'Udon', icon: udon, riveSrc: udonRive, group: 'data' },
+  sushimi: { name: 'Sushimi', icon: sushimi, riveSrc: sushimiRive, group: 'data' },
+  docusense: { name: 'Docusense', icon: docusense, riveSrc: docusenseRive, group: 'data' },
+  junction: { name: 'Junction', icon: junction, riveSrc: junctionRive, group: 'data' },
+  glimpse: { name: 'Glimpse', icon: glimpse, riveSrc: glimpseRive, group: 'data' },
+  foresight: { name: 'Foresight', icon: foresight, riveSrc: foresightRive, group: 'data', rotate: -90 },
+  actionRunner: { name: 'Action Runner', icon: actionRunner, riveSrc: actionRunnerRive, group: 'action' },
+  actionScript: { name: 'Action Script', icon: actionScript, riveSrc: actionScriptRive, group: 'action' },
+  teamwork: { name: 'TeamWork', icon: teamwork, riveSrc: teamworkRive, group: 'action' },
+  feedbackLoop: { name: 'Feedback Loop', icon: feedbackLoop, riveSrc: feedbackLoopRive, group: 'action' },
+  heartbeat: { name: 'Heartbeat', icon: heartbeat, riveSrc: heartbeatRive, group: 'action' },
+  smartProcess: { name: 'Smart Process', icon: smartProcess, riveSrc: smartProcessRive, group: 'orchestration' },
+  forge: { name: 'Forge', icon: forge, riveSrc: forgeRive, group: 'orchestration' },
+  skillHub: { name: 'Skill Hub', icon: skillHub, riveSrc: skillHubRive, group: 'orchestration' },
 } satisfies Record<string, ModuleSpec>
 
 export type ModuleName = keyof typeof MODULES

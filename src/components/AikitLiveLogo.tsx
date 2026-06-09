@@ -50,6 +50,8 @@ export type AikitLiveLogoProps = {
   wordmarkColor?: string
   /** Override the "Live" base colour (default brand magenta). */
   liveColor?: string
+  /** Render the purple radial glow behind "Live". Off for flat/CMYK-safe lockups. */
+  glow?: boolean
   title?: string
   style?: CSSProperties
 }
@@ -60,6 +62,7 @@ export function AikitLiveLogo({
   markColor = KIT_BLUE,
   wordmarkColor,
   liveColor = '#FF2D55',
+  glow: showGlow = true,
   title = 'AiKit Live',
   style,
 }: AikitLiveLogoProps) {
@@ -86,15 +89,17 @@ export function AikitLiveLogo({
       {LIVE_PATHS.map((d, i) => (
         <g key={`l${i}`}>
           <path d={d} fill={liveColor} />
-          <path d={d} fill={`url(#${glow})`} />
+          {showGlow && <path d={d} fill={`url(#${glow})`} />}
         </g>
       ))}
-      <defs>
-        <radialGradient id={glow} cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(408.472 79.4611) scale(274.689 146.554)">
-          <stop offset="0.113249" stopColor="#B84FED" />
-          <stop offset="1" stopColor="#B84FED" stopOpacity="0" />
-        </radialGradient>
-      </defs>
+      {showGlow && (
+        <defs>
+          <radialGradient id={glow} cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(408.472 79.4611) scale(274.689 146.554)">
+            <stop offset="0.113249" stopColor="#B84FED" />
+            <stop offset="1" stopColor="#B84FED" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+      )}
     </svg>
   )
 }

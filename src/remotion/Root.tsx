@@ -2,10 +2,12 @@ import { Composition, Folder } from 'remotion';
 import { ConversationVideo, CONVERSATION_DURATION } from './ConversationVideo';
 import { CodeTerminalVideo, CODE_TERMINAL_DURATION } from './CodeTerminalVideo';
 import { ClientTableVideo, CLIENT_TABLE_DURATION } from './ClientTableVideo';
+import { InventoryTableVideo, INVENTORY_TABLE_DURATION } from './InventoryTableVideo';
 import { DocumentVideo, DOCUMENT_DURATION } from './DocumentVideo';
 import { DocumentsVideo, DOCUMENTS_DURATION } from './DocumentsVideo';
 import { StoreFlowVideo, STORE_FLOW_DURATION } from './StoreFlowVideo';
 import { StoreBuildVideo, STORE_BUILD_DURATION } from './StoreBuildVideo';
+import { StoreInventoryVideo, STORE_INVENTORY_DURATION } from './StoreInventoryVideo';
 import { ScheduleFillVideo, SCHEDULE_FILL_DURATION } from './ScheduleFillVideo';
 import { MusicPulseVideo, MUSIC_PULSE_DURATION, calculateMusicPulseMetadata } from './MusicPulseVideo';
 import { PulseOverdriveVideo, PULSE_OVERDRIVE_DURATION, calculatePulseOverdriveMetadata } from './PulseOverdriveVideo';
@@ -39,6 +41,12 @@ import { StaffImportScene, STAFF_IMPORT_DURATION } from './StaffImportScene';
 import { SchedulingRulesScene, SCHEDULING_RULES_DURATION } from './SchedulingRulesScene';
 import { ScheduleTemplateScene, SCHEDULE_TEMPLATE_DURATION } from './ScheduleTemplateScene';
 import { ScheduleResultsScene, SCHEDULE_RESULTS_DURATION } from './ScheduleResultsScene';
+import { MotionShowcaseVideo, MOTION_SHOWCASE_DURATION } from './MotionShowcaseVideo';
+import { StoreCreateVideo, STORE_CREATE_DURATION as STORE_CREATE_VIDEO_DURATION } from './StoreCreateVideo';
+import { ObjectiveVideo, OBJECTIVE_DURATION } from './ObjectiveVideo';
+import { TextShowcaseVideo, TEXT_SHOWCASE_DURATION } from './TextShowcaseVideo';
+import { TextRevealVideo, TEXT_REVEAL_DURATION } from './TextRevealVideo';
+import { GridRevealVideo, GRID_REVEAL_DEFAULTS, calculateGridRevealMetadata } from './GridRevealVideo';
 import { PrintPageVideo, calculatePrintMetadata } from './PrintPageVideo';
 
 const FPS = 30;
@@ -369,6 +377,14 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
+        id="InventoryTable"
+        component={InventoryTableVideo}
+        durationInFrames={INVENTORY_TABLE_DURATION}
+        fps={FPS}
+        width={1920}
+        height={1080}
+      />
+      <Composition
         id="Document"
         component={DocumentVideo}
         durationInFrames={DOCUMENT_DURATION}
@@ -388,6 +404,14 @@ export const RemotionRoot: React.FC = () => {
         id="StoreFlow"
         component={StoreFlowVideo}
         durationInFrames={STORE_FLOW_DURATION}
+        fps={FPS}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="StoreInventory"
+        component={StoreInventoryVideo}
+        durationInFrames={STORE_INVENTORY_DURATION}
         fps={FPS}
         width={1920}
         height={1080}
@@ -425,6 +449,62 @@ export const RemotionRoot: React.FC = () => {
         fps={FPS}
         width={1920}
         height={1080}
+      />
+      <Composition
+        id="MotionShowcase"
+        component={MotionShowcaseVideo}
+        durationInFrames={MOTION_SHOWCASE_DURATION}
+        fps={FPS}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="StoreCreateVideo"
+        component={StoreCreateVideo}
+        durationInFrames={STORE_CREATE_VIDEO_DURATION}
+        fps={FPS}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Objective"
+        component={ObjectiveVideo}
+        durationInFrames={OBJECTIVE_DURATION}
+        fps={FPS}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="TextShowcase"
+        component={TextShowcaseVideo}
+        durationInFrames={TEXT_SHOWCASE_DURATION}
+        fps={FPS}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="TextReveal"
+        component={TextRevealVideo}
+        durationInFrames={TEXT_REVEAL_DURATION}
+        fps={FPS}
+        width={1920}
+        height={1080}
+        defaultProps={{
+          variant: 'camera-pan',
+          text: 'Automatiza tu negocio',
+          subtitle: 'Agentes de IA que trabajan por ti',
+          dark: false,
+        }}
+      />
+      <Composition
+        id="GridReveal"
+        component={GridRevealVideo}
+        calculateMetadata={calculateGridRevealMetadata}
+        durationInFrames={1}
+        fps={FPS}
+        width={1920}
+        height={1080}
+        defaultProps={GRID_REVEAL_DEFAULTS}
       />
       <Composition
         id="PrintPage"

@@ -17,11 +17,6 @@ export type AikitModuleProps = {
    * click the icon to re-play it.
    */
   animated?: boolean
-  /**
-   * When animated, keep re-firing the animation on an interval so the icon reads
-   * as "alive" (galleries/showcases). Off by default.
-   */
-  loop?: boolean
 }
 
 // Figma node 1293:1975: a 120px icon, a 32px gap, and an 86px / 0.72 wordmark.
@@ -42,14 +37,13 @@ export function AikitModule({
   iconOnly = false,
   color,
   animated = false,
-  loop = false,
 }: AikitModuleProps) {
   const theme = useNeoTheme()
   const spec: ModuleSpec = MODULES[module]
   const labelColor = color ?? theme.textStrong
 
   const icon = animated ? (
-    <RiveModuleIcon module={module} size={size} loop={loop} />
+    <RiveModuleIcon module={module} size={size} />
   ) : (
     <img
       src={spec.icon}

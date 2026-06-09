@@ -93,6 +93,20 @@ y en qué vídeo estaba — para no perderlo y poder reponerlo.
 
 ---
 
+## [Motion Language (curves, beats, principles)](./motion-language.md)
+
+Motion-for-video vocabulary: the named easing curves (ENTER / EXIT / STANDARD =
+Material 3 emphasized set, exact cubic-beziers for `Easing.bezier`), duration
+tokens (ms + frames), light-mode + neumorphic + no-bounce house rules. Beat /
+rhythm: sound-led cuts, holds, the reusable 5-beat reveal arc (anticipation →
+assembly → emerge → wordmark → breathe). What makes a good video animation
+(research synthesis: Apple film grammar, Disney 12 principles, ease-out
+asymmetry, timing & spacing, light & depth).
+
+**Source**: `src/remotion/MotionShowcaseVideo.tsx`, `src/lib/neumorphism.ts`
+
+---
+
 ## [Generated Assets (image-gen)](./generated-assets.md)
 
 Standing convention: when a scene, mockup or layout needs imagery that doesn't
@@ -147,6 +161,61 @@ then Ghostscript sRGB→CMYK + OutputIntent + Media/Bleed/TrimBox. Documents as
 local JSON (`public/prints/<id>/doc.json`), no backend.
 
 **Source**: `src/print/`, `scripts/export-print.mjs`, `public/prints/`, `public/icc/`
+
+---
+
+## [Print Type & Style System](./print-typography.md)
+
+The type voice for **print** pieces (wall graphics, signage, editorial text walls) —
+**print only, not the Remotion videos**. Grounds/palette chosen by `doc.theme`
+(clean **white** light / deep ink dark); a four-heading modular scale (H1 by wall
+proportion, H2/H3/H4 = H1 / ratiⁿ) + comfort-sized body + tracked eyebrow, all sized
+by **reading distance** (legibility floor ≈1 cm cap / 3 m, comfort ≈1 in / 10 ft, via
+`eventTypeScale`). Hairline Universal Sans Display cut (`PRINT_DISPLAY_HAIR`, its own
+single-face family so the matcher can't fall back to 400) + Universal Sans Text;
+print-owned `@font-face` (`<PrintFonts/>`) that works in the app preview + export.
+Hairline rules, one warm accent, lots of air. Authored on `marco-5-s-1`.
+
+**Source**: `src/print/pages/tipografia.ts`, `src/print/pages/tipografia-kit.tsx`, `src/print/pages/tipografia.tsx`, `src/print/printFonts.tsx`
+
+---
+
+## [Wall Graphics Production (AiKit Live)](./wall-graphics.md)
+
+AiKit Live expo wall graphics (vinyls / light-boxes) for the 21-wall 3D maquette.
+6-room emotional funnel (S1 Bici / S2 Intro IA / S3 Velocidad / S4 Ineficiencias /
+S5 Cuellos de botella — juice "Naranja Mecánica" / S6 Pobreza histórica + cocktail).
+Message-first curation, no blank walls, no spoilers. Two production tracks:
+code-rendered honest data-viz (model size, stock exponentials, # labs, context-window
+surfaces, code-gen value, the hero "sistema solar de la inversión" = circle area ∝
+market cap) from a researched sourced data file, vs image-gen (combustion texture,
+Naranja Mecánica storefront light-box, dark factories / autonomous trucks, salones por
+siglos). **Wall frames base layer** — every wall face is papered with a blank print
+("marco"), cut into separately-printable panels by abutment + nave cámaras, each
+associated to its numeric print (host wall `invId`); a piece is designed *on the frame
+itself*, for the wall at true size, as exhibition/museography (`wallFrames.ts`, `npm run
+frames` → `public/prints/marco-*`). Wall registry on event-layout.json (invId↔wall-N,
+sala/tema/rol/estado), museographic format standards (eye band, cap-height per distance),
+3D light-box / double-sided / placement persistence, gpt-image-1 img2img + tiling,
+pared-{id}_{sala}_{slug}.png, CMYK PDF/X export.
+
+**Source**: `specs/wall-graphics.md`, `src/print/space/`, `src/print/ui/EventSpaceScene.tsx`, `src/print/pages/`, `scripts/export-print.mjs`
+
+---
+
+## [Expo Guión (creative brief / copy source)](./expo-guion.md)
+
+The **original creative brief** for the AiKit Live expo experience, preserved
+verbatim (Spanish) as the canonical source for **copy, tone, and the meaning of
+each room**. Central message *"la IA nos libera de ser robots"*; the 6-room
+emotional funnel (S1 Bici / S2 Intro IA / S3 Velocidad-Showroom / S4 Ineficiencias
+/ S5 Cuellos de botella / S6 Pobreza histórica), every interactive (👁️ visual vs
+🎮 interactivo) and visual element per room, narrative arc table, tone directives
+(never denigrate the visitor), exit gift (zumo de naranja). **Caveat:** room
+numbering is conceptual and does **not** map 1:1 to the physical 21-wall layout —
+this is the *why/what*, `wall-graphics.md` + the wall registry is the *where*.
+
+**Source**: `~/Downloads/expo_ia_semantic (2).md` (imported 2026-06-04)
 
 ---
 

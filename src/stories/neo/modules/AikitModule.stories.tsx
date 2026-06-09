@@ -13,7 +13,6 @@ const meta = {
     iconOnly: { control: 'boolean' },
     color: { control: 'color' },
     animated: { control: 'boolean' },
-    loop: { control: 'boolean' },
   },
   args: { module: 'udon', size: 96 },
 } satisfies Meta<typeof AikitModule>
@@ -73,15 +72,15 @@ export const Catalogue: Story = {
 
 /**
  * The live Rive animation for a single module. It plays a one-shot entry on
- * load, then re-fires on hover/click; `loop` keeps it re-firing on its own.
+ * load, then re-fires on hover/click.
  */
 export const Animated: Story = {
-  args: { module: 'feedbackLoop', animated: true, size: 120, loop: true },
+  args: { module: 'feedbackLoop', animated: true, size: 120 },
 }
 
 /**
- * Every module's vector animation, grouped by family. Each icon loops its
- * reaction so the whole catalogue stays alive; hover/click any to re-fire it.
+ * Every module's vector animation, grouped by family. Hover/click any icon to
+ * re-fire its reaction.
  */
 export const AnimatedCatalogue: Story = {
   render: () => (
@@ -101,7 +100,7 @@ export const AnimatedCatalogue: Story = {
           </h3>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px 48px', alignItems: 'center' }}>
             {MODULE_NAMES.filter((name) => MODULES[name].group === group.id).map((name) => (
-              <AikitModule key={name} module={name} size={56} animated loop />
+              <AikitModule key={name} module={name} size={56} animated />
             ))}
           </div>
         </section>
@@ -123,7 +122,7 @@ export const AnimatedIconGrid: Story = {
       }}
     >
       {MODULE_NAMES.map((name) => (
-        <AikitModule key={name} module={name} iconOnly size={72} animated loop />
+        <AikitModule key={name} module={name} iconOnly size={72} animated />
       ))}
     </div>
   ),

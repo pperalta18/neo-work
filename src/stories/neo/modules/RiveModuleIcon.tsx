@@ -1,25 +1,15 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import {
   useRive,
   useViewModel,
   useViewModelInstance,
   useViewModelInstanceColor,
-  useViewModelInstanceTrigger,
   Fit,
   Alignment,
   Layout,
 } from '@rive-app/react-canvas'
 import { useNeoTheme } from '../NeoTheme'
-import {
-  RIVE_SRC,
-  RIVE_ARTBOARD,
-  RIVE_STATE_MACHINE,
-  RIVE_VIEW_MODEL,
-  RIVE_MODULE_STATE_MACHINE,
-  MODULES,
-  type ModuleName,
-  type ModuleSpec,
-} from './modules'
+import { RIVE_STATE_MACHINE, MODULES, type ModuleName, type ModuleSpec } from './modules'
 
 export type RiveModuleIconProps = {
   /** Which module to play. */
@@ -28,43 +18,10 @@ export type RiveModuleIconProps = {
   size: number
   /**
    * Autoplay the state machine on mount. When false the icon stays on its first
-   * frame and only plays on click (via the `click` trigger, combined file only).
+   * frame and only plays on click (via the file's pointer listener).
    */
   autoplay?: boolean
-  /**
-   * Re-fire the icon's animation on hover/click. The per-module `.riv` plays a
-   * one-shot entry on mount and then freezes; re-firing its state-machine
-   * trigger replays the lively reaction. Default `true`.
-   */
-  playOnHover?: boolean
-  /**
-   * Keep re-firing the animation on an interval so the icon reads as "alive"
-   * (showcases/galleries). Off by default. Per-module `.riv` only.
-   */
-  loop?: boolean
 }
-
-/**
- * Trigger names that re-play a module `.riv`'s reaction. These are view-model
- * (data-binding) triggers, not classic state-machine inputs — every file uses
- * `click`, except SQLSense which uses `click2`. We fire the first one present.
- */
-const REPLAY_TRIGGERS = ['click', 'click2'] as const
-
-/** Re-fire a module `.riv`'s reaction via its auto-bound view-model trigger. */
-function fireRiveReplay(rive: ReturnType<typeof useRive>['rive']) {
-  const vmi = rive?.viewModelInstance
-  if (!vmi) return
-  for (const name of REPLAY_TRIGGERS) {
-    const trigger = vmi.trigger(name)
-    if (trigger) {
-      trigger.trigger()
-      return
-    }
-  }
-}
-
-const LAYOUT = new Layout({ fit: Fit.Contain, alignment: Alignment.Center })
 
 /** "#rrggbb" → [r, g, b] (0-255). */
 function hexToRgb(hex: string): [number, number, number] {
@@ -77,93 +34,33 @@ function hexToRgb(hex: string): [number, number, number] {
 }
 
 /**
- * Primary variant — the module's own `.riv` (`spec.rive`): a self-contained
- * artboard + `State Machine 1` that autoplays its reveal. We `autoBind` its own
- * default view model (whose name varies per file), so no shared binding contract
- * is assumed and the canvas stays free of "view model not found" noise.
+ * RiveModuleIcon — the animated counterpart to a module's baked SVG.
+ * ──────────────────────────────────────────────────────────────────
+ * Each module ships its own Rive file (`./riv/<module>.riv`). The single
+ * artboard's `State Machine 1` autoplays the reveal on mount and a built-in
+ * pointer listener re-plays it on click. We bind the file's default view-model
+ * instance so we can tint its optional `colorBackground` plate to the active
+ * NeoTheme surface (so the plate blends into the canvas, esp. in dark mode).
  */
-function RiveIndividualIcon({
-  spec,
-  size,
-  autoplay,
-  playOnHover,
-  loop,
-}: {
-  spec: ModuleSpec
-  size: number
-  autoplay: boolean
-  playOnHover: boolean
-  loop: boolean
-}) {
-  const { rive, RiveComponent } = useRive({
-    src: spec.rive,
-    stateMachines: RIVE_MODULE_STATE_MACHINE,
-    autoplay,
-    autoBind: true,
-    layout: LAYOUT,
-  })
-
-  const replay = useCallback(() => fireRiveReplay(rive), [rive])
-
-  // "Alive" mode: re-fire on an interval so the icon keeps reacting.
-  useEffect(() => {
-    if (!loop || !rive) return
-    const id = setInterval(replay, 2600)
-    return () => clearInterval(id)
-  }, [loop, rive, replay])
-
-  return (
-    <RiveComponent
-      role="img"
-      aria-label={spec.name}
-      onMouseEnter={playOnHover ? replay : undefined}
-      onClick={playOnHover ? replay : undefined}
-      style={{
-        width: size,
-        height: size,
-        display: 'block',
-        flexShrink: 0,
-        cursor: playOnHover ? 'pointer' : undefined,
-        transform: spec.rotate ? `rotate(${spec.rotate}deg)` : undefined,
-      }}
-    />
-  )
-}
-
-/**
- * Fallback variant — the combined `aikit-modules.riv` (artboard `FeedbackLoop 2`)
- * driven by data binding: a `SlotVM` view model with one named instance per
- * module. We bind the module's instance to select the icon, tint its
- * `colorBackground` to the active NeoTheme surface, and fire its `click` trigger
- * on tap to re-play the reveal. Used only for modules without a `spec.rive`.
- */
-function RiveCombinedIcon({
-  spec,
-  size,
-  autoplay,
-}: {
-  spec: ModuleSpec
-  size: number
-  autoplay: boolean
-}) {
+export function RiveModuleIcon({ module, size, autoplay = true }: RiveModuleIconProps) {
   const theme = useNeoTheme()
+  const spec: ModuleSpec = MODULES[module]
 
   const { rive, RiveComponent } = useRive({
-    src: RIVE_SRC,
-    artboard: RIVE_ARTBOARD,
+    src: spec.riveSrc,
     stateMachines: RIVE_STATE_MACHINE,
     autoplay,
-    // We bind a specific named instance ourselves (below), so disable auto-bind.
+    // We bind the default instance ourselves (below) to drive the tint.
     autoBind: false,
-    layout: LAYOUT,
+    layout: new Layout({ fit: Fit.Contain, alignment: Alignment.Center }),
   })
 
-  // Bind this module's SlotVM instance — this is what selects the icon.
-  const vm = useViewModel(rive, { name: RIVE_VIEW_MODEL })
-  const vmi = useViewModelInstance(vm, { name: spec.instance, rive })
+  // Bind the file's default view-model instance (one per module file).
+  const vm = useViewModel(rive, { useDefault: true })
+  const vmi = useViewModelInstance(vm, { useDefault: true, rive })
 
-  // Re-tint the plate to the theme surface (keeps it from sitting on a
-  // hard-coded background, esp. in dark mode).
+  // Re-tint the optional background plate to the theme surface (keeps it from
+  // sitting on a hard-coded background). No-op on files without `colorBackground`.
   const bg = useViewModelInstanceColor('colorBackground', vmi)
   useEffect(() => {
     if (!bg?.setRgb) return
@@ -171,51 +68,17 @@ function RiveCombinedIcon({
     bg.setRgb(r, g, b)
   }, [bg, theme.surface])
 
-  // The `click` trigger re-plays the icon when tapped.
-  const click = useViewModelInstanceTrigger('click', vmi)
-
   return (
     <RiveComponent
       role="img"
       aria-label={spec.name}
-      onClick={() => click?.trigger?.()}
       style={{
         width: size,
         height: size,
         display: 'block',
         flexShrink: 0,
         cursor: 'pointer',
-        transform: spec.rotate ? `rotate(${spec.rotate}deg)` : undefined,
       }}
     />
-  )
-}
-
-/**
- * RiveModuleIcon — the animated counterpart to a module's baked SVG.
- * ──────────────────────────────────────────────────────────────────
- * Picks the per-module `.riv` when present (primary), else the combined
- * `aikit-modules.riv` (fallback). The branch is at the component level — each
- * variant keeps its own stable hook order — so no hook runs against a file that
- * lacks its bindings. See specs/operations-manual.md §2.
- */
-export function RiveModuleIcon({
-  module,
-  size,
-  autoplay = true,
-  playOnHover = true,
-  loop = false,
-}: RiveModuleIconProps) {
-  const spec: ModuleSpec = MODULES[module]
-  return spec.rive ? (
-    <RiveIndividualIcon
-      spec={spec}
-      size={size}
-      autoplay={autoplay}
-      playOnHover={playOnHover}
-      loop={loop}
-    />
-  ) : (
-    <RiveCombinedIcon spec={spec} size={size} autoplay={autoplay} />
   )
 }

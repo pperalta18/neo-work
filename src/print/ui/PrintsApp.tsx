@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { Component, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { KIT_BLUE } from '@/lib/neumorphism'
 import { PrintStage } from '../PrintRenderer'
 import { buildGeometry } from '../geometry'
 import { getPrintPage } from '../pages'
 import { PrintScaleScene } from './PrintScaleScene'
+import { EventSpaceScene } from './EventSpaceScene'
 import type { PrintDoc } from '../types'
 
 /**
@@ -25,6 +26,7 @@ export function PrintsApp() {
   const [docs, setDocs] = useState<PrintDoc[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [showSpace, setShowSpace] = useState(false)
 
   const reload = useCallback(() => {
     fetch('/api/prints')
@@ -55,8 +57,9 @@ export function PrintsApp() {
   )
 
   const selected = docs?.find((d) => d.id === selectedId) ?? null
+  if (showSpace && docs) return <EventSpaceScene docs={docs} onBack={() => setShowSpace(false)} />
   if (selected) return <PrintDetail doc={selected} onBack={() => setSelectedId(null)} />
-  return <PrintIndex docs={docs} error={error} onOpen={setSelectedId} onDelete={deletePrint} onReload={reload} />
+  return <PrintIndex docs={docs} error={error} onOpen={setSelectedId} onDelete={deletePrint} onReload={reload} onOpenSpace={() => setShowSpace(true)} />
 }
 
 /* ── live page render (browser; fonts come from index.css) ─────────────────── */
@@ -65,16 +68,41 @@ function LivePrintPage({ doc, showGuides = false }: { doc: PrintDoc; showGuides?
   const page = getPrintPage(doc.pageComponentId)
   const geo = buildGeometry(doc.dimensions, doc.dpi)
   return (
-    <PrintStage doc={doc} showGuides={showGuides}>
-      {page ? (
-        page({ doc, geo })
-      ) : (
-        <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: '#ff2d55', fontSize: geo.pt(20), textAlign: 'center', padding: geo.mm(10) }}>
-          Falta registrar la página “{doc.pageComponentId}”
-        </div>
-      )}
-    </PrintStage>
+    <PreviewBoundary>
+      <PrintStage doc={doc} showGuides={showGuides}>
+        {page ? (
+          page({ doc, geo })
+        ) : (
+          <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: '#ff2d55', fontSize: geo.pt(20), textAlign: 'center', padding: geo.mm(10) }}>
+            Falta registrar la página “{doc.pageComponentId}”
+          </div>
+        )}
+      </PrintStage>
+    </PreviewBoundary>
   )
+}
+
+/**
+ * PreviewBoundary — keeps one broken page from blanking the whole index. A page
+ * that throws while previewing (e.g. a widget that needs a context the live
+ * browser doesn't provide) is contained to its own card/viewport, which shows a
+ * fallback instead. The export pipeline (renderStill) is unaffected.
+ */
+class PreviewBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false }
+  static getDerivedStateFromError() {
+    return { failed: true }
+  }
+  render() {
+    if (this.state.failed) {
+      return (
+        <div style={{ width: '100%', height: '100%', display: 'grid', placeItems: 'center', background: '#1a0e12', color: '#ff6b7d', fontFamily: UI_FONT, fontSize: 'clamp(11px, 6vw, 40px)', fontWeight: 600, textAlign: 'center', padding: 16 }}>
+          Vista previa no disponible
+        </div>
+      )
+    }
+    return this.props.children
+  }
 }
 
 const fmtMm = (d: PrintDoc) => `${trim(d.dimensions.trimWidthMm)} × ${trim(d.dimensions.trimHeightMm)} mm`
@@ -88,12 +116,14 @@ function PrintIndex({
   onOpen,
   onDelete,
   onReload,
+  onOpenSpace,
 }: {
   docs: PrintDoc[] | null
   error: string | null
   onOpen: (id: string) => void
   onDelete: (doc: PrintDoc) => void
   onReload: () => void
+  onOpenSpace: () => void
 }) {
   return (
     <div style={{ minHeight: '100vh', background: SHELL_BG, color: '#e8e8f0', fontFamily: UI_FONT, padding: '40px 32px 80px' }}>
@@ -101,6 +131,7 @@ function PrintIndex({
         <h1 style={{ margin: 0, fontSize: 26, fontWeight: 800, letterSpacing: -0.5 }}>Prints</h1>
         <span style={{ fontSize: 13, color: '#7c8190', fontWeight: 600 }}>{docs ? `${docs.length} documento${docs.length === 1 ? '' : 's'}` : '…'}</span>
         <div style={{ flex: 1 }} />
+        <button onClick={onOpenSpace} style={{ ...ghostBtn, borderColor: KIT_BLUE, color: '#fff', background: KIT_BLUE }}>🏛 Espacio del evento</button>
         <button onClick={onReload} style={ghostBtn}>↻ recargar</button>
       </div>
 
