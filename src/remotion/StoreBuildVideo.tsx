@@ -58,6 +58,12 @@ const CHROME_H = 58 // browser top bar
 const VIEW_W = WIN_W // page is as wide as the window
 const VIEW_H = WIN_H - CHROME_H // 930 — visible page viewport
 
+/**
+ * Frame + browser-window geometry, exposed so embedders (e.g. StoreCreateScene)
+ * can position chrome/labels relative to the window when they re-scale the build.
+ */
+export const STORE_GEO = { W, H, WIN_X, WIN_Y, WIN_W, WIN_H } as const
+
 // ── page layout (page‑coordinate space; the page is taller than the viewport) ──
 const PAD = 84 // page side padding
 const ANN_Y = 0
@@ -521,18 +527,23 @@ function Page({ f }: { f: number }) {
 
 // ── composition root ──────────────────────────────────────────────────────────
 
-export const StoreBuildVideo: React.FC<{ frameOverride?: number }> = ({ frameOverride } = {}) => {
+export const StoreBuildVideo: React.FC<{ frameOverride?: number; transparent?: boolean }> = ({
+  frameOverride,
+  transparent,
+} = {}) => {
   const localFrame = useCurrentFrame()
   // When embedded (e.g. in StorePitch) the parent drives a time-remapped frame so
   // the build can be re-paced / beat-synced; standalone it uses its own frame.
   const f = frameOverride ?? localFrame
   // Browser window fades + lifts into the workspace at the very start.
   const win = prog(f, 0, 18)
+  // `transparent` drops the grey workspace + blueprint grid so an embedder can
+  // place just the browser window on its own background (e.g. StoreCreateScene).
   return (
-    <AbsoluteFill style={{ background: DESK }}>
+    <AbsoluteFill style={{ background: transparent ? 'transparent' : DESK }}>
       <Fonts />
       {/* faint design grid that flashes then clears — a "canvas" cue */}
-      <GenGrid f={f} />
+      {!transparent && <GenGrid f={f} />}
       <div
         style={{
           position: 'absolute',

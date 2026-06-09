@@ -678,8 +678,9 @@ function AiBadge({ f }: { f: number }) {
 }
 
 // ── composition root ──────────────────────────────────────────────────────────
-export const ScheduleFillVideo: React.FC = () => {
-  const f = useCurrentFrame()
+export const ScheduleFillVideo: React.FC<{ frameOverride?: number }> = ({ frameOverride }) => {
+  const currentFrame = useCurrentFrame()
+  const f = frameOverride ?? currentFrame
   // card lifts + settles into the workspace at the very start
   const cardIn = prog(f, 0, INTRO)
   const cardPlate = elevation(theme, { depth: 'raised', distance: 12, blur: 30, radius: 30 })
@@ -692,7 +693,7 @@ export const ScheduleFillVideo: React.FC = () => {
       {/* soft radial depth behind the card */}
       <AbsoluteFill
         style={{
-          background: `radial-gradient(1200px 760px at 50% 36%, #ffffff 0%, ${theme.surface} 62%, #ececf4 100%)`,
+          background: `radial-gradient(1200px 760px at 50% 36%, #ffffff 0%, ${theme.surface} 72%)`,
         }}
       />
       <div
