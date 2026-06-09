@@ -13,6 +13,8 @@ export type ChartWidgetProps = {
   accent?: BrandColor
   /** Delta pill copy, e.g. "+18,4%". Leading +/− tints it green/red. */
   delta?: string
+  /** Cómo se formatea el valor del pico (tooltip). Por defecto moneda (€k). */
+  valueFormat?: 'currency' | 'percent' | 'plain'
 }
 
 const DEFAULT_DATA = [4200, 3850, 5100, 4700, 6250, 5900, 7400]
@@ -37,6 +39,7 @@ export function ChartWidget({
   labels = DEFAULT_LABELS,
   accent = 'green',
   delta = '+18,4%',
+  valueFormat = 'currency',
 }: ChartWidgetProps) {
   const theme = useNeoTheme()
   const well = elevation(theme, { depth: 'recessed', distance: 4, blur: 10, radius: 18 })
@@ -71,8 +74,11 @@ export function ChartWidget({
   const gridYs = [0, 1, 2, 3].map((g) => VB.padTop + (innerH * g) / 3)
 
   const gradId = 'neo-chart-area-grad'
-  const money = (v: number) =>
-    `€${(v / 1000).toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}k`
+  const money = (v: number) => {
+    if (valueFormat === 'percent') return `${Math.round(v)}%`
+    if (valueFormat === 'plain') return v.toLocaleString('es-ES')
+    return `€${(v / 1000).toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}k`
+  }
 
   // Tooltip chip placement (in SVG units) — clamp so it never leaves the box.
   const chipW = 56

@@ -34,3 +34,15 @@ export const Caida: Story = {
     labels: ['Dic', 'Ene', 'Feb', 'Mar', 'Abr', 'May'],
   },
 }
+
+// `valueFormat="percent"`: el pico se rotula como % (p. ej. cobertura semanal).
+export const Porcentaje: Story = {
+  args: {
+    title: 'Cobertura semanal',
+    accent: 'blue',
+    delta: '+18%',
+    valueFormat: 'percent',
+    data: [72, 76, 82, 88, 95, 100, 100],
+    labels: ['L', 'M', 'X', 'J', 'V', 'S', 'D'],
+  },
+}
