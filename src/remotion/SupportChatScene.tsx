@@ -3,9 +3,9 @@
  * ──────────────────────────────────────────────────────────────────────────
  * "La IA atiende sola". Un CLIENTE escribe con una duda real ("¿dónde está mi
  * pedido?") y **Action Runner** responde y resuelve AL INSTANTE, con los datos a
- * mano — sin que nadie del equipo tenga que tocar nada. El cliente está a la
- * izquierda (entrante); la respuesta de AiKit, a la derecha, se "redacta" en el
- * input y se envía.
+ * mano — sin que nadie del equipo tenga que tocar nada. El cliente es quien
+ * escribe (a la derecha, "redacta" su duda en el input); AiKit responde a la
+ * izquierda como burbuja entrante (estado "escribiendo…" y se envía).
  *
  * Misma plantilla que los otros chats (NeoMessage + NeoInput en un NeoCard) con
  * header de marca del módulo. Todo derivado de `useCurrentFrame()`.
@@ -28,11 +28,11 @@ type Line = {
   typeStart?: number
 }
 
-// El cliente (them, izquierda) pregunta; AiKit (me, derecha) resuelve al instante.
+// El cliente (me, derecha) pregunta; AiKit (them, izquierda) resuelve al instante.
 const SCRIPT: Line[] = [
-  { from: 'them', text: 'Hola, ¿dónde está mi pedido #1240?', time: '9:41', typeStart: 8, showAt: 34 },
-  { from: 'me', text: '¡Hola Lucía! Salió ayer 📦 Llega mañana antes de las 14 h.', time: '9:41', typeStart: 42, showAt: 96 },
-  { from: 'me', text: '¿Te ayudo con algo más?', time: '9:41', typeStart: 104, showAt: 134 },
+  { from: 'me', text: 'Hola, ¿dónde está mi pedido #1240?', time: '9:41', typeStart: 8, showAt: 34 },
+  { from: 'them', text: '¡Hola Lucía! Salió ayer 📦 Llega mañana antes de las 14 h.', time: '9:41', typeStart: 42, showAt: 96 },
+  { from: 'them', text: '¿Te ayudo con algo más?', time: '9:41', typeStart: 104, showAt: 134 },
 ]
 
 export const SUPPORT_CHAT_DURATION = 186 // cola ampliada para leer el cierre "¿Te ayudo con algo más?"
@@ -90,7 +90,7 @@ export function SupportChatScene() {
           padding={28}
           radius={40}
           center={false}
-          style={{ height: 760, justifyContent: 'flex-end', gap: 0 }}
+          style={{ height: 500, justifyContent: 'flex-end', gap: 0 }}
         >
           {/* header de marca del módulo */}
           <div

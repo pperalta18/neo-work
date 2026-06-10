@@ -88,7 +88,12 @@ export function Grid({
           ...(frame
             ? {
                 borderRadius: frameRadius,
-                boxShadow: `inset 0 0 0 1px ${theme.gridLine}, 0 18px 50px -20px ${theme.shadow}`,
+                // Clip children to the rounded frame: rectangular pills/plates
+                // that reach a corner would otherwise paint over the radius.
+                overflow: 'hidden',
+                // Drop shadow only here — the hairline border is drawn as a
+                // top overlay below so pills can't paint over it at the corners.
+                boxShadow: `0 18px 50px -20px ${theme.shadow}`,
               }
             : null),
           ...style,
@@ -108,6 +113,20 @@ export function Grid({
           />
         ) : null}
         {children}
+        {frame ? (
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              borderRadius: frameRadius,
+              // Hairline on top of the content so pills' raised glow can't
+              // wash it out where they sit against the frame's edge/corners.
+              boxShadow: `inset 0 0 0 1px ${theme.gridLine}`,
+            }}
+          />
+        ) : null}
       </div>
     </GridContext.Provider>
   )

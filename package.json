@@ -22,6 +22,7 @@
     "remotion": "remotion studio src/remotion/index.ts",
     "render": "remotion render src/remotion/index.ts Conversation out/conversation.mp4",
     "render:emerge": "remotion render src/remotion/index.ts GridEmerge out/grid-emerge.mp4",
+    "render:hero": "remotion render src/remotion/index.ts HeroIntro out/hero-intro.mp4",
     "render:accounting": "remotion render src/remotion/index.ts Accounting out/accounting.mp4",
     "render:ecommerce": "remotion render src/remotion/index.ts Ecommerce out/ecommerce.mp4",
     "render:emailmarketing": "remotion render src/remotion/index.ts EmailMarketing out/email-marketing.mp4",

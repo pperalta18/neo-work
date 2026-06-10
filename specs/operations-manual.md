@@ -286,10 +286,11 @@ El plan completo (un flujo por "ejemplo" del pitch) está en
 | Flujo | Composición Remotion | Estado |
 |---|---|---|
 | Contabilidad (facturas → velocidad de cobro → cierre, **§8 del pitch**) | `Accounting` = mini-película de **4 actos** (`InvoiceIntake` chorro de facturas **absorbido por la placa de Udon** (`OperatingModuleTile` → "Analizando facturas") → grid `cierre-trimestre` **teaser (serpenteo cs2 5×5)** → `AccountingLoop` timeline `NeoReasoning` + **placa de Foresight** ("Buscando patrones") → `AccountingClose` informe **Glimpse**+KPI+sello) · **~16 s** | ✅ construido — grid con iconos de marca (DocuSense·Junction·Foresight·Glimpse·Action Runner·Forge); actos 1 y 3 con `OperatingModuleTile` · _AccountingLoop ampliado a 122 f para leer el cierre del razonamiento_ |
-| E-Commerce (tienda física → web AURELE conectada al inventario) | `Ecommerce` = mini-película de **6 actos** (`PlatformChaos` el lío de plataformas → `InventoryIntake` **pila de documentos** (Excel legible + PDF/Word detrás) que reposa y es absorbida por **DocuSense**→catálogo → grid `montar-tienda` **teaser** → `EcommerceChat` **Feedback Loop** personaliza → `StoreTerminal` **Forge** construye el código en un terminal (`aikit forge build aurele`) → `StoreCreate` **Forge** monta AURELE, reusa `StoreBuild` time-remapeada) · **~25 s** | ✅ construido — grid con iconos de marca (DocuSense·Junction·Feedback Loop·Forge·Action Runner·Heartbeat); DocuSense en acto 2; terminal en acto 5 · _colas ampliadas: PlatformChaos (HOLD 38), EcommerceChat (188 f), StoreTerminal (130 f); InventoryIntake refactorizado a pila de documentos con beat estático (158 f)_ |
+| E-Commerce (tienda física → web AURELE conectada al inventario) | `Ecommerce` = mini-película de **6 actos** (`PlatformChaos` el lío de plataformas → `InventoryIntake` **pila de documentos** (Excel legible + PDF/Word detrás) que reposa y es absorbida por **DocuSense**→catálogo → grid `montar-tienda` **teaser** → `EcommerceChat` **Feedback Loop** personaliza → `StoreTerminal` **Forge** construye el código en un terminal (`aikit forge build aurele`) → `StoreCreate` **Forge** monta AURELE, reusa `StoreBuild` time-remapeada) · **~25 s** | ✅ construido — grid con iconos de marca (DocuSense·Junction·Feedback Loop·Forge·Action Runner·Heartbeat); DocuSense en acto 2; terminal en acto 5 · _colas ampliadas: PlatformChaos (HOLD 38), EcommerceChat (136 f — conversación recortada: pregunta el nombre → "AURELE" → confirma "¡Magnífico! Empezamos" y pasa a Forge; sin la 2ª iteración de envíos/devoluciones), StoreTerminal (130 f); InventoryIntake refactorizado a pila de documentos con beat estático (158 f)_ |
 | Email Marketing (campañas a mano → funnel que se nutre solo) | `EmailMarketing` = mini-película de **5 actos** (`EmailGrind` borrador atascado + pila de herramientas → `ContactsMerge` fuentes dispersas convergen en **DocuSense** → grid `campana-email` **teaser (serpenteo cs2 5×5)** → `EmailCompose` **Smart Process** compone la campaña en un terminal → `CampaignLive` **Action Script** envía/nutre 24/7 + **Foresight** mide) · **~25 s** | ✅ construido — actos 1-2 con representación **propia** (no comparten coreografía con E-Commerce); grid con iconos de marca (DocuSense·Foresight·Smart Process·Forge·Action Script·Heartbeat) · _colas ampliadas: ContactsMerge (HOLD 44), EmailCompose (152 f)_ |
-| Atención al cliente (caos multicanal → cliente atendido solo) | `Support` = mini-película de **5 actos** (`MessageStorm` lluvia de mensajes → `ChannelsConnect` canales→**Hotpot**→bandeja única → grid `soporte-cliente` **teaser (compacto cs2)** → `SupportChat` **Action Runner** atiende a un cliente → `SupportResolved` 3 h→30 s + cliente feliz, **Skill Hub**+**Foresight**) · **~24 s** | ✅ construido — actos 1-2 con representación **propia** (lluvia que se amontona / canales enchufados a un hub); cierre con `TestimonialWidget`; grid con iconos de marca (Hotpot·Smart Process·Foresight·Skill Hub·Heartbeat·Action Runner) · _colas ampliadas: MessageStorm (HOLD 36), ChannelsConnect (HOLD 36), SupportChat (186 f)_ |
+| Atención al cliente (caos multicanal → cliente atendido solo) | `Support` = mini-película de **5 actos** (`MessageStorm` lluvia de mensajes → `ChannelsConnect` canales→**Hotpot**→bandeja única → grid `soporte-cliente` **teaser (compacto cs2)** → `SupportChat` **Action Runner** atiende a un cliente → `SupportResolved` 3 h→30 s + cliente feliz, **Skill Hub**+**Foresight**) · **~24 s** | ✅ construido — actos 1-2 con representación **propia** (lluvia que se amontona / canales enchufados a un hub); cierre con `TestimonialWidget`; grid con iconos de marca (Hotpot·Smart Process·Foresight·Skill Hub·Heartbeat·Action Runner) · _colas ampliadas: MessageStorm (HOLD 36), ChannelsConnect (HOLD 36), SupportChat (186 f — cliente a la derecha en azul (`me`), AiKit a la izquierda en blanco (`them`): la conversación estaba invertida)_ |
 | Planificación de Horarios (plantilla Excel/ERP → planillas semanales vivas) | `Scheduling` = mini-película de **6 actos** (`ShiftChaos` cuadrante manual con solapes/huecos → `StaffImport` Excel+ERP→**DocuSense/Junction**→plantilla limpia → `SchedulingRules` **Feedback Loop** confirma las reglas en un panel → grid `planificacion-horarios` **teaser** → `ScheduleTemplate` la planilla semanal se rellena sola, centrada, pill "creadas con **Glimpse**" → `ScheduleResults` en piloto automático con **Heartbeat** (rutina de 4 pasos) + KPIs (conflictos 0, cobertura 100%), hermano del cierre de Email) · **~31 s** | ✅ construido — grid con iconos de marca (DocuSense·Junction·Feedback Loop·Smart Process·Foresight·Teamwork·Glimpse·Heartbeat·Action Runner); iconos de paso RRHH añadidos a `icons.tsx` (`erp`, `alert`, `dashboard`, `employee`, `vacation`, `payroll`, `evaluation`, `database`) · _ampliados: ShiftChaos (165 f), StaffImport (190 f); cierre **dividido en 2 clips** (`ScheduleTemplate` 165 f + `ScheduleResults` 165 f)_ |
+| **Hero "El ecosistema vivo"** (qué es AiKit — **no** es un flujo) | `HeroIntro` ([`hero/HeroIntroVideo.tsx`](../src/remotion/hero/HeroIntroVideo.tsx)) — **render único** 300 f / ~10s, reglas propias en [`hero-animation.md`](./hero-animation.md) | ✅ construido (v2) — los **16 módulos reales** en 3 clusters por familia + malla + **tráfico de datos** en paralelo; cada módulo pulsa y dice su nombre al trabajar. Sin logo/gota/placas. `pnpm run render:hero` |
 | Galería "Qué se te da mal" (Delega) | — | 📋 §3.1–§3.13 |
 | Galería "Construye" (fases) | — | 📋 §4.1–§4.4 |
 | Ideas de uso avanzado | — | 📋 §5.1–§5.4 |
@@ -356,6 +357,25 @@ items**, emergencia + cámara derivadas de `useCurrentFrame()`, sin captions.
   `src/remotion/IntakeScene.tsx` (hoja vuela al núcleo → brotan fichas). Útiles como
   punto de partida, pero **reskinea/reinventa** si la nueva pieza va a convivir con
   otra que ya use esa coreografía.
+- [x] **Hero del home — construido (v2, "El ecosistema vivo")** ([`hero/HeroIntroVideo.tsx`](../src/remotion/hero/HeroIntroVideo.tsx),
+  `HeroIntro` en `Root.tsx` carpeta **Hero**, 300 f). **Pivote**: la **v1 "El motor
+  invisible"** (placa que se abre + 3 piezas abstractas) la rechazó Iván por *simplona
+  y sin contenido*; pidió **módulos reales, más vívido, que hable de ellos** (revierte
+  el consejo del panel de "no mostrar los 16"). **v2**: los **16 iconos de marca
+  reales** en 3 clusters por familia (golden-angle), una **malla CURADA por semántica**
+  (`RELATIONS` — quién colabora con quién de verdad, sin conexiones raras por
+  proximidad; hubs: Junction=datos, Action Runner=acción) con **roles especiales por
+  módulo** (Heartbeat=**trigger** que despierta en latidos y emite a varios ejecutores
+  a la vez) y **paquetes** de datos KIT_BLUE que la recorren en paralelo,
+  **despacio**; **no hay malla fija** — cada paquete deja una **estela en degradado que
+  se desvanece** (una conexión sólo se ve mientras una bola la recorre, v2.4) y el
+  **módulo destino pulsa + muestra su nombre**. Todo
+  **lento y sutil**, y **en bucle perfecto** (v2.2): sin entrada/fade ni push-in
+  lineal; **todo movimiento es periódico en 300 f** (tiempo modular) → el frame 299
+  encadena con el 0 sin salto. Sin logo/gota/placas/bordes/glows; iconos limpios con
+  drift; determinista (hash `Math.sin`). La animación
+  Rive interna **no** se usa (no se captura en `renderMedia`). Verificado con stills +
+  MP4. Receta en [`hero-animation.md`](./hero-animation.md). Render: `pnpm run render:hero`.
 - [ ] Construir los flujos 📋 de §5 conforme se prioricen con Marketing.
 - [ ] Iconos de flujo a confirmar al implementar: `signature`
   (`License`/`PencilEdit01`), `mobile`/Telegram (`DeviceAccess`) — ver
@@ -492,8 +512,21 @@ items**, emergencia + cámara derivadas de `useCurrentFrame()`, sin captions.
   Ecommerce · Accounting · Support · Scheduling) — "algo parecido en los demás",
   como pidió. `StoreFlow` no se ve afectado (recorrido completo, no teaser).
 
-> Añade aquí cualquier decisión o bloqueo que el "yo del futuro" deba conocer al
-> retomar la tarea.
+- [x] **Chats de la landing — iteración (pedida por Iván).** Los dos únicos chats
+  (`EcommerceChatScene` Feedback Loop · `SupportChatScene` Action Runner) comparten
+  plantilla (NeoCard `width 580` + header de marca + hilo + NeoInput). Tres ajustes:
+  (1) **Menos altura**: la conversación es corta, así que el `NeoCard` baja de
+  `height 760` → **`500`** en ambos (mismo valor, plantilla común; `justifyContent:
+  flex-end` ancla las burbujas abajo). (2) **E-Commerce más breve**: se eliminó la 2ª
+  iteración (envío gratis / devoluciones). Tras "AURELE", Feedback Loop confirma con
+  **"¡Magnífico! Empezamos 🚀"** y pasa directo a Forge. `SCRIPT` de 4→3 líneas,
+  `ECOMMERCE_CHAT_DURATION 188 → 136`. (3) **Support — conversación invertida (bug)**:
+  el 1.er mensaje, que es del **cliente**, salía a la **izquierda en blanco** (estilo
+  IA `them`). Convención de `NeoMessage`: `them` = burbuja recibida izquierda blanca;
+  `me` = enviada derecha azul. El **humano** del chat siempre es `me` (como en
+  E-Commerce). Corregido: cliente → `me` (derecha, azul), AiKit → `them` (izquierda,
+  blanco, con "escribiendo…"). Solo se invirtió el campo `from` (la mecánica
+  input/typing deriva de él). Verificado con stills.
 
 ---
 
@@ -501,6 +534,8 @@ items**, emergencia + cámara derivadas de `useCurrentFrame()`, sin captions.
 
 - [`flow-blueprints.md`](./flow-blueprints.md) — recetas de cada flujo (steps ·
   módulo · icono · detalle).
+- [`hero-animation.md`](./hero-animation.md) — blueprint del **hero** ("El motor
+  invisible"): qué es AiKit, render único, reglas propias (no es un flujo).
 - [`product-video.md`](./product-video.md) — Remotion, composiciones, render.
 - [`storybook-catalog.md`](./storybook-catalog.md) — primitivas + widgets neo
   (los "detalle" de los flujos).

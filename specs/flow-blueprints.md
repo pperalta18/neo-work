@@ -8,6 +8,10 @@ El objetivo es que **todas tengan el mismo aspecto y la misma mecánica**, y que
 construir una nueva sea: copiar el patrón, definir un `concept` y un wrapper.
 Referencia ya construida: **Contabilidad** (composición `Accounting`).
 
+> **El hero NO es un flujo.** La animación del hero ("qué es AiKit") tiene **reglas
+> propias** (render único, sin grid/chat) y vive en [`hero-animation.md`](./hero-animation.md),
+> no aquí. Este documento es solo para las animaciones de **caso de uso**.
+
 ---
 
 ## Cómo usar este blueprint

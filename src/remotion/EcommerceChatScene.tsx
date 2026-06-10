@@ -3,9 +3,9 @@
  * ──────────────────────────────────────────────────────────────────────────
  * "AiKit importa el inventario y te hace preguntas para definir y personalizar
  * tu tienda". Ya con el catálogo dentro, el módulo **Feedback Loop** pregunta lo
- * justo para configurar la tienda — el nombre, la política de envío — y tú
- * respondes por chat, sin menús ni formularios. El nombre que eliges ("AURELE")
- * es el de la tienda que se montará en el acto siguiente.
+ * justo para configurar la tienda — basta el nombre — y tú respondes por chat,
+ * sin menús ni formularios. En cuanto lo das ("AURELE"), confirma y pasa a montar
+ * la tienda en el acto siguiente.
  *
  * Es uno de los dos únicos chats que quedan en la landing (junto al de Support):
  * plantilla NeoMessage + NeoInput dentro de un NeoCard con header de marca del
@@ -36,11 +36,10 @@ type Line = {
 const SCRIPT: Line[] = [
   { from: 'them', text: 'Tu inventario ya está dentro. ¿Cómo se llama tu tienda?', time: '9:41', showAt: 10 },
   { from: 'me', text: 'AURELE', time: '9:41', typeStart: 20, showAt: 58 },
-  { from: 'them', text: '¡Bonito! ¿Envío gratis a partir de 30 €?', time: '9:41', typeStart: 66, showAt: 86 },
-  { from: 'me', text: 'Sí, y devoluciones en 30 días', time: '9:41', typeStart: 96, showAt: 138 },
+  { from: 'them', text: '¡Magnífico! Empezamos 🚀', time: '9:41', typeStart: 66, showAt: 86 },
 ]
 
-export const ECOMMERCE_CHAT_DURATION = 188 // last showAt + tail de lectura (cola ampliada para el último mensaje)
+export const ECOMMERCE_CHAT_DURATION = 136 // last showAt + tail de lectura
 
 export function EcommerceChatScene() {
   const frame = useCurrentFrame()
@@ -97,7 +96,7 @@ export function EcommerceChatScene() {
           padding={28}
           radius={40}
           center={false}
-          style={{ height: 760, justifyContent: 'flex-end', gap: 0 }}
+          style={{ height: 500, justifyContent: 'flex-end', gap: 0 }}
         >
           {/* header de marca del módulo */}
           <div

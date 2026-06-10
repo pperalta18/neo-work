@@ -82,6 +82,21 @@ between items, start disc → blue goal). The base for building each flow as a
 
 ---
 
+## [Hero Animation ("El ecosistema vivo")](./hero-animation.md)
+
+Blueprint de la animación del **hero** de la home — la pieza que explica **qué es
+AiKit** (no un caso de uso), con **reglas propias** distintas a las 5 de flujo. Un
+**render único** (~10s), vívido y denso: los **16 módulos reales** en 3 clusters por
+familia, una malla que los conecta y **tráfico de datos** (KIT_BLUE) en paralelo;
+cada módulo pulsa y dice su nombre al trabajar. Sin logo/gota/placas/bordes/glows.
+Incluye el **pivote** desde la v1 "El motor invisible" (rechazada por simplona) y el
+registro del panel de second opinion. Qué evitar (grid/chat/`OperatingModuleTile`).
+✅ construido (v2).
+
+**Source**: `specs/hero-animation.md`, `src/remotion/hero/HeroIntroVideo.tsx`, `src/stories/neo/modules/modules.ts`
+
+---
+
 ## [Cabeceras extraídas](./cabeceras-extraidas.md)
 
 Registro de las **tarjetas-título estáticas (H1 + subtítulo)** que se sacaron de

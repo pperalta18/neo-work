@@ -90,6 +90,9 @@ importers:
       '@chromatic-com/storybook':
         specifier: ^5.2.1
         version: 5.2.1(storybook@10.4.1(@testing-library/dom@10.4.1)(@types/react@18.3.29)(prettier@3.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@rive-app/canvas-advanced-single':
+        specifier: ^2.37.8
+        version: 2.38.0
       '@storybook/addon-a11y':
         specifier: ^10.4.1
         version: 10.4.1(storybook@10.4.1(@testing-library/dom@10.4.1)(@types/react@18.3.29)(prettier@3.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
@@ -1351,6 +1354,9 @@ packages:
     resolution: {integrity: sha512-OLIore5RDC6L0LNDvs7JJ/Vw9avD7q+fbhxMoYm8Zi+EBlRwFr9V1M/A03Ti1BifIWHczsDfoti9ZTDmHg36+A==}
     peerDependencies:
       zod: 4.3.6
+
+  '@rive-app/canvas-advanced-single@2.38.0':
+    resolution: {integrity: sha512-ijKJyuBvvZnqVamjXRJQtLChkOm5Smuxr1qNb3yzmD2qKXTY5g6EkgiwILJ6X6wqLCPxv2pWKyJZaLgn1rP4aQ==}
 
   '@rive-app/canvas@2.37.8':
     resolution: {integrity: sha512-nffrPG+VkBKHAxZdcqYlP5M+n/mOAoagj774HH397UPTsfC27gwQURg64i6dX7WswMc5qIVX0rzCrZ86Wb2HOA==}
@@ -4742,6 +4748,8 @@ snapshots:
     transitivePeerDependencies:
       - react
       - react-dom
+
+  '@rive-app/canvas-advanced-single@2.38.0': {}
 
   '@rive-app/canvas@2.37.8': {}
 

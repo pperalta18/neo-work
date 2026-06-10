@@ -90,7 +90,7 @@ function MessageCard({ i, frame, W, H }: { i: number; frame: number; W: number; 
   const row = Math.floor(i / 3)
   const colX = [W * 0.34, W * 0.5, W * 0.66][col]
   const restX = colX + (rnd(i, 1) - 0.5) * 90
-  const restY = H * 0.9 - row * 58 - rnd(i, 2) * 12
+  const restY = H * 0.82 - row * 58 - rnd(i, 2) * 12
   const restRot = (rnd(i, 3) - 0.5) * 12
 
   const startX = restX + (rnd(i, 4) - 0.5) * 120
@@ -299,8 +299,8 @@ export function MessageStormScene() {
 
   // Centro horizontal de la pila de notificaciones (lado izquierdo del canvas)
   const notifCenterX = W * 0.5
-  // Posición vertical base de la pila (centrada verticalmente, con margen superior)
-  const notifBaseY = H * 0.15
+  // Posición vertical base de la pila (bajada para acercarla al montón de mensajes)
+  const notifBaseY = H * 0.34
 
   return (
     <AbsoluteFill style={{ backgroundColor: theme.surface }}>
