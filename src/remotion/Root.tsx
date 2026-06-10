@@ -48,12 +48,52 @@ import { TextShowcaseVideo, TEXT_SHOWCASE_DURATION } from './TextShowcaseVideo';
 import { TextRevealVideo, TEXT_REVEAL_DURATION } from './TextRevealVideo';
 import { GridRevealVideo, GRID_REVEAL_DEFAULTS, calculateGridRevealMetadata } from './GridRevealVideo';
 import { PrintPageVideo, calculatePrintMetadata } from './PrintPageVideo';
+import { HeroIntroVideo, HERO_INTRO_DURATION } from './hero/HeroIntroVideo';
+import { HeroAltClicksVideo, HERO_ALT_CLICKS_DURATION } from './hero/HeroAltClicksVideo';
+import { HeroAltFamiliesVideo, HERO_ALT_FAMILIES_DURATION } from './hero/HeroAltFamiliesVideo';
+import { HeroAltTractorVideo, HERO_ALT_TRACTOR_DURATION } from './hero/HeroAltTractorVideo';
 
 const FPS = 30;
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      {/* ── Hero ── "El motor invisible": qué es AiKit (render único, no es un flujo) */}
+      <Folder name="Hero">
+        <Composition
+          id="HeroIntro"
+          component={HeroIntroVideo}
+          durationInFrames={HERO_INTRO_DURATION}
+          fps={FPS}
+          width={1920}
+          height={1080}
+        />
+        <Composition
+          id="HeroAltClicks"
+          component={HeroAltClicksVideo}
+          durationInFrames={HERO_ALT_CLICKS_DURATION}
+          fps={FPS}
+          width={1920}
+          height={1080}
+        />
+        <Composition
+          id="HeroAltFamilies"
+          component={HeroAltFamiliesVideo}
+          durationInFrames={HERO_ALT_FAMILIES_DURATION}
+          fps={FPS}
+          width={1920}
+          height={1080}
+        />
+        <Composition
+          id="HeroAltTractor"
+          component={HeroAltTractorVideo}
+          durationInFrames={HERO_ALT_TRACTOR_DURATION}
+          fps={FPS}
+          width={1920}
+          height={1080}
+        />
+      </Folder>
+
       {/* ── Contabilidad ── mini-película (5 actos) + sus clips sueltos */}
       <Folder name="Accounting">
         <Composition
