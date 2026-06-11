@@ -61,6 +61,25 @@ const CLIPS = [
   { flow: 'scheduling', n: 4, id: 'SchedulingGrid', slug: 'grid-recorrido' },
   { flow: 'scheduling', n: 5, id: 'ScheduleTemplate', slug: 'plantilla-glimpse' },
   { flow: 'scheduling', n: 6, id: 'ScheduleResults', slug: 'resultados-heartbeat' },
+  // ── Módulo 1 · «Tus tareas del día a día» (5 clips en bucle perfecto, no son actos) ──
+  { flow: 'module1', n: 1, id: 'ModAbsences', slug: 'aprobar-ausencias' },
+  { flow: 'module1', n: 2, id: 'ModInvoices', slug: 'facturas-se-ordenan' },
+  { flow: 'module1', n: 3, id: 'ModStock', slug: 'stock-se-repone' },
+  { flow: 'module1', n: 4, id: 'ModTickets', slug: 'tickets-se-priorizan' },
+  { flow: 'module1', n: 5, id: 'ModCart', slug: 'carrito-recuperado' },
+  // ── Módulo 2 · «Tu negocio funcionando conectado» (3 clips en bucle perfecto) ──
+  // (Dunning y MonthClose salieron de aquí: ahora son mini-películas de actos lineales.)
+  { flow: 'module2', n: 1, id: 'ModOnboarding', slug: 'alta-empleado' },
+  { flow: 'module2', n: 2, id: 'ModSaleChain', slug: 'venta-mueve-cadena' },
+  { flow: 'module2', n: 3, id: 'ModLeadFunnel', slug: 'leads-no-se-enfrian' },
+  // ── Dunning · «Los impagos se persiguen solos» (3 actos lineales, mini-película) ──
+  { flow: 'dunning', n: 1, id: 'ModDunningOverdue', slug: 'factura-vence' },
+  { flow: 'dunning', n: 2, id: 'ModDunningRun', slug: 'reclama-y-avisa' },
+  { flow: 'dunning', n: 3, id: 'ModDunningPaid', slug: 'factura-cobrada' },
+  // ── Cierre de mes · «El cierre de mes se hace solo» (3 actos lineales, mini-película) ──
+  { flow: 'monthclose', n: 1, id: 'ModMonthCloseLedger', slug: 'libro-diario' },
+  { flow: 'monthclose', n: 2, id: 'ModMonthCloseRun', slug: 'cerrando-junio' },
+  { flow: 'monthclose', n: 3, id: 'ModMonthCloseSummary', slug: 'resumen-cerrado' },
 ]
 
 /** Mirror remotion.config.ts: the `@` → src alias and the .riv asset rule. */
@@ -86,7 +105,7 @@ async function main() {
   const filter = process.argv.slice(2).map((s) => s.toLowerCase())
   const todo = filter.length ? CLIPS.filter((c) => filter.includes(c.flow)) : CLIPS
   if (!todo.length) {
-    console.error(`No clips match ${JSON.stringify(filter)}. Flows: accounting, ecommerce, email, support, scheduling.`)
+    console.error(`No clips match ${JSON.stringify(filter)}. Flows: accounting, ecommerce, email, support, scheduling, module1, module2, dunning, monthclose.`)
     process.exit(1)
   }
 

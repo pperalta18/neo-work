@@ -52,8 +52,45 @@ import { HeroIntroVideo, HERO_INTRO_DURATION } from './hero/HeroIntroVideo';
 import { HeroAltClicksVideo, HERO_ALT_CLICKS_DURATION } from './hero/HeroAltClicksVideo';
 import { HeroAltFamiliesVideo, HERO_ALT_FAMILIES_DURATION } from './hero/HeroAltFamiliesVideo';
 import { HeroAltTractorVideo, HERO_ALT_TRACTOR_DURATION } from './hero/HeroAltTractorVideo';
+// ── Módulos seleccionables (new-landing): 10 clips en bucle perfecto ──
+import { M1AbsencesScene, M1_ABSENCES_DURATION } from './modules/M1Absences';
+import { M1AbsencesLoopScene, M1_ABSENCES_LOOP_DURATION } from './modules/M1AbsencesLoop';
+// Absences ya no es un bucle: es una mini-película de 3 actos (peticiones → módulo → marcador)
+import { M1AbsencesRequestsScene, ABS_REQUESTS_DURATION } from './modules/M1AbsencesRequests';
+import { M1AbsencesProcessScene, ABS_PROCESS_DURATION } from './modules/M1AbsencesProcess';
+import { M1AbsencesSummaryScene, ABS_SUMMARY_DURATION } from './modules/M1AbsencesSummary';
+import { M1InvoicesScene, M1_INVOICES_DURATION } from './modules/M1Invoices';
+import { M1StockScene, M1_STOCK_DURATION } from './modules/M1Stock';
+import { M1TicketsScene, M1_TICKETS_DURATION } from './modules/M1Tickets';
+import { M1CartScene, M1_CART_DURATION } from './modules/M1Cart';
+import { M2OnboardingScene, M2_ONBOARDING_DURATION } from './modules/M2Onboarding';
+import { M2SaleChainScene, M2_SALECHAIN_DURATION } from './modules/M2SaleChain';
+// Dunning ya no es un bucle: es una mini-película de 3 actos (vence → reclama+avisa → cobrada)
+import { M2DunningVideo, M2_DUNNING_DURATION } from './modules/M2DunningVideo';
+import { M2DunningOverdueScene, M2_DUNNING_OVERDUE_DURATION } from './modules/M2DunningOverdue';
+import { M2DunningRunScene, M2_DUNNING_RUN_DURATION } from './modules/M2DunningRun';
+import { M2DunningPaidScene, M2_DUNNING_PAID_DURATION } from './modules/M2DunningPaid';
+// MonthClose ya no es un bucle: es una mini-película de 3 actos (libro diario → módulo → resumen)
+import { M2MonthCloseVideo, M2_MONTHCLOSE_DURATION } from './modules/M2MonthCloseVideo';
+import { M2MonthCloseLedgerScene, MC_LEDGER_DURATION } from './modules/M2MonthCloseLedger';
+import { M2MonthCloseRunScene, MC_RUN_DURATION } from './modules/M2MonthCloseRun';
+import { M2MonthCloseSummaryScene, MC_SUMMARY_DURATION } from './modules/M2MonthCloseSummary';
+import { M2LeadFunnelScene, M2_LEADFUNNEL_DURATION } from './modules/M2LeadFunnel';
+// Copias V1 (abstractas, pre-Tailark) — solo para comparar lado a lado en Studio
+import { M1AbsencesV1Scene, M1_ABSENCES_V1_DURATION } from './modules/M1AbsencesV1';
+import { M1InvoicesV1Scene, M1_INVOICES_V1_DURATION } from './modules/M1InvoicesV1';
+import { M1StockV1Scene, M1_STOCK_V1_DURATION } from './modules/M1StockV1';
+import { M1TicketsV1Scene, M1_TICKETS_V1_DURATION } from './modules/M1TicketsV1';
+import { M1CartV1Scene, M1_CART_V1_DURATION } from './modules/M1CartV1';
+import { M2OnboardingV1Scene, M2_ONBOARDING_V1_DURATION } from './modules/M2OnboardingV1';
+import { M2SaleChainV1Scene, M2_SALECHAIN_V1_DURATION } from './modules/M2SaleChainV1';
+import { M2DunningV1Scene, M2_DUNNING_V1_DURATION } from './modules/M2DunningV1';
+import { M2MonthCloseV1Scene, M2_MONTHCLOSE_V1_DURATION } from './modules/M2MonthCloseV1';
+import { M2MonthCloseLoopScene, M2_MONTHCLOSE_LOOP_DURATION } from './modules/M2MonthCloseLoop';
+import { M2LeadFunnelV1Scene, M2_LEADFUNNEL_V1_DURATION } from './modules/M2LeadFunnelV1';
 
 const FPS = 30;
+const MOD = 1080; // lienzo cuadrado de los clips de módulo
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -92,6 +129,52 @@ export const RemotionRoot: React.FC = () => {
           width={1920}
           height={1080}
         />
+      </Folder>
+
+      {/* ── Módulos seleccionables ── 10 clips en bucle perfecto (cuadrado 1080) */}
+      {/* Módulo 1 · «Tus tareas del día a día» — un objeto, una transformación */}
+      <Folder name="Modulos-Tareas">
+        {/* Absences = mini-película de 3 actos (combinada) + sus actos sueltos */}
+        <Composition id="ModAbsences" component={M1AbsencesScene} durationInFrames={M1_ABSENCES_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModAbsencesRequests" component={M1AbsencesRequestsScene} durationInFrames={ABS_REQUESTS_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModAbsencesProcess" component={M1AbsencesProcessScene} durationInFrames={ABS_PROCESS_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModAbsencesSummary" component={M1AbsencesSummaryScene} durationInFrames={ABS_SUMMARY_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModInvoices" component={M1InvoicesScene} durationInFrames={M1_INVOICES_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModStock" component={M1StockScene} durationInFrames={M1_STOCK_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModTickets" component={M1TicketsScene} durationInFrames={M1_TICKETS_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModCart" component={M1CartScene} durationInFrames={M1_CART_DURATION} fps={FPS} width={MOD} height={MOD} />
+      </Folder>
+      {/* Módulo 2 · «Tu negocio funcionando conectado» — varios nodos + un pulso */}
+      <Folder name="Modulos-Conectado">
+        <Composition id="ModOnboarding" component={M2OnboardingScene} durationInFrames={M2_ONBOARDING_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModSaleChain" component={M2SaleChainScene} durationInFrames={M2_SALECHAIN_DURATION} fps={FPS} width={MOD} height={MOD} />
+        {/* Dunning = mini-película de 3 actos (combinada) + sus actos sueltos */}
+        <Composition id="ModDunning" component={M2DunningVideo} durationInFrames={M2_DUNNING_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModDunningOverdue" component={M2DunningOverdueScene} durationInFrames={M2_DUNNING_OVERDUE_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModDunningRun" component={M2DunningRunScene} durationInFrames={M2_DUNNING_RUN_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModDunningPaid" component={M2DunningPaidScene} durationInFrames={M2_DUNNING_PAID_DURATION} fps={FPS} width={MOD} height={MOD} />
+        {/* MonthClose = mini-película de 3 actos (combinada) + sus actos sueltos */}
+        <Composition id="ModMonthClose" component={M2MonthCloseVideo} durationInFrames={M2_MONTHCLOSE_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModMonthCloseLedger" component={M2MonthCloseLedgerScene} durationInFrames={MC_LEDGER_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModMonthCloseRun" component={M2MonthCloseRunScene} durationInFrames={MC_RUN_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModMonthCloseSummary" component={M2MonthCloseSummaryScene} durationInFrames={MC_SUMMARY_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModLeadFunnel" component={M2LeadFunnelScene} durationInFrames={M2_LEADFUNNEL_DURATION} fps={FPS} width={MOD} height={MOD} />
+      </Folder>
+      {/* Copias V1 (versión abstracta anterior) + el loop de Ausencias previo a la
+          mini-película — comparación lado a lado en Studio */}
+      <Folder name="Modulos-V1">
+        <Composition id="ModAbsencesLoop" component={M1AbsencesLoopScene} durationInFrames={M1_ABSENCES_LOOP_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModAbsencesV1" component={M1AbsencesV1Scene} durationInFrames={M1_ABSENCES_V1_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModInvoicesV1" component={M1InvoicesV1Scene} durationInFrames={M1_INVOICES_V1_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModStockV1" component={M1StockV1Scene} durationInFrames={M1_STOCK_V1_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModTicketsV1" component={M1TicketsV1Scene} durationInFrames={M1_TICKETS_V1_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModCartV1" component={M1CartV1Scene} durationInFrames={M1_CART_V1_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModOnboardingV1" component={M2OnboardingV1Scene} durationInFrames={M2_ONBOARDING_V1_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModSaleChainV1" component={M2SaleChainV1Scene} durationInFrames={M2_SALECHAIN_V1_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModDunningV1" component={M2DunningV1Scene} durationInFrames={M2_DUNNING_V1_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModMonthCloseV1" component={M2MonthCloseV1Scene} durationInFrames={M2_MONTHCLOSE_V1_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModMonthCloseLoop" component={M2MonthCloseLoopScene} durationInFrames={M2_MONTHCLOSE_LOOP_DURATION} fps={FPS} width={MOD} height={MOD} />
+        <Composition id="ModLeadFunnelV1" component={M2LeadFunnelV1Scene} durationInFrames={M2_LEADFUNNEL_V1_DURATION} fps={FPS} width={MOD} height={MOD} />
       </Folder>
 
       {/* ── Contabilidad ── mini-película (5 actos) + sus clips sueltos */}

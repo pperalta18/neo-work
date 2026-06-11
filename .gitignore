@@ -12,3 +12,6 @@ out
 # Generated build/bundle output
 build/
 *.tsbuildinfo
+
+# Tailark Pro source crudo (suscripción, no redistribuir) — solo la adaptación propia se commitea
+vendor/

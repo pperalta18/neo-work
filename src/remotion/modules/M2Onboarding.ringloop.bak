@@ -1,0 +1,130 @@
+/**
+ * M2Onboarding · «El alta de un empleado, sin papeles» — Módulo 2 (conectado)
+ * ──────────────────────────────────────────────────────────────────────────────
+ * Lenguaje HÍBRIDO: base NEUMÓRFICA + detalles de Tailark (**flow**: conectores
+ * PUNTEADOS, su firma) + **step-cards** con `StateChip` del kit (idle→azul→✓ verde)
+ * que cambia cuando el pulso cruza, y un nodo origen tipo chat. Indigo→KIT_BLUE,
+ * emerald→BRAND.green.
+ *
+ * Bucle: anillo Contrato→Firma→Ficha→Accesos; el pulso vuelve al chat, que ya
+ * muestra otro nombre (N vueltas = N nombres). Módulo origen: actionScript.
+ *
+ * REGLA de costura: el chip verde «hecho» es TRANSITORIO (decae antes de u→1) → en la
+ * costura todos los nodos vuelven a idle = estado de u=0. Nada acumulado sobrevive al seam.
+ */
+
+import {
+  LoopStage,
+  NeoTile,
+  Packet,
+  StageSvg,
+  ModuleIcon,
+  StateChip,
+  useLoop,
+  ringPoints,
+  M2_DURATION,
+  CENTER,
+  KIT_BLUE,
+  BRAND,
+  lightTheme,
+  elevation,
+  TEXT_FONT,
+  clamp01,
+  mod,
+  mix,
+  type Pt,
+} from './loopKit';
+
+export const M2_ONBOARDING_DURATION = M2_DURATION; // 168 f
+
+const DUR = M2_ONBOARDING_DURATION;
+const NAMES = ['María', 'Carlos'];
+const LAPS = NAMES.length;
+const LAP = DUR / LAPS;
+
+const R = 312;
+const RING: Pt[] = ringPoints(5, CENTER, CENTER, R, 90);
+const STEPS = [
+  { label: 'Contrato', glyph: 'doc' },
+  { label: 'Firma', glyph: 'sign' },
+  { label: 'Ficha', glyph: 'card' },
+  { label: 'Accesos', glyph: 'key' },
+] as const;
+const NODE = 168;
+
+function nearPulse(u: number, u0: number, width = 0.12): number {
+  const d = Math.min(mod(u - u0, 1), mod(u0 - u, 1));
+  return clamp01(1 - d / width);
+}
+
+const Glyph: React.FC<{ kind: string; c: string }> = ({ kind, c }) => {
+  const common = { fill: 'none', stroke: c, strokeWidth: 4, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
+  return (
+    <svg width={50} height={50} viewBox="0 0 52 52">
+      {kind === 'doc' && (<><rect x="13" y="8" width="26" height="36" rx="4" {...common} /><line x1="19" y1="18" x2="33" y2="18" {...common} /><line x1="19" y1="26" x2="33" y2="26" {...common} /><line x1="19" y1="34" x2="28" y2="34" {...common} /></>)}
+      {kind === 'sign' && (<><path d="M10 38 Q18 20 24 32 T38 26" {...common} /><line x1="10" y1="44" x2="42" y2="44" {...common} /></>)}
+      {kind === 'card' && (<><rect x="9" y="14" width="34" height="24" rx="4" {...common} /><circle cx="19" cy="24" r="4" {...common} /><line x1="28" y1="22" x2="37" y2="22" {...common} /><line x1="28" y1="30" x2="37" y2="30" {...common} /></>)}
+      {kind === 'key' && (<><circle cx="19" cy="22" r="8" {...common} /><path d="M25 28 L40 43 M35 38 L31 42 M40 43 L36 47" {...common} /></>)}
+    </svg>
+  );
+};
+
+export const M2OnboardingScene: React.FC = () => {
+  const { frame } = useLoop(DUR);
+  const lap = Math.floor(frame / LAP) % LAPS;
+  const u = (frame % LAP) / LAP;
+  const name = NAMES[lap];
+  const uOf = (i: number) => i / 5;
+
+  return (
+    <LoopStage dur={DUR}>
+      {/* conectores PUNTEADOS (firma Tailark flow) + pulso con estela */}
+      <StageSvg>
+        {RING.map((p, i) => {
+          const q = RING[(i + 1) % 5];
+          const lit = nearPulse(u, (uOf(i) + uOf(i + 1)) / 2, 0.1);
+          return <line key={i} x1={p.x} y1={p.y} x2={q.x} y2={q.y} stroke={mix('#c0cadb', KIT_BLUE, lit)} strokeWidth={2.5} strokeLinecap="round" strokeDasharray="2 11" opacity={0.55 + 0.45 * lit} />;
+        })}
+        <Packet path={RING} t={u} closed tailFrac={0.22} r={7} id="onb" />
+      </StageSvg>
+
+      {/* nodos-paso (step-cards híbridas) */}
+      {STEPS.map((s, k) => {
+        const p = RING[k + 1];
+        const act = nearPulse(u, uOf(k + 1), 0.13);
+        const passT = mod(u - uOf(k + 1), 1);
+        const done = passT <= 0.16 ? clamp01(1 - passT / 0.16) : 0; // verde transitorio (decae antes del seam)
+        const accent = act > 0.05 ? KIT_BLUE : done > 0.04 ? BRAND.green : undefined;
+        return (
+          <div key={s.label}>
+            <NeoTile size={NODE} x={p.x} y={p.y} radius={30} distance={11} blur={24} scale={1 + 0.07 * act} accent={accent} accentAmount={Math.max(act, done * 0.5)}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+                <Glyph kind={s.glyph} c={act > 0.1 ? KIT_BLUE : lightTheme.textStrong} />
+                <StateChip active={act} done={done} />
+              </div>
+            </NeoTile>
+            <span style={{ position: 'absolute', left: p.x, top: p.y + NODE / 2 + 8, transform: 'translateX(-50%)', fontFamily: TEXT_FONT, fontWeight: 600, fontSize: 23, color: lightTheme.textStrong, opacity: 0.55 + 0.45 * act, whiteSpace: 'nowrap' }}>{s.label}</span>
+          </div>
+        );
+      })}
+
+      {/* nodo origen = tarjeta de chat AiKit (lanza el alta y recibe la vuelta) */}
+      {(() => {
+        const p = RING[0];
+        const emit = clamp01(1 - u / 0.1);
+        const recv = nearPulse(u, 1, 0.1);
+        const pulse = Math.max(emit, recv);
+        return (
+          <NeoTile size={NODE + 40} x={p.x} y={p.y} radius={28} distance={13} blur={28} scale={1 + 0.05 * pulse} accent={KIT_BLUE} accentAmount={0.1 + 0.4 * pulse}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '0 10px' }}>
+              <ModuleIcon name="actionScript" size={44} active={pulse} />
+              <div style={{ ...elevation(lightTheme, { depth: 'raised', distance: 5, blur: 12, radius: 11 }), backgroundColor: mix(lightTheme.surface, KIT_BLUE, 0.08), padding: '7px 13px', fontFamily: TEXT_FONT, fontWeight: 600, fontSize: 21, color: lightTheme.textStrong, whiteSpace: 'nowrap' }}>
+                alta de <span style={{ color: KIT_BLUE, fontWeight: 700 }}>{name}</span>
+              </div>
+            </div>
+          </NeoTile>
+        );
+      })()}
+    </LoopStage>
+  );
+};

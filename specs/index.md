@@ -82,6 +82,20 @@ between items, start disc → blue goal). The base for building each flow as a
 
 ---
 
+## [Module loops (10 clips en bucle perfecto)](./module-loops.md)
+
+Contrato de los **10 clips** de los dos **módulos seleccionables** de la new-landing
+(zoom medio/macro del acto *Picture*). Tipo de asset nuevo: clips cortos, cuadrados, en
+**bucle perfecto** (todo periódico en `DURATION`, determinista, como el hero). **Módulo
+1** = un objeto que se transforma (5 clips); **Módulo 2** = nodos conectados + un pulso que
+vuelve al origen (5 clips). Incluye el **kit compartido** (`loopKit.tsx`), las reglas duras
+de costura (las 3 técnicas de cierre + "nada acumulado sobrevive al seam"), naming/registro
+y la receta de cada clip. ✅ construido (CMS copy pendiente).
+
+**Source**: `specs/module-loops.md`, `src/remotion/modules/loopKit.tsx`, `src/remotion/modules/M{1,2}*.tsx`
+
+---
+
 ## [Hero Animation ("El ecosistema vivo")](./hero-animation.md)
 
 Blueprint de la animación del **hero** de la home — la pieza que explica **qué es

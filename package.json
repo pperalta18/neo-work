@@ -10,6 +10,8 @@
     "preview": "vite preview",
     "export": "node scripts/export-print.mjs",
     "export:clips": "node scripts/export-clips.mjs",
+    "render:modules": "node scripts/export-clips.mjs module1 module2 dunning",
+    "render:dunning": "remotion render src/remotion/index.ts ModDunning out/mod-dunning.mp4",
     "tile": "node scripts/tile-print.mjs",
     "control-table": "node scripts/control-table.mjs",
     "legibility": "node scripts/legibility.mjs",
