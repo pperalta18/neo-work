@@ -26,8 +26,6 @@
 
 import {
   LoopStage,
-  TailarkCard,
-  TAILARK_RING,
   useLoop,
   CENTER,
   KIT_BLUE,
@@ -143,8 +141,6 @@ const CheckoutCard: React.FC<{
   // La nitidez NO cambia (el «apagado» es solo desaturación) → resting gris idéntico
   // entre la tarjeta saliente en u=0 y la entrante en u→1, sin pop en la costura.
   const sat = lerp(0.2, 1, revive);
-  // anillo de la card: se enciende suave hacia KIT_BLUE mientras se rellena.
-  const ring = mix(TAILARK_RING, KIT_BLUE, clamp01(fill) * 0.5 * revive);
 
   return (
     <div
@@ -158,7 +154,19 @@ const CheckoutCard: React.FC<{
         filter: `saturate(${sat})`,
       }}
     >
-      <TailarkCard width={CARD_W} height={CARD_H} radius={28} bevel ring={ring} pad={40} shadow>
+      {/* contenedor NEUMÓRFICO (mismo lenguaje que la notificación / botón): relieve por
+          sombras, sin ring de contorno ni esquina biselada (Iván: «fuera el borde negro
+          y el radius sup-der grande»). */}
+      <div
+        style={{
+          width: CARD_W,
+          height: CARD_H,
+          padding: 40,
+          boxSizing: 'border-box',
+          overflow: 'hidden',
+          ...elevation(lightTheme, { depth: 'raised', distance: 14, blur: 32, radius: 28 }),
+        }}
+      >
         {/* encabezado: título del checkout + total */}
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 26 }}>
           <span style={{ fontFamily: TEXT_FONT, fontWeight: 700, fontSize: 26, color: lightTheme.textStrong, opacity: 0.5 + 0.5 * revive }}>
@@ -206,7 +214,7 @@ const CheckoutCard: React.FC<{
         <div style={{ marginTop: 28 }}>
           <PayButton paid={paid} revive={revive} />
         </div>
-      </TailarkCard>
+      </div>
     </div>
   );
 };

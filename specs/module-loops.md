@@ -43,10 +43,10 @@ de 4 beats — la idea del anillo abstracto «no encajaba»; ver §2 «Excepció
 | # | id (Root) | Fichero | Mód. | Base Tailark | Mecanismo (único por clip) | Estado |
 |---|---|---|---|---|---|---|
 | 1.1 | `ModAbsences` | `M1Absences.tsx` | M1 | `calendar` | **mini-película de 3 actos (NO loop)**: montón de peticiones de vacaciones → `OperatingModuleTile` (Action Runner) «Analizando conflictos» → marcador Aprobadas·A revisar·Rechazadas. Tarjeta de solicitud = placa neumórfica por nombre (sin borde). Loop previo en `M1AbsencesLoop.tsx` | ✅ |
-| 1.2 | `ModInvoices` | `M1Invoices.tsx` | M1 | `flow` + `document-pdf/xlx/csv` | **arco CAOS→ORDEN, haz SIMÉTRICO, sin placa de fondo**: la bandeja **ya está llena** de facturas desordenadas en el frame 0 (montón inclinado/solapado = caos) → DocuSense las **ingiere** por las 2 líneas que se encienden, **enderezándolas** → salen clasificadas y **divergen** a **2 carpetas macOS en blanco** «Compras·Ventas» (pulso + ✓) → al vaciarse, **entra un lote nuevo deslizándose desde la izquierda** que la rellena = reposo del frame 0 | ✅ |
+| 1.2 | `ModInvoices` | `M1Invoices.tsx` | M1 | `flow` + `document-pdf/xlx/csv` | **arco CAOS→ORDEN, haz SIMÉTRICO**: flujo continuo de facturas que entran por las 2 ramas izquierdas → DocuSense las **ingiere** por las líneas que se encienden, **enderezándolas** → salen clasificadas y **divergen** a **2 carpetas macOS en blanco** «Compras·Ventas» (pulso + ✓). **Bandeja de entrada VIVA**: el ciclo de vida de cada factura empieza con una fase `stack` — aparece por DEBAJO en el origen de la rama, asciende en la pila (`RISE`) y la de la cima se despega hacia DocuSense; con `LIFE == DUR` hay siempre 2-3 docs ascendiendo a distintas alturas → la línea nace de un montón vivo, nunca «del aire» NI estático (Iván: una pila fija «se ve artificial»). **DocuSense sobre placa neumórfica** (`DocuSensePlate`, `elevation`) → el icono de marca es transparente y el doc en proceso asomaba por debajo; la placa lo oculta | ✅ |
 | 1.3 | `ModStock` | `M1Stock.tsx` | M1 | `uptime` | **3 beats, sin placa de fondo, estático** (`breathe={false}`): tarjeta de stock + `MetricBar` se agota verde→rojo → la **placa «módulo en funcionamiento»** (`OperatingModuleTile`·Heartbeat, "Reponiendo stock") **aparece** (fade-in)→abre→cierra→**desaparece** (fade-out) → rellena a lleno + ✓ | ✅ |
 | 1.4 | `ModTickets` | `M1Tickets.tsx` | M1 | `kanban` | **3 actos, sin placa de fondo (180 f)**: (1) CAOS — un montón de tickets cae sobre un **Kanban real** (cols Alta/Media/Baja, flat) y se amontona SIN orden (solapados/rotados, sin prioridad); (2) caídos todos, la placa **`OperatingModuleTile`** de **Smart Process** APARECE (fade-in, cerrada), se abre («Priorizando tickets») + barrido que asigna prioridad (franja+chip); (3) ORDEN — las cards se enderezan a su columna; ✓ «resuelto» + la placa cierra y DESAPARECE (fade-out) → tablero vacío = frame 0. **Cards estándar (sin bisel)** | ✅ |
-| 1.5 | `ModCart` | `M1Cart.tsx` | M1 | `payment` | **3 momentos (150f), sin recuadro de fondo**: ABANDONO (checkout Email+tarjeta+CVV apagado/gris + **notificación** «Compra sin terminar · 48,90 €» abajo, no el sello atravesado) → EJECUCIÓN (placa **`OperatingModuleTile`**·Action Script «Recuperando carrito» + shimmer rellena los campos) → PAGO (botón→KIT_BLUE→«✓ Pagado», ✓ **inline** en el botón) → relevo a carrito nuevo gris | ✅ |
+| 1.5 | `ModCart` | `M1Cart.tsx` | M1 | `payment` | **3 momentos (150f), sin recuadro de fondo**: ABANDONO (checkout Email+tarjeta+CVV apagado/gris + **notificación** «Compra sin terminar · 48,90 €» abajo, no el sello atravesado) → EJECUCIÓN (placa **`OperatingModuleTile`**·Action Script «Recuperando carrito» + shimmer rellena los campos) → PAGO (botón→KIT_BLUE→«✓ Pagado», ✓ **inline** en el botón) → relevo a carrito nuevo gris. **La tarjeta-checkout es NEUMÓRFICA** (`elevation` raised, mismo lenguaje que la notificación/botón): sin ring de contorno ni esquina sup-der biselada — NO usa `TailarkCard` (Iván: «fuera el borde negro y el radius grande») | ✅ |
 | 2.1 | `ModOnboarding` | `M2Onboarding.tsx` | M2 | `actionnable` (firma) | **NO es loop** (excepción §2): narrativa de 4 beats encadenados con cross-fades — FIRMA (porte Tailark `actionnable` «Signatures Approved», la firma se dibuja) → EJECUTA (`OperatingModuleTile`·Action Script «Dando de alta a María») → STEPS (`NeoReasoning`, el «3.er clip» de Accounting) → CONFIRMA (✓ «Alta completada» + pasos en verde). Loop anterior en `M2Onboarding.ringloop.bak` | ✅ |
 | 2.2 | `ModSaleChain` | `M2SaleChain.tsx` | M2 | `workflow` + `currency` | árbol RAMIFICADO POS→Inventario→{Compra ‖ Factura→Cliente}; moneda € dispara, dos pulsos paralelos tras Inventario, retorno lateral al POS | ✅ |
 | 2.3 | `ModDunning` | `M2DunningVideo.tsx` (3 actos) | M2 | `invoice` | **mini-película de 3 actos (NO loop)**: ① la factura con los **días corriendo** «Vence en 5 días»→«Vencida hace 8 días» + sello **VENCIDA** al agotar el plazo → ② `OperatingModuleTile` (Action Script) «Reclamando el pago» + **aviso al cliente** (sobre vuela al nodo Cliente, 🔔 + ✓) → ③ la **misma** factura, **PAGADO** (verde + ✓ + onda). Tarjeta = **placa neumórfica limpia** (sin marco rojo externo, sin ring Tailark) compartida en `dunningInvoice.tsx`; actos sueltos `ModDunningOverdue/Run/Paid` | ✅ ⚠️ |
@@ -121,8 +121,9 @@ la duración distinta no rompe la uniformidad.
 
 ## 3. Tono y lenguaje visual (del brief)
 
-- **Estética:** fondo blanco, **neumorfismo**, «cuadrados», motion graphics, UIs
-  abstractas y «mensajitos». **NUNCA capturas reales.**
+- **Estética:** fondo **PLANO casi blanco `#F4F4FA`** (`CANVAS_BG` en `loopKit`; sin
+  degradado radial ni viñeta — pedido por Iván), **neumorfismo**, «cuadrados», motion
+  graphics, UIs abstractas y «mensajitos». **NUNCA capturas reales.**
 - **Tono:** friendly y desenfadado — *«esto es lo fácil, te quita marrones»*.
   Aliviado, no épico. Sin sobrepromesa (nada de «100x»). Cabe la imperfección
   relatable (un *«uff, hecho»*, un ✓ verde con chispa).
@@ -150,8 +151,10 @@ Importa **todo** desde `'./loopKit'`. No reimplementes lo que ya está.
 → Pt` (punto a lo largo de una polilínea por arc-length).
 
 **Componentes:**
-- `<LoopStage dur breathe? vignette?>` — escenario neumórfico común + fuentes +
-  respiro de cámara periódico. **Envuelve siempre tu escena en él.**
+- `<LoopStage dur breathe? vignette?>` — escenario neumórfico común + fuentes. Fondo
+  **plano `CANVAS_BG`**; `breathe` y `vignette` default **false** — Iván pidió eliminar
+  el «floating» (respiro de cámara) y la viñeta en TODOS los module-loops: todo
+  **estático**. Quedan como opciones apagadas. **Envuelve siempre tu escena en él.**
 - `<NeoTile size x? y? radius? depth? distance? blur? press? accent? accentAmount?
   scale? opacity?>` — placa cuadrada (el «cuadro»/nodo). `accent`+`accentAmount` la
   tiñen suave sin glow. Con `x,y` se ancla centrada; sin ellos, inline.

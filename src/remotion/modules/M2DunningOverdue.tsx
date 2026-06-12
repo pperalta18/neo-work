@@ -17,12 +17,12 @@
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { Fonts } from '../fonts';
 import {
-  lightTheme,
   CENTER,
   clamp01,
   lerp,
   smoother,
   TEXT_FONT,
+  CANVAS_BG,
 } from './loopKit';
 import { DunningInvoiceCard, DUNNING_CARD_W, DUNNING_CARD_H, Stamp, dueLabel } from './dunningInvoice';
 
@@ -74,7 +74,7 @@ export const M2DunningOverdueScene: React.FC = () => {
   return (
     <AbsoluteFill
       style={{
-        background: `radial-gradient(circle at 50% 47%, #fbfbff, ${lightTheme.surface} 58%, #e9eaf2)`,
+        background: CANVAS_BG,
         fontFamily: TEXT_FONT,
         overflow: 'hidden',
       }}

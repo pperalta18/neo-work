@@ -43,6 +43,8 @@ export const FPS = 30;
 /** Lienzo CUADRADO: encuadra «un objeto / un sistema» y se recorta a cualquier ratio. */
 export const STAGE = 1080;
 export const CENTER = STAGE / 2;
+/** Fondo de lienzo: color PLANO casi blanco (sin degradado ni viñeta). Pedido por Iván. */
+export const CANVAS_BG = '#F4F4FA';
 /** Duración canónica de cada módulo (loop perfecto). Mantenerlas para que el selector sea uniforme. */
 export const M1_DURATION = 120; // 4.0 s — Módulo 1 (tareas cortas, ~3–5 s). Div: 2·3·4·5·6·8·10·12·15·20·24·30·40
 export const M2_DURATION = 168; // 5.6 s — Módulo 2 (cadenas, ~5–6 s). Muy divisible (2·3·4·6·7·8·12·14·21·24·28) → vueltas/sub-ciclos enteros
@@ -176,11 +178,12 @@ export function pointAt(pts: Pt[], u: number, closed = false): Pt {
 export const LoopStage: React.FC<{
   dur: number;
   children: ReactNode;
-  /** respiro de cámara muy leve (escala/translate periódicos). Default true. */
+  /** respiro de cámara muy leve (escala/translate periódicos). Default false
+   *  (Iván pidió eliminar el «floating» en TODOS los module-loops → todo estático). */
   breathe?: boolean;
-  /** viñeta de foco. Default true. */
+  /** viñeta de foco. Default false (fondo plano pedido por Iván). */
   vignette?: boolean;
-}> = ({ dur, children, breathe = true, vignette = true }) => {
+}> = ({ dur, children, breathe = false, vignette = false }) => {
   const { ca } = useLoop(dur);
   const scale = breathe ? 1 + 0.01 * (1 - Math.cos(ca)) * 0.5 : 1;
   const camX = breathe ? Math.sin(ca) * 4 : 0;
@@ -188,7 +191,7 @@ export const LoopStage: React.FC<{
   return (
     <AbsoluteFill
       style={{
-        background: `radial-gradient(circle at 50% 47%, #fbfbff, ${lightTheme.surface} 58%, #e9eaf2)`,
+        background: CANVAS_BG,
         fontFamily: TEXT_FONT,
         overflow: 'hidden',
       }}

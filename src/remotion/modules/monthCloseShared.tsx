@@ -33,6 +33,7 @@ import {
   lerp,
   smooth,
   mix,
+  CANVAS_BG,
   type Pt,
 } from './loopKit';
 import { Fonts } from '../fonts';
@@ -103,7 +104,7 @@ function chipOut(s: Source): Pt {
 export const MonthBg: React.FC<{ children: ReactNode; style?: CSSProperties }> = ({ children, style }) => (
   <AbsoluteFill
     style={{
-      background: `radial-gradient(circle at 50% 47%, #fbfbff, ${lightTheme.surface} 58%, #e9eaf2)`,
+      background: CANVAS_BG,
       fontFamily: TEXT_FONT,
       overflow: 'hidden',
       ...style,
@@ -111,8 +112,6 @@ export const MonthBg: React.FC<{ children: ReactNode; style?: CSSProperties }> =
   >
     <Fonts />
     {children}
-    {/* viñeta neutra muy sutil, como en LoopStage */}
-    <AbsoluteFill style={{ background: 'radial-gradient(circle at 50% 47%, transparent 60%, rgba(120,134,160,0.10) 100%)', pointerEvents: 'none' }} />
   </AbsoluteFill>
 );
 

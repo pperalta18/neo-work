@@ -16,11 +16,14 @@
  * (registrada como `ModAbsencesLoop` en `Modulos-V1`).
  */
 
+import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { TransitionSeries, linearTiming } from '@remotion/transitions';
 import { fade } from '@remotion/transitions/fade';
+import { clamp01, smoother } from './loopKit';
 import { M1AbsencesRequestsScene, ABS_REQUESTS_DURATION } from './M1AbsencesRequests';
 import { M1AbsencesProcessScene, ABS_PROCESS_DURATION } from './M1AbsencesProcess';
 import { M1AbsencesSummaryScene, ABS_SUMMARY_DURATION } from './M1AbsencesSummary';
+import { AbsBg } from './absencesShared';
 
 /** Solape de cada fundido entre actos (frames @30fps). */
 const TRANSITION = 8;
@@ -29,27 +32,46 @@ const TRANSITION = 8;
 export const M1_ABSENCES_DURATION =
   ABS_REQUESTS_DURATION + ABS_PROCESS_DURATION + ABS_SUMMARY_DURATION - 2 * TRANSITION;
 
+/** Fundido de salida al cerrar: el contenido se disuelve hacia el lienzo limpio. */
+const FADE_OUT = 16;
+
 const crossFade = () => (
   <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: TRANSITION })} />
 );
 
+/**
+ * Capa de cierre: el MISMO fondo (`AbsBg`) se opaca encima del último acto en los
+ * últimos {@link FADE_OUT} frames → el clip ya no corta en seco, se funde al lienzo
+ * (simétrico al fade-in de entrada). Solo afecta al vídeo combinado.
+ */
+const ClosingFade: React.FC = () => {
+  const frame = useCurrentFrame();
+  const o = smoother(clamp01((frame - (M1_ABSENCES_DURATION - FADE_OUT)) / FADE_OUT));
+  if (o <= 0) return null;
+  return <AbsBg style={{ opacity: o, pointerEvents: 'none' }}>{null}</AbsBg>;
+};
+
 export const M1AbsencesScene: React.FC = () => (
-  <TransitionSeries>
-    {/* Acto 1 — el montón de peticiones */}
-    <TransitionSeries.Sequence durationInFrames={ABS_REQUESTS_DURATION}>
-      <M1AbsencesRequestsScene />
-    </TransitionSeries.Sequence>
-    {crossFade()}
+  <AbsoluteFill>
+    <TransitionSeries>
+      {/* Acto 1 — el montón de peticiones */}
+      <TransitionSeries.Sequence durationInFrames={ABS_REQUESTS_DURATION}>
+        <M1AbsencesRequestsScene />
+      </TransitionSeries.Sequence>
+      {crossFade()}
 
-    {/* Acto 2 — Action Runner aprobando */}
-    <TransitionSeries.Sequence durationInFrames={ABS_PROCESS_DURATION}>
-      <M1AbsencesProcessScene />
-    </TransitionSeries.Sequence>
-    {crossFade()}
+      {/* Acto 2 — Action Runner aprobando */}
+      <TransitionSeries.Sequence durationInFrames={ABS_PROCESS_DURATION}>
+        <M1AbsencesProcessScene />
+      </TransitionSeries.Sequence>
+      {crossFade()}
 
-    {/* Acto 3 — el marcador */}
-    <TransitionSeries.Sequence durationInFrames={ABS_SUMMARY_DURATION}>
-      <M1AbsencesSummaryScene />
-    </TransitionSeries.Sequence>
-  </TransitionSeries>
+      {/* Acto 3 — el marcador */}
+      <TransitionSeries.Sequence durationInFrames={ABS_SUMMARY_DURATION}>
+        <M1AbsencesSummaryScene />
+      </TransitionSeries.Sequence>
+    </TransitionSeries>
+
+    <ClosingFade />
+  </AbsoluteFill>
 );

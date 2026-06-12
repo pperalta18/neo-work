@@ -14,7 +14,7 @@
 
 import type { CSSProperties, ReactNode } from 'react';
 import { AbsoluteFill } from 'remotion';
-import { AvatarChip, BRAND, lightTheme, elevation, TEXT_FONT, mix } from './loopKit';
+import { AvatarChip, BRAND, lightTheme, elevation, TEXT_FONT, mix, CANVAS_BG } from './loopKit';
 import { Fonts } from '../fonts';
 
 export type Verdict = 'approved' | 'review' | 'rejected';
@@ -50,7 +50,7 @@ export const CARD_W = 560;
 export const AbsBg: React.FC<{ children: ReactNode; style?: CSSProperties }> = ({ children, style }) => (
   <AbsoluteFill
     style={{
-      background: `radial-gradient(circle at 50% 47%, #fbfbff, ${lightTheme.surface} 58%, #e9eaf2)`,
+      background: CANVAS_BG,
       fontFamily: TEXT_FONT,
       overflow: 'hidden',
       ...style,

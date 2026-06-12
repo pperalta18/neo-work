@@ -30,6 +30,7 @@ import {
   CENTER,
   KIT_BLUE,
   lightTheme,
+  elevation,
   TEXT_FONT,
   clamp01,
   lerp,
@@ -56,6 +57,7 @@ const CK = 150; // tirador de las curvas (mismo a ambos lados → espejo)
 const FOLDER_W = 150;
 const DOC_W = 104;
 const DOC_RATIO = 1.3;
+const PLATE = Math.round(ICON * 1.16); // placa neumórfica bajo DocuSense (tapa el doc en proceso)
 
 const cubicAt = (p: Cubic, u: number): Pt => {
   const t = clamp01(u);
@@ -69,8 +71,6 @@ const pathD = (p: Cubic) => `M ${p[0].x} ${p[0].y} C ${p[1].x} ${p[1].y} ${p[2].
 const inScaffold = (row: number): Cubic => [{ x: PX, y: ROW_Y[row] }, { x: PX + CK, y: ROW_Y[row] }, { x: DS.x - CK, y: DS.y }, DS];
 /** Línea de SALIDA (scaffold): del hub a la carpeta, espejo de la de entrada. */
 const outBez = (row: number): Cubic => [DS, { x: DS.x + CK, y: DS.y }, { x: FX - CK, y: ROW_Y[row] }, { x: FX, y: ROW_Y[row] }];
-/** Trayectoria del doc al ENTRAR: nace fuera del marco (izq) y recorre la rama hasta el hub. */
-const docInBez = (row: number): Cubic => [{ x: -DOC_W, y: ROW_Y[row] }, { x: PX + CK, y: ROW_Y[row] }, { x: DS.x - CK, y: DS.y }, DS];
 
 const IN_SCAFFOLD: Cubic[] = ROW_Y.map((_, r) => inScaffold(r));
 const OUT_SCAFFOLD: Cubic[] = ROW_Y.map((_, r) => outBez(r));
@@ -79,10 +79,15 @@ const OUT_SCAFFOLD: Cubic[] = ROW_Y.map((_, r) => outBez(r));
 const KIND: DocKind[] = ['pdf', 'xlx', 'csv'];
 const K = 8; // facturas por loop (120/8 = 15 f de separación)
 const SPACING = DUR / K; // 15 f
-const TIN = 48; // entrada (fuera → hub). > separación por rama (30) → ramas NUNCA vacías
-const PROC = 8; // dentro de DocuSense (oculto tras el icono)
-const TOUT = 30; // salida (hub → carpeta)
-const LIFE = TIN + PROC + TOUT; // 86 f < DUR → cada doc nace y muere dentro del periodo
+// ciclo de vida de cada factura: BANDEJA (asciende en la pila) → ENTRA (cima → hub) →
+// PROCESO → SALE. Como LIFE == DUR, hay un flujo CONTINUO: la bandeja nunca se vacía
+// (varios docs ascendiendo a distintas alturas) y nada queda estático en el origen.
+const STACK = 64; // en la bandeja: aparece por debajo y asciende hasta la cima (origen de la línea)
+const RISE = 88; // px que asciende un doc dentro de la bandeja
+const TIN = 26; // entrada (cima de la pila → hub)
+const PROC = 8; // dentro de DocuSense (oculto tras la placa)
+const TOUT = 22; // salida (hub → carpeta)
+const LIFE = STACK + TIN + PROC + TOUT; // 120 = DUR → flujo continuo, sin huecos ni reposo
 const DEST = [0, 1, 1, 0, 0, 1, 1, 0] as const; // carpeta destino por factura (4 Compras / 4 Ventas)
 
 const TRIPS = Array.from({ length: K }, (_, k) => ({
@@ -94,16 +99,28 @@ const TRIPS = Array.from({ length: K }, (_, k) => ({
   tilt: (hash(k * 2.3 + 0.7) - 0.5) * 30, // ±15° al entrar (papel torcido) → se endereza
 }));
 
-type Phase = 'in' | 'proc' | 'out';
+type Phase = 'stack' | 'in' | 'proc' | 'out';
 type Doc = { x: number; y: number; scale: number; rot: number; opacity: number; phase: Phase; uIn: number; uOut: number };
 function docState(life: number, t: (typeof TRIPS)[number]): Doc {
-  if (life <= TIN) {
-    const u = life / TIN; // LINEAL → velocidad ~constante → solape garantizado (sin huecos)
-    const p = cubicAt(docInBez(t.lane), u);
-    return { x: p.x, y: p.y, scale: lerp(0.92, 1, smooth(u)), rot: lerp(t.tilt, 0, clamp01(u / 0.7)), opacity: clamp01(life / 6), phase: 'in', uIn: u };
+  // 1) BANDEJA: la factura aparece por DEBAJO y asciende hasta la cima (origen de la
+  //    línea). Con varios docs desfasados → una pila viva que avanza, nada estático.
+  if (life <= STACK) {
+    const u = life / STACK; // 0 base → 1 cima
+    const dx = (hash(t.k * 1.7 + 0.3) - 0.5) * 34; // leve abanico horizontal (no perfecto)
+    const y = lerp(ROW_Y[t.lane] + RISE, ROW_Y[t.lane], smooth(u));
+    return { x: PX + dx, y, scale: lerp(0.9, 1, u), rot: lerp(t.tilt, 0, clamp01(u / 0.85)), opacity: clamp01(life / 8), phase: 'stack', uIn: 0, uOut: 0 };
   }
-  if (life <= TIN + PROC) return { x: DS.x, y: DS.y, scale: 0.96, rot: 0, opacity: 1, phase: 'proc', uIn: 0, uOut: 0 };
-  const u = (life - TIN - PROC) / TOUT;
+  // 2) ENTRA: se despega de la cima y recorre la rama hasta DocuSense.
+  const li = life - STACK;
+  if (li <= TIN) {
+    const u = li / TIN; // LINEAL → velocidad ~constante
+    const p = cubicAt(inScaffold(t.lane), u);
+    return { x: p.x, y: p.y, scale: lerp(1, 0.96, smooth(u)), rot: 0, opacity: 1, phase: 'in', uIn: u, uOut: 0 };
+  }
+  // 3) PROCESO dentro de DocuSense (oculto tras la placa).
+  if (li <= TIN + PROC) return { x: DS.x, y: DS.y, scale: 0.96, rot: 0, opacity: 1, phase: 'proc', uIn: 0, uOut: 0 };
+  // 4) SALE clasificada a su carpeta.
+  const u = (li - TIN - PROC) / TOUT;
   const p = cubicAt(outBez(t.dest), smoother(u));
   return { x: p.x, y: p.y, scale: lerp(0.96, 0.34, smooth(u)), rot: 0, opacity: u > 0.82 ? clamp01((1 - u) / 0.18) : 1, phase: 'out', uOut: u, uIn: 0 };
 }
@@ -123,6 +140,7 @@ export const M1InvoicesScene: React.FC = () => {
   let proc = 0;
   docs.forEach(({ t, doc, life }) => {
     if (!doc || life == null) return;
+    if (doc.phase === 'stack') return; // en la bandeja: aún no toca la línea ni el hub
     if (doc.phase === 'in') {
       inLit[t.lane] = Math.max(inLit[t.lane], Math.sin(clamp01(doc.uIn) * Math.PI));
       proc = Math.max(proc, smooth(doc.uIn));
@@ -157,8 +175,12 @@ export const M1InvoicesScene: React.FC = () => {
         <FolderSlot key={i} id={i} x={FX} y={y} label={FOLDER_LABELS[i]} lit={flash[i]} />
       ))}
 
-      {/* ── docs entrando / procesándose (detrás de DocuSense) ── */}
+      {/* ── docs en la bandeja / entrando / procesándose (detrás de DocuSense) ── */}
       {behind.map(({ t, doc }) => (doc ? <FlyingDoc key={t.k} doc={doc} kind={t.kind} /> : null))}
+
+      {/* ── placa neumórfica BAJO DocuSense: el icono de marca es transparente y el doc
+            en proceso asomaba por debajo; esta placa opaca lo oculta (lo «absorbe») ── */}
+      <DocuSensePlate active={iconActive} />
 
       {/* ── DocuSense lee/clasifica (SIEMPRE por encima del doc que tiene dentro) ── */}
       <ModuleIcon name="docusense" size={ICON} x={DS.x} y={DS.y} active={iconActive} />
@@ -206,6 +228,24 @@ const Flowline: React.FC<{ d: string; lit: number }> = ({ d, lit }) => {
     </g>
   );
 };
+
+// ── placa neumórfica de fondo para DocuSense (oculta el doc que procesa por debajo) ─
+const DocuSensePlate: React.FC<{ active: number }> = ({ active }) => (
+  <div style={{ position: 'absolute', left: DS.x, top: DS.y, width: 0, height: 0 }}>
+    <div
+      style={{
+        position: 'absolute',
+        left: -PLATE / 2,
+        top: -PLATE / 2,
+        width: PLATE,
+        height: PLATE,
+        transform: `scale(${1 + 0.04 * clamp01(active)})`,
+        transformOrigin: '50% 50%',
+        ...elevation(lightTheme, { depth: 'raised', distance: 12, blur: 30, radius: Math.round(PLATE * 0.3) }),
+      }}
+    />
+  </div>
+);
 
 // ── documento en vuelo: DocChip (Tailark) ─────────────────────────────────────────
 const FlyingDoc: React.FC<{ doc: Doc; kind: DocKind }> = ({ doc, kind }) => (

@@ -17,11 +17,14 @@
  * anterior se conserva en `M2MonthCloseLoop.tsx` (folder Modulos-V1) para comparar.
  */
 
+import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { TransitionSeries, linearTiming } from '@remotion/transitions';
 import { fade } from '@remotion/transitions/fade';
+import { clamp01, smoother } from './loopKit';
 import { M2MonthCloseLedgerScene, MC_LEDGER_DURATION } from './M2MonthCloseLedger';
 import { M2MonthCloseRunScene, MC_RUN_DURATION } from './M2MonthCloseRun';
 import { M2MonthCloseSummaryScene, MC_SUMMARY_DURATION } from './M2MonthCloseSummary';
+import { MonthBg } from './monthCloseShared';
 
 /** Solapamiento de cada fade entre actos (frames @30fps). */
 const TRANSITION = 8;
@@ -30,27 +33,46 @@ const TRANSITION = 8;
 export const M2_MONTHCLOSE_DURATION =
   MC_LEDGER_DURATION + MC_RUN_DURATION + MC_SUMMARY_DURATION - 2 * TRANSITION;
 
+/** Fundido de salida al cerrar: el resumen se disuelve hacia el lienzo limpio. */
+const FADE_OUT = 16;
+
 const crossFade = () => (
   <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: TRANSITION })} />
 );
 
+/**
+ * Capa de cierre: el MISMO fondo (`MonthBg`) se opaca encima del último acto en los
+ * últimos {@link FADE_OUT} frames → el clip ya no corta en seco, se funde al lienzo
+ * (simétrico al fade-in de entrada). Solo afecta al vídeo combinado.
+ */
+const ClosingFade: React.FC = () => {
+  const frame = useCurrentFrame();
+  const o = smoother(clamp01((frame - (M2_MONTHCLOSE_DURATION - FADE_OUT)) / FADE_OUT));
+  if (o <= 0) return null;
+  return <MonthBg style={{ opacity: o, pointerEvents: 'none' }}>{null}</MonthBg>;
+};
+
 export const M2MonthCloseVideo: React.FC = () => (
-  <TransitionSeries>
-    {/* Acto 1 — el libro diario se llena */}
-    <TransitionSeries.Sequence durationInFrames={MC_LEDGER_DURATION}>
-      <M2MonthCloseLedgerScene />
-    </TransitionSeries.Sequence>
-    {crossFade()}
+  <AbsoluteFill>
+    <TransitionSeries>
+      {/* Acto 1 — el libro diario se llena */}
+      <TransitionSeries.Sequence durationInFrames={MC_LEDGER_DURATION}>
+        <M2MonthCloseLedgerScene />
+      </TransitionSeries.Sequence>
+      {crossFade()}
 
-    {/* Acto 2 — el módulo cierra el mes */}
-    <TransitionSeries.Sequence durationInFrames={MC_RUN_DURATION}>
-      <M2MonthCloseRunScene />
-    </TransitionSeries.Sequence>
-    {crossFade()}
+      {/* Acto 2 — el módulo cierra el mes */}
+      <TransitionSeries.Sequence durationInFrames={MC_RUN_DURATION}>
+        <M2MonthCloseRunScene />
+      </TransitionSeries.Sequence>
+      {crossFade()}
 
-    {/* Acto 3 — el resumen, cerrado */}
-    <TransitionSeries.Sequence durationInFrames={MC_SUMMARY_DURATION}>
-      <M2MonthCloseSummaryScene />
-    </TransitionSeries.Sequence>
-  </TransitionSeries>
+      {/* Acto 3 — el resumen, cerrado */}
+      <TransitionSeries.Sequence durationInFrames={MC_SUMMARY_DURATION}>
+        <M2MonthCloseSummaryScene />
+      </TransitionSeries.Sequence>
+    </TransitionSeries>
+
+    <ClosingFade />
+  </AbsoluteFill>
 );
