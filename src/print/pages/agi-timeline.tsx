@@ -10,7 +10,7 @@ import type { PrintPageProps } from '../types'
  * the base and the collective histogram emerges in negative, in neutral ink.
  *
  * Composition (Swiss / exhibition register, inherited from `exhibition-wall-panel`):
- * monochrome INK on warm PAPER, with a single accent — KIT_BLUE used in exactly
+ * monochrome INK on clean white PAPER, with a single accent — KIT_BLUE used in exactly
  * two places that tell one story ("AGI / now"): the word «AGI» in the title, and
  * the present (2026 / HOY) origin of the line. Three horizontal bands:
  *   [ left editorial block ] · [ empty seam ] · [ 11 open lanes + horizon ]
@@ -20,7 +20,7 @@ import type { PrintPageProps } from '../types'
  * Designed via the editorial-layout workflow (3 concepts → judge panel → synthesis).
  */
 
-const PAPER = '#f4f1ea'
+const PAPER = '#ffffff'
 const INK = '#1a1a1a'
 
 /* ── canvas grid (mm) — 6000 × 2500, origin top-left ───────────────────────── */

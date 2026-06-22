@@ -181,6 +181,64 @@ this is the *why/what*, `wall-graphics.md` + the wall registry is the *where*.
 
 ---
 
+## [AiKit Live Animations (Producto + Yusta)](./aikit-live-animations.md)
+
+Remotion compositions for the AiKit Live event (2026-06-17), projected live from
+Remotion Studio: presentación de Producto (Prod01Programa robot de carne blanda /
+Prod02Delegacion / Prod03Costumbre /ba/ / Prod04Colmena reproducción organismo /
+Prod05CierreFlujos) + apoyos charla Yusta (procesador de información, programar
+humanos, economics, entorno humano→herramienta, chispitas sparkles, entorno
+operativo IA, la curva, oficina cenital plano vivo). Standalone support pieces:
+PresupuestoManual (Vía Crucis manual, flat/text-free), FlowBuilder (Zapier a mano,
+self-assembling), PresupuestoChat (con IA), TejidoVivo (organismo de micro-procesos).
+Asset inventory with absorb map over the existing scene library, shared kit
+`src/remotion/aikit/` with a **script + component** architecture (ChatPanel,
+AppWindow, ScriptedCursor, ProgramRunner, BaGraph, NotificationToast, WorkspaceTile,
+Spreadsheet/Inbox/CalendarMonth/LineChart/StatTile/Invoice content widgets,
+cameraScript rig, KitGallery), placeholder names, copy refinado, production status
+(registered vs planned), deterministic frame-driven.
+
+**Source**: `src/remotion/`, `src/remotion/aikit/`, `specs/aikit-live-animations.md`
+
+---
+
+## [3D Stacked-Process Generator (GridStack3D)](./grid-3d-stack.md)
+
+Stack several process-grids as 3D planes in an exploded iso fan to read "many
+processes at once" in depth. **CSS-3D (perspective / preserve-3d / translate3d),
+NOT three.js and NOT the abandoned SDF/raymarch plan** — so the real neumorphic
+plates render pixel-exact. Each plane runs its own StoreFlow-style emergence
+(`ProcessGrid`, generalised from any `PathSpec`) on a front→back depth wave; depth
+reads from relief + atmospheric rack-focus (surface-colour haze veil + blur),
+never coloured glows (only the goal is blue). Hybrid: an interactive **studio**
+(`grid3d.html` — orbit/zoom, plane manager add/clone/reorder/delete, ✎ opens the
+grid Editor, staging sliders, play/scrub, "Copiar doc") + a deterministic Remotion
+composition (`GridStack3D`); one `GridStackDoc` JSON drives both. All timeline /
+layout / camera math is a pure, unit-tested module (`gridStack3d.ts`).
+
+**Source**: `src/grid3d/`, `grid3d.html`, `specs/grid-3d-stack.md`
+
+---
+
+## [Globo Vivo (GloboVivo)](./globo-vivo.md)
+
+Escena hero AAA Remotion: **globo terráqueo fotorrealista** (NASA Blue Marble) que
+flota en estudio claro neumórfico y al que una **textura de tejido vivo** envuelve
+y **reemplaza** la superficie creciendo geodésicamente desde un **punto semilla**,
+hasta dejar un **orbe-grid blanco vasto** con procesos minúsculos incesantes en
+**bucle**. **Esfera 3D real** (three.js + r3f + drei + **@remotion/three**, no
+CSS-3D / no falsa esfera); el tejido se mapea como **CanvasTexture equirectangular**
+(atlas Canvas2D con sprites neumórficos FlowPlate pre-rasterizados) **mezclado**
+sobre la Tierra por una máscara de crecimiento. **Muchísimos procesos** (híbrido:
+curado "hero" + generador combinatorio sembrado, módulos × verbos × dominios).
+Cámara cinemática multi-beat (Tierra → colonización → orbe), determinista
+frame-driven, ~30s @1920×1080 30fps. Se aparta a propósito de la regla plana "sin
+glows" (fresnel/bloom/DoF/nubes/specular) conservando la identidad neumórfica del grid.
+
+**Source**: `src/remotion/GloboVivoVideo.tsx`, `src/remotion/globoVivoScript.ts`, `src/remotion/processLibrary.ts`, `specs/globo-vivo.md`, `public/globoVivo/`
+
+---
+
 ## [Editor](./editor.md)
 
 In-app editor, build route by clicking cells, edit step content (arrow/text/

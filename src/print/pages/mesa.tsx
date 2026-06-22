@@ -1,5 +1,5 @@
 import type { PrintPageProps } from '../types'
-import { Sheet, display, eyebrow, text, PAPER_WARM, INK, MUTED, BLUE } from './signage-kit'
+import { Sheet, display, eyebrow, text, PAPER, INK, MUTED, BLUE } from './signage-kit'
 
 /**
  * mesa — a dinner table numberer (A5 portrait, a tent card on the cloth). The huge
@@ -16,7 +16,7 @@ export function Mesa({ doc, geo }: PrintPageProps) {
   const caption = p.caption ?? 'Cena privada · Acto 003 · Contraste'
 
   return (
-    <Sheet geo={geo} paper={PAPER_WARM} justify="space-between" align="center">
+    <Sheet geo={geo} paper={PAPER} justify="space-between" align="center">
       <div style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: geo.mm(5), marginBottom: geo.mm(6) }}>
           <span style={{ width: geo.mm(5.5), height: geo.mm(5.5), background: BLUE, flex: '0 0 auto' }} />

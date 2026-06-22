@@ -104,7 +104,10 @@ export const CameraPan: React.FC<TextAnimProps> = ({ text, subtitle, palette = P
           // window around the frame the pan reaches it — generous OVERLAP so
           // siblings flow into one another rather than clumping.
           const n = Math.max(1, words.length);
-          const wf = n === 1 ? 0.5 : lerp(PAN_START, 0.5, i / (n - 1));
+          // A lone word has nowhere to pan, so it IS the hero: develop it from the
+          // start (sweepT→0 ⇒ start≈4) so it's buried huge & blurred and sharpens as
+          // the lens pulls out — instead of staying invisible until the move lands.
+          const wf = n === 1 ? PAN_START : lerp(PAN_START, 0.5, i / (n - 1));
           // invert the linear pan target to a normalized sweep time, then bias a
           // hair early so the word is already sharpening as the lens arrives.
           const sweepT = clamp01((wf - PAN_START) / (0.5 - PAN_START));

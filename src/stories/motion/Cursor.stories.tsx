@@ -12,7 +12,7 @@ const meta = {
   argTypes: {
     size: { control: { type: 'range', min: 16, max: 64, step: 1 } },
     stiffness: { control: { type: 'range', min: 0.05, max: 1, step: 0.05 } },
-    state: { control: 'inline-radio', options: [undefined, 'arrow', 'hand', 'text', 'grab', 'grabbing'] },
+    state: { control: 'inline-radio', options: [undefined, 'arrow', 'text', 'cell', 'crosshair', 'hand', 'grab', 'grabbing'] },
     followMouse: { control: 'boolean' },
   },
   args: { size: 26, followMouse: true, stiffness: 1 },
@@ -95,7 +95,7 @@ export const Default: Story = {
 /** All cursor shapes side by side. */
 export const States: Story = {
   render: () => {
-    const states: CursorState[] = ['arrow', 'hand', 'text', 'grab', 'grabbing']
+    const states: CursorState[] = ['arrow', 'text', 'cell', 'crosshair', 'hand', 'grab', 'grabbing']
     return (
       <div style={{ display: 'flex', gap: 18, fontFamily: font }}>
         {states.map((s) => (

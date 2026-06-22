@@ -175,9 +175,11 @@ const COMET_TIP: TipSeg[] = [
 /**
  * One self-drawing line. The permanent neutral "ink" is always revealed up to
  * the draw progress; the accent tip rides the moving front and lifts off once
- * the line completes (the "settle"), leaving just the hairline.
+ * the line completes (the "settle"), leaving just the hairline. Exported so other
+ * scenes can reuse the exact pen-traces-then-dries look (e.g. the unroll's
+ * grouping frame in {@link StoreUnfoldVideo}).
  */
-function Stroke({
+export function Stroke({
   frame,
   start,
   draw,

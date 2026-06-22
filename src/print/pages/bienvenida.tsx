@@ -1,5 +1,5 @@
 import type { PrintPageProps } from '../types'
-import { Sheet, Masthead, Footer, Rule, display, eyebrow, text, PAPER_WARM, INK, MUTED, BLUE } from './signage-kit'
+import { Sheet, Masthead, Footer, Rule, display, eyebrow, text, PAPER, INK, MUTED, BLUE } from './signage-kit'
 
 /**
  * bienvenida — the entrance welcome board (A1 portrait, read from several metres).
@@ -17,7 +17,7 @@ export function Bienvenida({ doc, geo }: PrintPageProps) {
   const year = p.year ?? '2026'
 
   return (
-    <Sheet geo={geo} paper={PAPER_WARM} justify="space-between">
+    <Sheet geo={geo} paper={PAPER} justify="space-between">
       {/* header — typographic locator strip (no logo: this is signage) */}
       <Masthead geo={geo} left="Cumbre a puerta cerrada" right="Alcalá de Henares · Madrid" />
 

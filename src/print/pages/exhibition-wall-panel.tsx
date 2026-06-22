@@ -7,13 +7,13 @@ import type { PrintPageProps } from '../types'
  * Swiss/International register: one huge Display title split across two lines, a quiet
  * near-black divider, a narrow credits rail on the left, a deliberate empty channel,
  * two flush-left body columns on the right, a footnote on the master left edge.
- * Monochrome ink on warm paper. Layout from the editorial-poster workflow synthesis.
+ * Monochrome ink on clean white paper. Layout from the editorial-poster workflow synthesis.
  *
  * Content is positioned in mm from the TRIM origin (a trim layer offset by the bleed),
  * type sized in points — so it reads correctly at print scale and survives any bleed.
  */
 
-const PAPER = '#f4f1ea'
+const PAPER = '#ffffff'
 const INK = '#1a1a1a'
 
 // Grid (mm) — A1 landscape 841×594, asymmetric 12-col.

@@ -1,5 +1,5 @@
 import type { PrintPageProps } from '../types'
-import { Sheet, Masthead, Footer, display, eyebrow, text, PAPER_WARM, INK, MUTED, BLUE } from './signage-kit'
+import { Sheet, Masthead, Footer, display, eyebrow, text, PAPER, INK, MUTED, BLUE } from './signage-kit'
 
 /**
  * plano — «Estás aquí» as an editorial journey (A2 landscape). Rather than invent a
@@ -39,7 +39,7 @@ export function Plano({ doc, geo }: PrintPageProps) {
   const lineW = geo.mm(0.8)
 
   return (
-    <Sheet geo={geo} paper={PAPER_WARM} justify="space-between">
+    <Sheet geo={geo} paper={PAPER} justify="space-between">
       <Masthead geo={geo} left={heading} right="Finca El Olivar" />
 
       <div style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -75,7 +75,7 @@ export function Plano({ doc, geo }: PrintPageProps) {
                     width: n.here ? hereR * 2 : dotR * 2,
                     height: n.here ? hereR * 2 : dotR * 2,
                     borderRadius: '50%',
-                    background: n.here ? BLUE : PAPER_WARM,
+                    background: n.here ? BLUE : PAPER,
                     border: n.here ? 'none' : `${geo.mm(1)}px solid ${INK}`,
                     boxSizing: 'border-box',
                   }}

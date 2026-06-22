@@ -1,11 +1,11 @@
 import type { PrintPageProps } from '../types'
-import { Sheet, Masthead, Footer, Rule, display, eyebrow, text, PAPER_WARM, INK, MUTED, BLUE } from './signage-kit'
+import { Sheet, Masthead, Footer, Rule, display, eyebrow, text, PAPER, INK, MUTED, BLUE } from './signage-kit'
 
 /**
  * acreditacion — the check-in desk sign (A2 portrait, read at the counter).
  * Title «Acreditación», three numbered steps for the guest, and a quiet note
  * about the pase. Hospitable and premium: the blue threads the step numerals so
- * the eye walks the sequence; everything else is ink on warm paper.
+ * the eye walks the sequence; everything else is ink on clean white paper.
  */
 
 type Step = { n: string; title: string; body: string }
@@ -24,7 +24,7 @@ export function Acreditacion({ doc, geo }: PrintPageProps) {
   const hours = p.hours ?? 'Apertura de puertas 17:00'
 
   return (
-    <Sheet geo={geo} paper={PAPER_WARM} justify="space-between">
+    <Sheet geo={geo} paper={PAPER} justify="space-between">
       <Masthead geo={geo} left="Recepción · Acceso" />
 
       <div style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>

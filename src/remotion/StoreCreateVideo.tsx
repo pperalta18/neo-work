@@ -81,7 +81,26 @@ const clampE = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const
 const clamp01 = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x)
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 
-export function StoreCreateVideo() {
+/** Copy is configurable so the same intro can front different builds
+ *  ("Crear tienda online · Usando Forge", "Crear Dashboard de pedidos ·
+ *  Usando herramienta", …). Defaults keep the standalone StoreCreate intact. */
+export type StoreCreateProps = {
+  /** Muted lead of the title pill. */
+  labelLead?: string
+  /** Strong subject of the title pill. */
+  labelStrong?: string
+  /** Muted lead of the payoff caption. */
+  captionLead?: string
+  /** Strong tool name in the payoff caption. */
+  captionStrong?: string
+}
+
+export function StoreCreateVideo({
+  labelLead = 'Crear ',
+  labelStrong = 'tienda online',
+  captionLead = 'Usando ',
+  captionStrong = 'Forge',
+}: StoreCreateProps = {}) {
   const frame = useCurrentFrame()
 
   // pill → full-frame morph
@@ -200,7 +219,7 @@ export function StoreCreateVideo() {
               style={{
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
-                maxWidth: (1 - textGone) * 420,
+                maxWidth: (1 - textGone) * 520,
                 marginLeft: (1 - textGone) * 14,
                 opacity: 1 - textGone,
                 fontFamily: TEXT_FONT,
@@ -209,8 +228,8 @@ export function StoreCreateVideo() {
                 letterSpacing: -0.4,
               }}
             >
-              <span style={{ color: theme.textMuted }}>Crear </span>
-              <span style={{ color: theme.textStrong }}>tienda online</span>
+              <span style={{ color: theme.textMuted }}>{labelLead}</span>
+              <span style={{ color: theme.textStrong }}>{labelStrong}</span>
             </div>
 
             {/* "Usando Forge" — rises in beneath the centred icon */}
@@ -229,8 +248,8 @@ export function StoreCreateVideo() {
                 letterSpacing: -0.2,
               }}
             >
-              <span style={{ color: theme.textMuted }}>Usando </span>
-              <span style={{ color: theme.textStrong }}>Forge</span>
+              <span style={{ color: theme.textMuted }}>{captionLead}</span>
+              <span style={{ color: theme.textStrong }}>{captionStrong}</span>
             </div>
           </div>
 

@@ -26,8 +26,28 @@ const INITIAL: PathSpec = {
 
 const sameCoord = (a: Coord, b: Coord) => a[0] === b[0] && a[1] === b[1]
 
-export function Editor({ theme }: { theme: NeoTheme }) {
-  const [spec, setSpec] = useState<PathSpec>(INITIAL)
+export function Editor({
+  theme,
+  value,
+  onChange,
+  onClose,
+}: {
+  theme: NeoTheme
+  /** Controlled spec. When provided (with `onChange`), the editor edits it in
+   *  place — that's how the 3D-stack studio edits each plane. Omit for the
+   *  standalone builder, which keeps its own state. */
+  value?: PathSpec
+  onChange?: (spec: PathSpec) => void
+  /** Show a "back" affordance in the header (studio: return to the stack). */
+  onClose?: () => void
+}) {
+  const [internal, setInternal] = useState<PathSpec>(value ?? INITIAL)
+  const spec = value ?? internal
+  const setSpec = (updater: PathSpec | ((s: PathSpec) => PathSpec)) => {
+    const next = typeof updater === 'function' ? (updater as (s: PathSpec) => PathSpec)(spec) : updater
+    if (onChange) onChange(next)
+    else setInternal(next)
+  }
   const [selected, setSelected] = useState<number | null>(null)
   const [revealedCount, setRevealedCount] = useState<number | undefined>(undefined)
   const timer = useRef<number | null>(null)
@@ -92,6 +112,11 @@ export function Editor({ theme }: { theme: NeoTheme }) {
     <div style={{ display: 'flex', height: '100vh', background: theme.surface }}>
       <aside style={panel}>
         <header>
+          {onClose ? (
+            <button style={{ ...ghostBtn, padding: '6px 10px', marginBottom: 8 }} onClick={onClose}>
+              ◀ volver al stack
+            </button>
+          ) : null}
           <h2 style={{ margin: 0, fontSize: 17, color: ink }}>Editor de conceptos</h2>
           <p style={hint}>
             Clic en una celda vacía para añadir un paso. Clic en un paso para editarlo.

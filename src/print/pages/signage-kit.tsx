@@ -20,7 +20,6 @@ import type { PrintGeometry } from '../geometry'
 
 /* ── palette ─────────────────────────────────────────────────────────────────── */
 export const PAPER = '#ffffff'
-export const PAPER_WARM = '#f4f1ea'
 export const INK = '#111114'
 export const INK_SOFT = '#1e1e20'
 export const MUTED = '#6c6c89'

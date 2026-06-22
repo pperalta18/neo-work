@@ -1,5 +1,5 @@
 import type { PrintPageProps } from '../types'
-import { Sheet, Masthead, Footer, Picto, Rule, display, eyebrow, text, PAPER_WARM, MUTED, RED } from './signage-kit'
+import { Sheet, Masthead, Footer, Picto, Rule, display, eyebrow, text, PAPER, MUTED, RED } from './signage-kit'
 
 /**
  * acceso-restringido — the private / restricted access sign (A3 portrait). Protects
@@ -19,7 +19,7 @@ export function AccesoRestringido({ doc, geo }: PrintPageProps) {
   const tag = p.tag ?? 'Zona reservada'
 
   return (
-    <Sheet geo={geo} paper={PAPER_WARM} justify="space-between">
+    <Sheet geo={geo} paper={PAPER} justify="space-between">
       <Masthead geo={geo} left={<span style={eyebrow(geo, 11, RED)}>{tag}</span>} />
 
       <div style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>

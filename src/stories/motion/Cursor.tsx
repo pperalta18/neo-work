@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import Lottie from 'lottie-react'
 
-export type CursorState = 'arrow' | 'hand' | 'text' | 'grab' | 'grabbing'
+export type CursorState = 'arrow' | 'text' | 'cell' | 'crosshair' | 'hand' | 'grab' | 'grabbing'
 
 /**
  * Lottie assets for the cursor. Any provided state replaces its SVG glyph with
@@ -236,6 +236,31 @@ function CursorGlyph({
           strokeLinecap="round"
         />
         <path d="M6 2v20M3 2h6M3 22h6" stroke="#fff" strokeWidth="0.6" fill="none" strokeLinecap="round" />
+      </svg>
+    )
+  }
+
+  // cell — the thick white "+" a spreadsheet shows over its cells. Hotspot centre.
+  if (state === 'cell') {
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" style={{ transform: 'translate(-50%, -50%)' }}>
+        <path
+          d="M10 3 H14 V10 H21 V14 H14 V21 H10 V14 H3 V10 H10 Z"
+          fill="#fff"
+          stroke="#1e1e20"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+        />
+      </svg>
+    )
+  }
+
+  // crosshair — the thin "+" for dragging a fill-handle. Hotspot centre, white halo.
+  if (state === 'crosshair') {
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" style={{ transform: 'translate(-50%, -50%)' }}>
+        <path d="M12 3 V21 M3 12 H21" stroke="#fff" strokeWidth="3.4" fill="none" strokeLinecap="round" />
+        <path d="M12 3 V21 M3 12 H21" stroke="#1e1e20" strokeWidth="1.5" fill="none" strokeLinecap="round" />
       </svg>
     )
   }

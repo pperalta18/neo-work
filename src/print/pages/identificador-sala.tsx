@@ -1,5 +1,5 @@
 import type { PrintPageProps } from '../types'
-import { Sheet, Masthead, Footer, Arrow, type ArrowDir, display, eyebrow, text, PAPER_WARM, INK, MUTED, BLUE } from './signage-kit'
+import { Sheet, Masthead, Footer, Arrow, type ArrowDir, display, eyebrow, text, PAPER, INK, MUTED, BLUE } from './signage-kit'
 
 /**
  * identificador-sala — a door / space placard (A3 portrait). One reusable template
@@ -28,7 +28,7 @@ export function IdentificadorSala({ doc, geo }: PrintPageProps) {
   const arrowLabel = p.arrowLabel ?? 'Acceso'
 
   return (
-    <Sheet geo={geo} paper={PAPER_WARM} justify="space-between">
+    <Sheet geo={geo} paper={PAPER} justify="space-between">
       <Masthead geo={geo} left="Sala" />
 
       <div style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingBottom: geo.mm(40) }}>

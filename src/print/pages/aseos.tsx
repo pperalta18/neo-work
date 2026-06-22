@@ -1,5 +1,5 @@
 import type { PrintPageProps } from '../types'
-import { Sheet, Masthead, Footer, Picto, Arrow, type ArrowDir, type PictoName, display, eyebrow, text, PAPER_WARM, INK, MUTED, RED } from './signage-kit'
+import { Sheet, Masthead, Footer, Picto, Arrow, type ArrowDir, type PictoName, display, eyebrow, text, PAPER, INK, MUTED, RED } from './signage-kit'
 
 /**
  * aseos — the restroom sign (A3 portrait). A service piece: monochrome ink, with a
@@ -26,7 +26,7 @@ export function Aseos({ doc, geo }: PrintPageProps) {
   const arrow = p.arrow ?? 'none'
 
   return (
-    <Sheet geo={geo} paper={PAPER_WARM} justify="space-between">
+    <Sheet geo={geo} paper={PAPER} justify="space-between">
       <Masthead geo={geo} left="Servicios" right="Finca El Olivar" />
 
       <div style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>

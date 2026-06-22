@@ -4,18 +4,22 @@ import {
   ArrowLeft01Icon,
   ArrowRight01Icon,
   BellIcon,
+  Calculator01Icon,
   Calendar03Icon,
   Call02Icon,
   Cancel01Icon,
   CheckmarkCircle02Icon,
   Clock01Icon,
+  Database01Icon,
   DialpadCircle01Icon,
   Flag02Icon,
+  FolderOpenIcon,
   GlobalIcon,
   Location01Icon,
   Megaphone01Icon,
   Mic01Icon,
   MicOff01Icon,
+  Mouse01Icon,
   PauseIcon,
   PlusSignIcon,
   ReloadIcon,
@@ -24,6 +28,7 @@ import {
   StarIcon,
   Target02Icon,
   User02Icon,
+  UserSearch01Icon,
 } from '@hugeicons-pro/core-stroke-standard'
 
 /**
@@ -56,6 +61,12 @@ export const ICONS = {
   reload: ReloadIcon,
   plus: PlusSignIcon,
   global: GlobalIcon,
+  // budget-step icons («Creador de skills»)
+  mouse: Mouse01Icon,
+  userSearch: UserSearch01Icon,
+  folder: FolderOpenIcon,
+  calculator: Calculator01Icon,
+  database: Database01Icon,
 } as const
 
 export type IconName = keyof typeof ICONS

@@ -19,9 +19,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        // The keynote/grid app and the standalone print generator are two pages.
+        // The keynote/grid app, the print generator, and the 3D stack studio.
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
-        prints: fileURLToPath(new URL('./prints.html', import.meta.url))
+        prints: fileURLToPath(new URL('./prints.html', import.meta.url)),
+        grid3d: fileURLToPath(new URL('./grid3d.html', import.meta.url))
       }
     }
   },

@@ -20,16 +20,34 @@ type Line = {
   typeStart?: number;
 };
 
-// A short assistant chat that builds itself, frame-driven end to end.
+// El humano abre la conversación y explica, paso a paso, cómo arma un
+// presupuesto en su empresa (el mismo proceso manual de Prod01: plantilla →
+// CRM → tarifas → mano de obra + material → descuento + IVA → PDF → enviar).
+// Sin marca: el interlocutor solo asiente y pregunta, breve y neutro. Acaba a
+// media explicación — «Y así con cada uno» — y la respuesta de la IA NO llega:
+// se queda con los tres puntos pensando, en loop, sobre todo ese tedio.
+// Frame-driven de principio a fin.
+
+/** showAt para una línea que nunca llega a comprometerse: la burbuja de puntos
+ * de su lead-up (typeStart) se queda en loop hasta el final de la composición. */
+const NEVER = 1e9;
+
 const SCRIPT: Line[] = [
-  { from: 'them', text: 'Hola 👋 Soy tu asistente de AiKit. ¿En qué te ayudo?', time: '9:41', showAt: 8 },
-  { from: 'me', text: '¿Cómo empiezo un cartel?', time: '9:41', typeStart: 28, showAt: 92 },
-  { from: 'them', text: 'Abre el editor y dibuja una ruta sobre la rejilla.', time: '9:41', typeStart: 108, showAt: 168 },
-  { from: 'me', text: '¿Y la animación?', time: '9:42', typeStart: 188, showAt: 244 },
-  { from: 'them', text: 'Pulsa play ▶ y cada paso emerge en 3D ✨', time: '9:42', typeStart: 262, showAt: 322 },
+  { from: 'me', text: 'Te explico cómo hacemos aquí los presupuestos.', time: '9:41', typeStart: 12, showAt: 84 },
+  { from: 'them', text: 'Claro, ¿por dónde empiezas?', time: '9:41', typeStart: 92, showAt: 126 },
+  { from: 'me', text: 'Un cliente nos pide presupuesto del material. Abro la plantilla de Excel y la guardo con su número.', time: '9:41', typeStart: 134, showAt: 266 },
+  { from: 'them', text: 'Vale. ¿Y los datos del cliente?', time: '9:42', typeStart: 274, showAt: 306 },
+  { from: 'me', text: 'Los saco del CRM: razón social, CIF y contacto. Los copio uno a uno.', time: '9:42', typeStart: 314, showAt: 410 },
+  { from: 'them', text: 'Entiendo. ¿Y los precios?', time: '9:42', typeStart: 418, showAt: 448 },
+  { from: 'me', text: 'De la lista de tarifas. Calculo la mano de obra por horas y sumo el material del catálogo.', time: '9:42', typeStart: 456, showAt: 580 },
+  { from: 'me', text: 'Luego aplico el descuento, sumo el IVA y exporto el PDF.', time: '9:43', typeStart: 588, showAt: 672 },
+  { from: 'me', text: 'Lo adjunto al correo, lo reviso y se lo envío. Y así con cada uno.', time: '9:43', typeStart: 680, showAt: 776 },
+  // La IA se queda pensando: los tres puntos aparecen tras el último mensaje y
+  // siguen en loop hasta el final (showAt = NEVER, así nunca se resuelve).
+  { from: 'them', text: '', time: '9:43', typeStart: 792, showAt: NEVER },
 ];
 
-export const CONVERSATION_DURATION = 372; // last showAt + tail
+export const CONVERSATION_DURATION = 990; // last bubble at 776, then ~7s de puntos pensando (frame-driven) antes del loop
 
 export function ConversationVideo() {
   const frame = useCurrentFrame();
@@ -99,6 +117,9 @@ export function ConversationVideo() {
               flex: 1,
               minHeight: 0,
               paddingBottom: 22,
+              // Hilo largo: el historial se recorta por arriba (lo ya scrolleado)
+              // en vez de desbordar la tarjeta.
+              overflow: 'hidden',
             }}
           >
             {shown.map((l) => (
@@ -110,11 +131,12 @@ export function ConversationVideo() {
             ))}
             {thinking && (
               <div style={enter(thinking.typeStart!, 'them')}>
-                <NeoMessage from="them" typing />
+                {/* Frame-driven dots so the "thinking" bob survives the MP4 export. */}
+                <NeoMessage from="them" typing typingFrame={frame} />
               </div>
             )}
           </div>
-          <NeoInput value={inputValue} placeholder="Escribe un mensaje…" icon="plus" style={{ width: '100%' }} />
+          <NeoInput value={inputValue} placeholder="Escribe un mensaje…" icon="plus" multiline style={{ width: '100%' }} />
         </NeoCard>
       </AbsoluteFill>
     </NeoThemeProvider>

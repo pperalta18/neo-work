@@ -1,5 +1,5 @@
 import type { PrintPageProps } from '../types'
-import { Sheet, Footer, Picto, display, eyebrow, text, PAPER_WARM, INK, MUTED, BLUE } from './signage-kit'
+import { Sheet, Footer, Picto, display, eyebrow, text, PAPER, INK, MUTED, BLUE } from './signage-kit'
 
 /**
  * wifi — the network access card (A5 portrait, read in hand or on a table). A blue
@@ -17,7 +17,7 @@ export function Wifi({ doc, geo }: PrintPageProps) {
   const hint = p.hint ?? 'Red abierta para invitados durante la jornada.'
 
   return (
-    <Sheet geo={geo} paper={PAPER_WARM} justify="space-between">
+    <Sheet geo={geo} paper={PAPER} justify="space-between">
       {/* header: glyph + title */}
       <div style={{ flex: '0 0 auto' }}>
         <Picto geo={geo} name="wifi" boxMm={26} glyphMm={16} color={BLUE} />

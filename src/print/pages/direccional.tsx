@@ -1,5 +1,5 @@
 import type { PrintPageProps } from '../types'
-import { Sheet, Masthead, Footer, Arrow, type ArrowDir, display, PAPER_WARM, INK, BLUE } from './signage-kit'
+import { Sheet, Masthead, Footer, Arrow, type ArrowDir, display, PAPER, INK, BLUE } from './signage-kit'
 
 /**
  * direccional — a junction / corridor wayfinding sign (A2 landscape). The
@@ -25,7 +25,7 @@ export function Direccional({ doc, geo }: PrintPageProps) {
   const heading = p.heading ?? 'Orientación'
 
   return (
-    <Sheet geo={geo} paper={PAPER_WARM} justify="space-between">
+    <Sheet geo={geo} paper={PAPER} justify="space-between">
       <Masthead geo={geo} left={heading} right="Finca El Olivar" />
 
       <div style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>

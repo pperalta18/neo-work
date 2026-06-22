@@ -1,0 +1,175 @@
+{
+  "worker-dev.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": null,
+    "prompt": "Detailed MODERN PIXEL ART character sprite for a premium indie game set in a contemporary tech-startup office, in the polished style of 'VA-11 Hall-A' and 'The Last Night': an adult software developer seen from the FRONT, REALISTIC ADULT PROPORTIONS about 4 heads tall (NOT chibi, not cute), early thirties, short tidy dark hair, slim build, wearing a slate-grey hoodie over a dark tee, dark navy jeans, clean low sneakers, a lanyard ID badge clipped at the chest, over-ear headphones around the neck. Sophisticated DESATURATED palette: cool greys and slate navy with a single warm AMBER accent, soft cel shading with subtle dithering and a crisp dark outline. Calm, grounded, professional, full of quiet personality. Relaxed standing pose, centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+  "worker-dev-up.png": {
+    "model": "openai/gpt-image-2/edit",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same modern pixel art style, palette, EXACT same character, outfit, colors and adult proportions as this reference. The SAME developer seen from BEHIND (back view): back of the slate-grey hoodie and headphones around the neck visible, standing still, same scale as the reference. Centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+  "worker-dev-side-a.png": {
+    "model": "openai/gpt-image-2/edit",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same modern pixel art style, palette, EXACT same character, outfit and adult proportions as this reference. The SAME developer in SIDE profile facing RIGHT, mid-walk stride: left leg stepping forward, arms swinging naturally, body bobbing slightly. Same scale as the reference. Centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+  "worker-dev-side-b.png": {
+    "model": "openai/gpt-image-2/edit",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same modern pixel art style, palette, EXACT same character, outfit and adult proportions as this reference. The SAME developer in SIDE profile facing RIGHT, mid-walk stride: right leg stepping forward, opposite arm swing, body bobbing slightly. Same scale as the reference. Centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+
+  "worker-manager.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette, rendering and REALISTIC ADULT PROPORTIONS (about 4 heads tall, NOT chibi) as this reference character. A DIFFERENT character: a confident team manager woman seen from the FRONT, late thirties, shoulder-length auburn hair, wearing a tailored charcoal blazer over a cream blouse, slim navy trousers, holding a slim tablet. Same desaturated cool-grey / slate-navy palette with a warm amber accent, soft cel shading, crisp dark outline. Standing pose, centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+  "worker-manager-up.png": {
+    "model": "openai/gpt-image-2/edit",
+    "image_ref": "raw/worker-manager.png",
+    "prompt": "Same modern pixel art style, palette, EXACT same character, outfit, colors and adult proportions as this reference character. The SAME manager seen from BEHIND (back view), standing still, same scale as the reference. Centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+  "worker-manager-side-a.png": {
+    "model": "openai/gpt-image-2/edit",
+    "image_ref": "raw/worker-manager.png",
+    "prompt": "Same modern pixel art style, palette, EXACT same character, outfit and adult proportions as this reference character. The SAME manager in SIDE profile facing RIGHT, mid-walk stride: left leg stepping forward, arms swinging naturally. Same scale as the reference. Centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+  "worker-manager-side-b.png": {
+    "model": "openai/gpt-image-2/edit",
+    "image_ref": "raw/worker-manager.png",
+    "prompt": "Same modern pixel art style, palette, EXACT same character, outfit and adult proportions as this reference character. The SAME manager in SIDE profile facing RIGHT, mid-walk stride: right leg stepping forward, opposite arm swing. Same scale as the reference. Centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+
+  "worker-designer.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette, rendering and REALISTIC ADULT PROPORTIONS (about 4 heads tall, NOT chibi) as this reference character. A DIFFERENT character: a product designer man seen from the FRONT, twenties, undercut haircut, round glasses, wearing a muted olive overshirt over a grey tee, dark chinos, white sneakers, a stylus tucked behind the ear. Same desaturated cool-grey / slate-navy palette with a warm amber accent, soft cel shading, crisp dark outline. Standing pose, centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+  "worker-designer-up.png": {
+    "model": "openai/gpt-image-2/edit",
+    "image_ref": "raw/worker-designer.png",
+    "prompt": "Same modern pixel art style, palette, EXACT same character, outfit, colors and adult proportions as this reference character. The SAME designer seen from BEHIND (back view), standing still, same scale as the reference. Centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+  "worker-designer-side-a.png": {
+    "model": "openai/gpt-image-2/edit",
+    "image_ref": "raw/worker-designer.png",
+    "prompt": "Same modern pixel art style, palette, EXACT same character, outfit and adult proportions as this reference character. The SAME designer in SIDE profile facing RIGHT, mid-walk stride: left leg stepping forward, arms swinging naturally. Same scale as the reference. Centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+  "worker-designer-side-b.png": {
+    "model": "openai/gpt-image-2/edit",
+    "image_ref": "raw/worker-designer.png",
+    "prompt": "Same modern pixel art style, palette, EXACT same character, outfit and adult proportions as this reference character. The SAME designer in SIDE profile facing RIGHT, mid-walk stride: right leg stepping forward, opposite arm swing. Same scale as the reference. Centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+
+  "worker-agent.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette, rendering and REALISTIC ADULT PROPORTIONS (about 4 heads tall, NOT chibi) as this reference character. A DIFFERENT character: a sleek humanoid AI ASSISTANT colleague seen from the FRONT, matte off-white synthetic body with slate-grey panel lines, a smooth visor-like face with a single calm horizontal AMBER light bar for eyes, subtle glowing amber seams at the joints, professional and elegant rather than cartoonish or toy-like. Same desaturated palette, soft cel shading, crisp dark outline. Standing pose, centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+  "worker-agent-up.png": {
+    "model": "openai/gpt-image-2/edit",
+    "image_ref": "raw/worker-agent.png",
+    "prompt": "Same modern pixel art style, palette, EXACT same AI assistant character, colors and proportions as this reference. The SAME AI assistant seen from BEHIND (back view): back of the off-white synthetic body and slate panel lines visible, standing still, same scale as the reference. Centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+  "worker-agent-side-a.png": {
+    "model": "openai/gpt-image-2/edit",
+    "image_ref": "raw/worker-agent.png",
+    "prompt": "Same modern pixel art style, palette, EXACT same AI assistant character and proportions as this reference. The SAME AI assistant in SIDE profile facing RIGHT, mid-walk stride: left leg stepping forward, arms swinging smoothly. Same scale as the reference. Centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+  "worker-agent-side-b.png": {
+    "model": "openai/gpt-image-2/edit",
+    "image_ref": "raw/worker-agent.png",
+    "prompt": "Same modern pixel art style, palette, EXACT same AI assistant character and proportions as this reference. The SAME AI assistant in SIDE profile facing RIGHT, mid-walk stride: right leg stepping forward, opposite arm swing. Same scale as the reference. Centered, isolated on a fully transparent background, no floor, no shadow, no text."
+  },
+
+  "desk.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette and rendering as this reference (premium indie game, VA-11 Hall-A / The Last Night). A single modern OPEN-PLAN WORKSTATION desk seen from the front in 3/4 top-down RPG perspective: light wood top on a slim white frame, a slate computer monitor showing a faint amber UI glow, a low-profile keyboard, a coffee mug, a small stack of papers and a tiny succulent. Desaturated cool-grey / slate-navy palette with a warm amber accent. Isolated on a fully transparent background, fills most of the canvas, no ground plane, no text or letters anywhere.",
+    "_doc": "validation batch"
+  },
+  "glass-office.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette and rendering as this reference. A small GLASS-WALLED PRIVATE OFFICE module: floor-to-ceiling glass panels in slim black frames, a desk and chair faintly visible inside, a small potted plant, a flat warm-grey roof. Seen from the front in 3/4 top-down RPG perspective, isolated on a fully transparent background, fills most of the canvas, no ground plane, no text or letters anywhere."
+  },
+  "meeting-room.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette and rendering as this reference. A small MEETING ROOM module: glass front wall, a long table with several chairs visible inside, a large wall-mounted screen glowing faint amber, acoustic panel walls in muted slate, flat roof. Seen from the front in 3/4 top-down RPG perspective, isolated on a fully transparent background, fills most of the canvas, no ground plane, no text or letters anywhere."
+  },
+  "reception.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette and rendering as this reference. A modern RECEPTION DESK with a curved white counter, a backlit logo wall behind it (blank, no letters, just a soft amber glow), two lounge stools, a tall plant to one side. Seen from the front in 3/4 top-down RPG perspective, isolated on a fully transparent background, fills most of the canvas, no ground plane, no text or letters anywhere."
+  },
+  "server-rack.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette and rendering as this reference. A tall black SERVER RACK CABINET with rows of blade servers, tiny blinking amber and white status LEDs, neat cable management, a glass front door. Seen from the front in 3/4 top-down RPG perspective, isolated on a fully transparent background, fills most of the canvas, no ground plane, no text or letters anywhere."
+  },
+  "kitchenette.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette and rendering as this reference. A small office KITCHENETTE / coffee point: light wood counter, an espresso machine, mugs on a shelf, a fruit bowl, upper cabinets in muted slate. Seen from the front in 3/4 top-down RPG perspective, isolated on a fully transparent background, fills most of the canvas, no ground plane, no text or letters anywhere."
+  },
+
+  "plant-large.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette and rendering as this reference. A tall MONSTERA house plant in a minimalist matte-grey cylindrical pot, lush deep-green leaves, 3/4 top-down RPG perspective. Isolated on a fully transparent background, centered, no ground plane, no text."
+  },
+  "plant-small.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette and rendering as this reference. A small round desk SUCCULENT / snake plant in a little concrete pot, 3/4 top-down RPG perspective. Isolated on a fully transparent background, centered, no ground plane, no text."
+  },
+  "water-cooler.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette and rendering as this reference. A modern office WATER COOLER: white dispenser body, a clear blue water bottle on top, a small cup holder, soft amber status light. Seen from the front in 3/4 top-down RPG perspective. Isolated on a fully transparent background, centered, no ground plane, no text."
+  },
+  "printer.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette and rendering as this reference. A modern multifunction OFFICE PRINTER / copier on a low stand, slate-grey body, paper tray, a tiny amber status light. Seen from the front in 3/4 top-down RPG perspective. Isolated on a fully transparent background, centered, no ground plane, no text."
+  },
+  "couch.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette and rendering as this reference. A modern two-seat LOUNGE SOFA in muted slate-blue fabric with two amber throw cushions, slim wooden legs. Seen from the front in 3/4 top-down RPG perspective. Isolated on a fully transparent background, centered, no ground plane, no text."
+  },
+  "partition.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette and rendering as this reference. A short office CUBICLE PARTITION panel: a low acoustic divider in muted grey felt with a slim wooden frame, wide and low. Seen from the front in 3/4 top-down RPG perspective. Isolated on a fully transparent background, centered, no ground plane, no text."
+  },
+  "whiteboard.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette and rendering as this reference. A standing mobile WHITEBOARD on castor wheels, blank white surface (no letters, no writing) in a slim aluminium frame. Seen from the front in 3/4 top-down RPG perspective. Isolated on a fully transparent background, centered, no ground plane, no text."
+  },
+  "floor-lamp.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": "raw/worker-dev.png",
+    "prompt": "Same MODERN PIXEL ART style, palette and rendering as this reference. A modern minimalist FLOOR LAMP: slim matte-black stem on a round base with a warm amber glowing globe shade. Isolated on a fully transparent background, centered, no ground plane, no text."
+  },
+
+  "tile-floor.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": null,
+    "prompt": "SEAMLESS TILEABLE ground texture, MODERN PIXEL ART style (premium indie game, VA-11 Hall-A / The Last Night), desaturated cool-grey palette. Light warm-grey carpet-tile office flooring, flat top-down view, very subtle woven texture and faint tile seams, uniform brightness, edges tile seamlessly. Fully opaque, no objects, no border, no text.",
+    "_doc": "validation batch"
+  },
+  "tile-walkway.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": null,
+    "prompt": "SEAMLESS TILEABLE ground texture, MODERN PIXEL ART style, desaturated palette. Light polished CONCRETE walkway flooring, flat top-down view, subtle speckle and faint sheen, slightly lighter than carpet, uniform brightness, edges tile seamlessly. Fully opaque, no objects, no border, no text."
+  },
+  "tile-atrium.png": {
+    "model": "openai/gpt-image-2",
+    "image_ref": null,
+    "prompt": "SEAMLESS TILEABLE ground texture, MODERN PIXEL ART style, desaturated palette with a faint warm tone. Light WOOD-PLANK atrium / lobby flooring, flat top-down view, subtle plank seams and warm grain, uniform brightness, edges tile seamlessly. Fully opaque, no objects, no border, no text."
+  }
+}

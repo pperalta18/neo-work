@@ -1,5 +1,5 @@
 import type { PrintPageProps } from '../types'
-import { Sheet, Masthead, Footer, Picto, Arrow, type ArrowDir, type PictoName, display, eyebrow, text, PAPER_WARM, INK, MUTED, BLUE } from './signage-kit'
+import { Sheet, Masthead, Footer, Picto, Arrow, type ArrowDir, type PictoName, display, eyebrow, text, PAPER, INK, MUTED, BLUE } from './signage-kit'
 
 /**
  * llegada — the arrival / parking sign at the gate of the finca (A2 landscape). The
@@ -23,7 +23,7 @@ export function Llegada({ doc, geo }: PrintPageProps) {
   const when = p.when ?? '17 jun 2026 · desde las 17:00'
 
   return (
-    <Sheet geo={geo} paper={PAPER_WARM} justify="space-between">
+    <Sheet geo={geo} paper={PAPER} justify="space-between">
       <Masthead geo={geo} left="Acceso a la sede" right="Finca El Olivar" />
 
       <div style={{ flex: '1 1 auto', display: 'flex', alignItems: 'center', gap: geo.mm(28) }}>
