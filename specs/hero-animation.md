@@ -1,168 +1,117 @@
-# Hero Animation — "El ecosistema vivo"
+# Hero Animation — "Inteligencia" (el grid)
 
-> Blueprint de la animación del **hero** de la home: la pieza que explica **qué es
-> AiKit** (no un caso de uso). Tiene **reglas propias**, distintas a las 5
-> animaciones de flujo — por eso vive en su propia spec y no en
-> [`flow-blueprints.md`](./flow-blueprints.md). Cárgalo junto al
+> Blueprint de la animación del **hero** de la home: la pieza que abre la web. Tiene
+> **reglas propias** y vive en su propia spec. Cárgalo junto al
 > [`operations-manual.md`](./operations-manual.md) al trabajar el hero.
 
-**Estado:** ✅ *construido (v2.2 · **loop perfecto**) — [`src/remotion/hero/HeroIntroVideo.tsx`](../src/remotion/hero/HeroIntroVideo.tsx),
-composición `HeroIntro` (carpeta **Hero** en `Root.tsx`), 300 f / ~10s, pensado para
-reproducirse **en bucle continuo** (frame 299 → 0 sin salto). Render: `pnpm run render:hero`.*
+**Estado:** ✅ *construido (v3.1 · **loop perfecto**) — [`src/remotion/hero/HeroIntroVideo.tsx`](../src/remotion/hero/HeroIntroVideo.tsx),
+composición `HeroIntro` (carpeta **Hero** en `Root.tsx`), **159 f / ~5,3 s** @30fps, pensado para
+reproducirse **en bucle continuo** (frame 158 → 0 sin salto). Render: `pnpm run render:hero`.*
 **Vocabulario de motion:** [`motion-language.md`](./motion-language.md).
 
-> **Pivote (2026-06-10).** La **v1 "El motor invisible"** (una placa que se abría y
-> 3 piezas abstractas formando un motor) **se descartó**: Iván la vio *simplona y sin
-> contenido* — la gota inicial pobre, los bordes/placas alrededor de los iconos no
-> los quería, y los módulos abstractos (○ ▶ ▦) no decían nada. Pedido explícito:
-> **más vívido, con los módulos REALES, que la pieza hable de ellos.** Esto **revierte
-> la recomendación del panel** (§6) de "no mostrar los 16 para no saturar": manda el
-> cliente, y su activo más rico son los 16 módulos con identidad propia. El reto pasó
-> a ser que el sistema se sienta **vivo** (no un mapa de features estático).
+> **Pivote (2026-06-12).** La **v2 "El ecosistema vivo"** (los 16 módulos reales en 3
+> clusters + malla + tráfico de datos) **se descartó**: Iván la vio *floja, no servía*.
+> Pedido explícito y nuevo rumbo: **simplemente EL GRID de la referencia** (el concept
+> `inteligencia`) con una animación **muy suave y sutil, en bucle**. Esto **revierte la
+> disciplina anterior** ("evitar grid/ruta/flechas en el hero"): ya no aplica — el hero ES
+> ahora ese grid.
+>
+> **v3.1 (mismo día).** La primera v3 hacía recorrer el grid una **línea azul**; no
+> convencía. Iván: *que vayan EMERGIENDO los ítems del grid* (como `GridEmergeVideo`); la
+> "rayita" puede quedarse pero **mucho más pequeña y tenue**, como guía. Esta es la versión
+> vigente. El historial de v1/v2 queda al pie (§5).
 
 ---
 
-## 1. Qué es y en qué se diferencia
+## 1. Qué es
 
-El hero acompaña, **al lado**, este texto:
+El hero es **el grid de la imagen de referencia** y nada más: el concept `inteligencia`
+de [`concepts.ts`](../src/content/concepts.ts) — una rejilla neumórfica **3×2** con una
+**ruta serpenteante** (disco de inicio vacío abajo-izquierda → flechas `→ ↑ → →` → punto
+azul de meta arriba-derecha). Sobre ese grid corre **una única animación**:
 
-> *"AiKit es una plataforma que integra un ERP completo con un ecosistema digital
-> diseñado para delegar el trabajo en IAs que lo manejan de manera autónoma. Es
-> decir: es una herramienta muy sencilla que te ayuda con tu trabajo."*
+> Los **6 ítems del grid EMERGEN escalonados** a lo largo de la ruta (disco de inicio →
+> 4 flechas → punto de meta): cada uno brota de plano → elevado. Un **puntito azul
+> diminuto y muy tenue** recorre la ruta sincronizado, guiando el frente (cada ítem emerge
+> cuando el punto llega a él). Al completarse, los ítems **desaparecen en el MISMO orden**
+> en que aparecieron (FIFO: el disco de inicio primero, la meta al final) → **ola continua**
+> de aparecer/desaparecer en la misma dirección; arranca casi en cuanto el grid se completa, y
+> **vuelve a empezar**. La rejilla-bandeja (frame redondeado) es lo único permanente.
 
-La animación **ilustra la sensación con sustancia**: el **ecosistema completo de
-AiKit, vivo y trabajando en paralelo**. Reglas de encargo:
+Encargo de Iván (2026-06-12), literal: *"que vayan emergiendo los distintos ítems… aun así
+sí podemos meter algo visual, tal vez esa rayita que has dejado, pero mucho más sutil y
+pequeña."*
 
-- **Un render único** (no clips sueltos como los flujos).
-- **Corto** (~10 s / 300 f @30fps), **muy visual**, **vívido y denso**.
-- **No** se parece a las 5 animaciones de flujo: ni grid serpenteante, ni chat.
+### Disciplina de hero (v3.1)
 
-### Disciplina de hero — qué EVITAR (vigente tras el pivote)
-
-- ❌ **Grid serpenteante, ruta, flechas, meta azul** (la firma de los 5 flujos).
-- ❌ **Chat / burbuja**, captions, micro-etiquetas permanentes.
-- ❌ **`OperatingModuleTile`** (placa cuadrada que se abre / enciende en cadena) — es
-  el lenguaje de Intake/Invoice/Channels/Staff/AccountingLoop. Repetirlo = repetir el clip.
-- ❌ **Placas / bordes neumórficos alrededor de los iconos** (pedido de Iván: los
-  módulos van **limpios**, sin placa).
-- ❌ **Abrir/cerrar con el logo de AiKit** (no tiene sentido repetir la marca al
-  principio y al final).
-- ❌ **Glows / halos de color.** La vida es **movimiento + tráfico KIT_BLUE**, no un halo.
-- ❌ **Módulos abstractos / inventados.** Se usan los **iconos de marca reales** de los 16.
-
----
-
-## 2. El concepto — "El ecosistema vivo"
-
-Los **16 módulos reales** pueblan el lienzo claro, agrupados en sus **3 familias**
-(Controla · Delega · Construye). Una **malla fina** los conecta y por ella viajan sin
-parar **paquetes de datos** (el trabajo, en `KIT_BLUE`): el sistema trabaja **en
-paralelo**. Cuando el trabajo **llega a un módulo, éste pulsa y dice su nombre** un
-instante — así la pieza *habla de los módulos* sin saturar con 16 etiquetas fijas. La
-densidad de tráfico **crece** (la máquina se enciende) y **se sostiene hasta el final**
-(queda en marcha). No hay logo, ni gota, ni placas.
-
-**Por qué funciona con el texto:** el texto enumera ("ERP + ecosistema + autónomo");
-la animación lo **encarna** — un organismo de piezas reales que se coordinan solas.
-
-**Decisiones fijadas (Iván, 2026-06-10):**
-
-| Decisión | Elegido | Implicación |
-|---|---|---|
-| **Protagonista** | **Muchos módulos a la vez** | Los 16 iconos reales poblando la escena (ecosistema lleno, denso). |
-| **Acción** | **Ecosistema vivo en paralelo** | Tráfico de datos entre módulos, varios activos a la vez. |
-| **Look** | **Claro y limpio, sin placas** | Fondo neumórfico claro de marca; iconos sin borde + mucho movimiento. |
+- ✅ **El grid + las flechas + los dos discos**, fieles a la referencia (mismos primitivos
+  neumórficos que el resto: `Grid`/`Cell`, `elevation`, `KIT_BLUE`).
+- ✅ **La animación es la EMERGENCIA** de los ítems (patrón `GridEmergeVideo`). Cámara estática.
+- ✅ **La "rayita"** queda como **puntito azul diminuto y tenue** que guía la emergencia.
+- ✅ **Muy suave y sutil**: `smootherstep`, sombras/escala que crecen con la emergencia.
+- ❌ **Nada de texto, logo, módulos, chat, captions.** "Simplemente ese grid."
+- ❌ **Sin línea azul que barre todo el grid** (era la v3 inicial, descartada), sin glows duros.
 
 ---
 
-## 3. Cómo está construido (v2)
+## 2. Cómo está construido (v3.1)
 
-- **Fichero:** [`src/remotion/hero/HeroIntroVideo.tsx`](../src/remotion/hero/HeroIntroVideo.tsx)
-  (carpeta propia `hero/`), exporta `HeroIntroVideo` + `HERO_INTRO_DURATION = 300`.
-  Registrado en [`Root.tsx`](../src/remotion/Root.tsx) como `HeroIntro` (carpeta **Hero**).
-- **Módulos:** se leen de [`modules.ts`](../src/stories/neo/modules/modules.ts) (`MODULES`/
-  `MODULE_NAMES`); el icono es `spec.icon` (SVG real, multicolor), con `rotate` para
-  Foresight. Se pintan como `<img>` **sin placa**.
-- **Layout:** 3 **clusters por familia** (`CLUSTERS`), empaquetado **golden-angle**
-  (girasol) → equilibrado y orgánico. Controla izquierda (8), Delega arriba-derecha
-  (5), Construye abajo-derecha (3).
-- **Malla (`EDGES`) — CURADA por semántica (no proximidad):** las conexiones se
-  definen a mano en **`RELATIONS`** (quién colabora de verdad con quién), para que
-  **ninguna sea "rara"**. Es el lugar a editar para añadir/quitar relaciones. Hubs
-  naturales que emergen: **Junction** (hub de datos: reúne Hotpot/SQLSense/Udon/
-  DocuSense y alimenta Foresight/Glimpse) y **Action Runner** (hub de acción: actúa
-  *a través de* los conectores — combo del pitch). El grosor del borde marca los
-  **puentes** entre familias (`bridge = grupos distintos`).
-- **Roles especiales por módulo (`HEARTBEAT_TARGETS`, `WAKES`, …):** no todos se
-  comportan igual. **Heartbeat = TRIGGER**: no recibe inputs; **despierta** en latidos
-  periódicos (`WAKES`, 3/loop) y en cada latido **emite a la vez** a varios destinos
-  (Action Runner · Action Script · Smart Process · Teamwork · **Foresight** — un latido
-  puede arrancar un análisis predictivo) — sus aristas son **salientes** (`trigger`). Late con un **doble pulso cardíaco** (`heartbeatPulse`,
-  lub-dub) y su escala pulsa más fuerte. Hueco para más customizaciones por módulo.
-- **Tráfico (`PACKETS`):** 150 paquetes deterministas (hash `Math.sin`, sin random)
-  que recorren aristas **despacio** (34–58 f en cruzar); `t0` sesgado a la 2ª mitad
-  (densidad creciente) pero repartido hasta ~300 (no se apaga). La arista **se ilumina**
-  KIT_BLUE mientras lleva un paquete; el módulo **destino se activa** (`ARRIVALS` →
-  `activation()`, rampa lenta + decaimiento largo de 40 f): pulso de escala + opacidad
-  + **su nombre** aparece y permanece legible un instante.
-- **Vida de cada módulo:** **drift** flotante suave (sin/cos del ángulo de loop, 2
-  vueltas, fase por icono), pulso contenido al recibir trabajo. **Sin entrada/fade**:
-  todo está presente desde el frame 0.
-- **Cámara:** breathing + deriva circular muy sutiles, **periódicos** (sin push-in
-  lineal). Light mode, sin glows, determinista.
-- **BUCLE PERFECTO (v2.2):** la pieza se reproduce **en bucle continuo**. No hay
-  entrada ni push-in lineal (no serían loopables); **todo movimiento es periódico en
-  `LOOP = 300` frames** vía **tiempo modular** (`mod(frame − t0, LOOP)` para el tráfico
-  y los pulsos; el ángulo `ca = (frame/LOOP)·2π` para drift y cámara). Así el frame 299
-  encadena con el 0 sin salto. Los `PACKETS` tienen `t0` **uniforme** en `[0, LOOP)`
-  (sin sesgo de arranque) → densidad constante.
-- **Ritmo (afinado · cada vez más suave/sutil a petición de Iván):** tráfico **lento**
-  (paquetes 50–80 f en cruzar, HB 58 f) y menos denso (≈105 paquetes); dots pequeños
-  (r≈3.6 / 4.6 trigger); pulsos contenidos (escala +0.10, HB +0.18) y drift suave.
-- **Sin malla fija — sólo estelas (v2.4):** las aristas **no se dibujan en reposo**;
-  cada paquete deja una **estela en degradado** (`linearGradient` KIT_BLUE, transparente
-  detrás → opaca en la cabeza, `TAIL_PX≈175`) que lo sigue y se desvanece, con fade-in/out
-  en los extremos. Una conexión **sólo es visible mientras una bola la recorre**. `EDGES`
-  sigue existiendo (la malla curada gobierna por dónde puede ir el tráfico), pero no se
-  pinta como líneas estáticas.
-- **Encuadre:** el layout se **recentra** en el canvas y se agranda un punto (`SPREAD ≈
-  1.08`) → menos padding alrededor, ocupa algo más sin tocar bordes.
-- **NOTA Rive:** la animación Rive interna de cada módulo **no se usa** (no se captura
-  bien en `renderMedia`); todo el movimiento es por frame.
-
-### Iteración futura posible
-- El cluster Controla (8 módulos) es el más denso; si se quiere más aire, subir su
-  `r` o repartir en dos sub-grupos.
-- Se podría rematar con un leve pull-back final que encuadre todo el ecosistema.
+- **Fichero:** [`HeroIntroVideo.tsx`](../src/remotion/hero/HeroIntroVideo.tsx) — exporta
+  `HeroIntroVideo` + `HERO_INTRO_DURATION = 159`. Registrado en `Root.tsx` como `HeroIntro`.
+- **Grid base:** misma geometría que [`PathScene`](../src/components/PathScene.tsx) —
+  `reflowRoute(coordsToSteps([[1,2],[2,2],[2,1],[3,1]]))`, `startNode [0,2]`, meta `[4,1]`,
+  flechas vía `routeArrows`. Se dibuja con `Grid` (frame redondeado, **permanente**) + `Cell`
+  neumórficas; las dos celdas fuera de ruta ([1,1] y [3,2]) quedan vacías (igual que la
+  referencia). `CELL = 300`, centrado en el lienzo 1920×1080.
+- **Emergencia (patrón `GridEmergeVideo`):** 6 ítems en orden de ruta — `[0]` disco inicio,
+  `[1..4]` flechas, `[5]` disco meta. Cada ítem tiene `grow = emerge·(1 − recede)` derivado
+  de `frame mod LOOP`: `emerge = smoother((f − T(i))/RISE)` con stagger `T(i)=START_F+i·STAGGER`;
+  `recede = smoother((f − RT(i))/FALL)` con stagger **FIFO** (`RT(i)=RECEDE_START+i·STAGGER_OUT` → el disco de inicio se va primero, la meta al final).
+  `grow` conduce el `distance`/`blur` del `Cell` real (sombra 0→plena) + `scale 0.9→1` +
+  `opacity` — exactamente como `GridEmerge` (NO se usan las transiciones CSS de `<Cell animate>`,
+  que son wall-clock y romperían el render determinista). Los discos (`Node`) emergen igual.
+- **El puntito guía (la "rayita", diminuta):** se calcula la **polilínea** inicio → centros
+  de flechas → meta (`VERTS`/`SEGS`/`CUM`). `guideArc(f)` interpola el arco sincronizado con
+  el stagger (el punto está en `CUM[i]` justo cuando el ítem `i` arranca a emerger), así el
+  punto **lidera** la aparición. Es minúsculo (`r ≈ CELL·0.022` + núcleo blanco) con estela
+  cortísima y muy tenue (`opacity ≤ 0.28`); aparece con el primer ítem y se va al cerrar el
+  barrido (`guideOpacity`).
+- **BUCLE PERFECTO:** todo se deriva de `frame mod LOOP`. En la costura **todo está plano**
+  (`grow=0` en todos los ítems: el `emerge` aún no arrancó en `f≈0` y el `recede` ya terminó
+  en `f≈LOOP−1`) → sólo queda la bandeja vacía, idéntica en ambos extremos. Ritmo: `START_F 0`
+  (el primero emerge ya en f0) · `STAGGER 13` · `RISE 28` (build ~f0–93) → desaparición **FIFO**
+  casi inmediata (`RECEDE_START 100`, `RT(i)=RECEDE_START+i·STAGGER_OUT`) · `STAGGER_OUT 8` ·
+  `FALL 18` (~f100–158) → **reposo de costura ~1 f**: el último desaparece y el primero
+  reaparece casi sin hueco (`LOOP 159`, ajustado a que `recede(meta)` cierre justo en f158).
+- **Determinismo total:** función pura de `frame mod LOOP` (sin Rive, sin `Date`/`random`)
+  → idéntico en preview y en `renderMedia`. Verificado: `f0` ≡ `f158` (byte-idénticos).
 
 ---
 
-## 4. Qué ilustra del texto (mapa concepto → mensaje)
-
-| Frase del hero | Cómo se siente en la pieza |
-|---|---|
-| "ERP completo + ecosistema digital" | Los **16 módulos reales** + la malla que los une. |
-| "delegar el trabajo en IAs autónomas" | El **tráfico** que fluye solo entre módulos, sin manos. |
-| "herramienta muy sencilla que te ayuda" | El conjunto **se coordina solo**; tú solo lo ves trabajar. |
-
----
-
-## 5. Registro del panel (second opinion · 2026-06-09)
-
-El panel (Codex + Kimi + GLM) revisó la idea **original** ("organismo/constelación de
-16 que late"). Aportes que **siguen vigentes**: evitar grid/chat (firma de los flujos),
-evitar `OperatingModuleTile`, no abrir explicación redundante con el texto. Su
-recomendación de **no mostrar los 16 módulos** llevó a la **v1 "El motor invisible"**
-(3 piezas abstractas) — que **Iván rechazó por simplona**. La **v2** retoma los 16
-módulos reales, pero resolviendo el miedo del panel ("mapa de features") con **vida**:
-tráfico constante, activación por trabajo y nombres al vuelo, no un diagrama estático.
-
----
-
-## 6. Specs relacionadas
+## 3. Specs relacionadas
 
 - [`motion-language.md`](./motion-language.md) — curvas, ritmo, reglas de la casa.
 - [`operations-manual.md`](./operations-manual.md) — estado compartido; §5 tabla de animaciones.
-- [`flow-blueprints.md`](./flow-blueprints.md) — las 5 animaciones de **flujo** (lo que el hero **no** es).
+- [`concepts.ts`](../src/content/concepts.ts) / [`PathScene.tsx`](../src/components/PathScene.tsx) — el grid `inteligencia` y su motor de ruta.
 - [`product-video.md`](./product-video.md) — Remotion, composiciones, render.
-</content>
+
+---
+
+## 4. Qué EVITAR (errores de tomas pasadas)
+
+- ❌ Recargar el grid con módulos, texto o segundas animaciones — el brief es minimalista.
+- ❌ Romper el bucle: todo lo animado debe llegar a su **estado de reposo** (grow=0, bandeja
+  vacía) antes de la costura, derivado de `frame mod LOOP`, para que `f158→f0` no dé un salto.
+- ❌ Volver a la **línea azul que barre** el grid (descartada) o subir el puntito guía: es
+  diminuto y tenido a propósito; la emergencia es la protagonista, el grid manda.
+
+---
+
+## 5. Historial (descartado)
+
+- **v1 "El motor invisible"** (placa que se abre + 3 piezas abstractas formando un motor)
+  — Iván: *simplona y sin contenido*. Descartada.
+- **v2 "El ecosistema vivo"** (16 módulos reales en 3 clusters + malla curada `RELATIONS` +
+  tráfico `KIT_BLUE` + Heartbeat como trigger + bucle perfecto por tiempo modular) — Iván
+  (2026-06-12): *no servía*. Descartada en favor del grid (v3). El código histórico está en
+  git si hiciera falta recuperar la mecánica de tráfico/estelas.

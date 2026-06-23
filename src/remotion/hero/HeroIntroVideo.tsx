@@ -1,326 +1,264 @@
 /**
- * HeroIntroVideo — "El ecosistema vivo" (hero de la home · light · neumórfico)
+ * HeroIntroVideo — "Inteligencia" (hero de la home · light · neumórfico)
  * ──────────────────────────────────────────────────────────────────────────────
- * La pieza que explica QUÉ es AiKit (no un caso de uso). Render ÚNICO, ~10 s, en
- * BUCLE perfecto. NO es un grid serpenteante ni un chat (la firma de los 5 flujos).
- * No abre/cierra con el logo, ni usa placas/bordes: los MÓDULOS REALES (sus iconos
- * de marca) pueblan el lienzo y el TRABAJO fluye entre ellos.
+ * Es **simplemente EL GRID** de la referencia (concept `inteligencia`: 3×2, ruta
+ * serpenteante disco-inicio → punto-azul meta) y su animación es la **EMERGENCIA**
+ * de los ítems: cada placa/disco brota de plano → elevado, **escalonado a lo largo
+ * de la ruta** (igual que `GridEmergeVideo`). Como guía muy sutil queda un **puntito
+ * azul diminuto** que recorre la ruta sincronizado con la emergencia (cada ítem
+ * emerge cuando el punto llega a él). Luego el grid se repliega y **vuelve a empezar**.
  *
- * El ecosistema completo de AiKit, vivo y trabajando EN PARALELO. Los 16 módulos se
- * agrupan en sus 3 familias (Controla · Delega · Construye). Las conexiones NO son
- * por proximidad: son una malla CURADA por la semántica de cada módulo (quién
- * colabora de verdad con quién — ver `RELATIONS`), para que ninguna conexión sea
- * "rara". Por las aristas viajan paquetes de datos (KIT_BLUE); cuando el trabajo
- * llega a un módulo, éste PULSA y dice su nombre un instante.
+ * Reescrito 2026-06-12 (Iván): la versión con la línea azul recorriendo el grid no
+ * convencía → ahora EMERGEN los ítems (patrón GridEmerge) y la "rayita" se queda
+ * mucho más pequeña y tenue, como mera guía.
  *
- * ROLES ESPECIALES por módulo (no todos se comportan igual):
- *   · Heartbeat = TRIGGER. No recibe inputs: "despierta" en latidos periódicos y, en
- *     cada latido, EMITE a la vez a varios ejecutores (Action Runner / Action Script /
- *     Smart Process / Teamwork). Late con un doble pulso cardíaco (lub-dub).
- *   (Hueco para más customizaciones por módulo conforme se pidan.)
+ * BUCLE PERFECTO: la emergencia se DERIVA de `frame mod LOOP` (sin transiciones CSS,
+ * sin Rive, sin Date/random → determinista). Cada ítem hace `grow = emerge·(1−recede)`:
+ * brota escalonado y al final se repliega (recede en orden inverso). En la costura
+ * (u→1 ≡ u→0) todo está plano (grow=0) → el frame final encadena con el inicial sin
+ * salto. La rejilla-bandeja (frame redondeado) es lo único permanente.
  *
- * BUCLE PERFECTO: sin entrada/fade — todo presente desde el frame 0; todo movimiento
- * es PERIÓDICO en `LOOP` frames (tiempo modular) → el frame 299 encadena con el 0.
- *
- * Reglas de la casa (specs/motion-language.md): light mode, sin glows, sin bounce,
- * suave. La animación Rive interna NO se usa (no se captura en `renderMedia`).
- * Determinismo: función pura de `frame mod LOOP` (hash `Math.sin`, sin Date/random).
+ * Reglas de la casa (specs/hero-animation.md · motion-language.md): light mode, sin
+ * glows duros, sin bounce, muy suave.
  */
 
+import type { CSSProperties } from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
-import { KIT_BLUE, lightTheme, TEXT_FONT } from '@/lib/neumorphism';
-import { MODULES, MODULE_NAMES, type ModuleName, type ModuleGroup, type ModuleSpec } from '@/stories/neo/modules/modules';
-import { Fonts } from '../fonts';
+import { elevation, KIT_BLUE, lightTheme, PLATE_INSET, TEXT_FONT } from '@/lib/neumorphism';
+import { coordsToSteps, reflowRoute, routeArrows, type Coord, type Dir } from '@/lib/pathfinding';
+import { Cell } from '@/components/Cell';
+import { Grid } from '@/components/Grid';
 
-export const HERO_INTRO_DURATION = 300; // 10 s @30fps
-const LOOP = HERO_INTRO_DURATION; // everything is periodic in LOOP frames → seamless loop
+export const HERO_INTRO_DURATION = 159; // ~5,3 s @30fps — emerger → desaparecer, sin apenas reposo
+const LOOP = HERO_INTRO_DURATION; // todo es periódico en LOOP frames → bucle sin costura
 
-// ── canvas + look ─────────────────────────────────────────────────────────────
+// ── lienzo + look ──────────────────────────────────────────────────────────────
 const W = 1920;
 const H = 1080;
-const ICON = 84; // icon edge (no plate, no border)
-const RAD = Math.PI / 180;
-const TAU = Math.PI * 2;
-const TAIL_PX = 175; // length of the fading trail a packet leaves behind it
+const theme = lightTheme;
 
-// ── helpers (pure) ────────────────────────────────────────────────────────────
-const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
-const smooth = (t: number) => { const x = clamp01(t); return x * x * (3 - 2 * x); };
-const mod = (x: number, m: number) => ((x % m) + m) % m;
-/** Deterministic 0..1 hash (no Date/random) — just Math.sin folding. */
-const hash = (n: number) => { const x = Math.sin(n * 127.1 + 11.7) * 43758.5453; return x - Math.floor(x); };
+// ── el grid de la referencia (concept `inteligencia`): 3×2, ruta serpenteante ──
+const COLUMNS = 3;
+const ROWS = 2;
+const STEPS = reflowRoute(coordsToSteps([
+  [1, 2],
+  [2, 2],
+  [2, 1],
+  [3, 1],
+]));
+const START: Coord = [0, 2]; // disco vacío, justo a la izquierda del primer paso
+const GOAL: Coord = [COLUMNS + 1, 1]; // punto azul, fuera de la esquina superior derecha
+const ARROWS: Dir[] = routeArrows(STEPS, GOAL);
 
-// ── the 16 modules, placed in 3 family clusters (computed once) ────────────────
-type Node = { key: ModuleName; name: string; icon: string; rotate: number; group: ModuleGroup; x: number; y: number };
+// ── escala + encuadre (centrado en el lienzo) ──────────────────────────────────
+const CELL = 300; // celda generosa: contenido 5·CELL × 2·CELL = 1500×600, centrado
+const GRID_X = W / 2 - (COLUMNS / 2) * CELL; // 510 — origen (top-left) del grid 3×2
+const GRID_Y = H / 2 - (ROWS / 2) * CELL; //   240
+const localCentre = (c: Coord): [number, number] => [(c[0] - 0.5) * CELL, (c[1] - 0.5) * CELL];
+const centreAbs = (c: Coord): [number, number] => [GRID_X + localCentre(c)[0], GRID_Y + localCentre(c)[1]];
 
-const CLUSTERS: Record<ModuleGroup, { cx: number; cy: number; r: number; phase: number }> = {
-  data: { cx: 568, cy: 538, r: 338, phase: 18 }, //          Controla (8) · izquierda
-  action: { cx: 1362, cy: 404, r: 252, phase: 65 }, //        Delega (5)   · arriba-derecha
-  orchestration: { cx: 1374, cy: 778, r: 158, phase: 140 }, // Construye (3) · abajo-derecha
-};
+// ── orden de emergencia = recorrido de la ruta (inicio → flechas → meta) ────────
+// 6 ítems: [0] disco inicio · [1..4] las 4 flechas · [5] disco meta.
+const ITEMS = STEPS.length + 2; // 6
+const stepArcCoords: Coord[] = [START, ...STEPS.map((s) => s.at), GOAL];
 
-const NODES: Node[] = (() => {
-  const byGroup: Record<ModuleGroup, ModuleName[]> = { data: [], action: [], orchestration: [] };
-  for (const k of MODULE_NAMES) byGroup[MODULES[k].group].push(k);
-  const out: Node[] = [];
-  (['data', 'action', 'orchestration'] as ModuleGroup[]).forEach((g) => {
-    const c = CLUSTERS[g];
-    const list = byGroup[g];
-    list.forEach((key, k) => {
-      const ang = (k * 137.5 + c.phase) * RAD; // golden-angle sunflower packing
-      const rad = c.r * Math.sqrt((k + 0.55) / list.length);
-      const x = c.cx + Math.cos(ang) * rad;
-      const y = c.cy + Math.sin(ang) * rad * 0.92;
-      out.push({ key, name: MODULES[key].name, icon: MODULES[key].icon, rotate: (MODULES[key] as ModuleSpec).rotate ?? 0, group: g, x, y });
-    });
-  });
-  // fit: recentre the bounding box on the canvas and grow a touch (less padding around)
-  const xs = out.map((n) => n.x);
-  const ys = out.map((n) => n.y);
-  const bcx = (Math.min(...xs) + Math.max(...xs)) / 2;
-  const bcy = (Math.min(...ys) + Math.max(...ys)) / 2;
-  const SPREAD = 1.08;
-  out.forEach((n) => {
-    n.x = W / 2 + (n.x - bcx) * SPREAD;
-    n.y = H / 2 + (n.y - bcy) * SPREAD;
-  });
-  return out;
-})();
-
-const IDX = Object.fromEntries(NODES.map((n, i) => [n.key, i])) as Record<ModuleName, number>;
-
-// ── CURATED semantics: who actually collaborates with whom (no proximity guesses) ─
-// Edit here to add/remove a relation; by construction there are no "weird" edges.
-const RELATIONS: [ModuleName, ModuleName][] = [
-  // Junction = data hub: gathers every source into one integrated view
-  ['junction', 'hotpot'],
-  ['junction', 'sqlsense'],
-  ['junction', 'udon'],
-  ['junction', 'docusense'],
-  // Junction feeds analysis + visualisation
-  ['junction', 'foresight'],
-  ['junction', 'glimpse'],
-  // Foresight = prediction over the data; informs memory, processes, the view
-  ['foresight', 'glimpse'],
-  ['foresight', 'feedbackLoop'],
-  ['foresight', 'smartProcess'],
-  ['foresight', 'docusense'],
-  // Action Runner = action hub: acts THROUGH the connectors (pitch: combina con udon/hotpot/sqlsense) + infra
-  ['actionRunner', 'hotpot'],
-  ['actionRunner', 'udon'],
-  ['actionRunner', 'sqlsense'],
-  ['actionRunner', 'sushimi'],
-  // Orchestration of actions
-  ['actionScript', 'actionRunner'], // sequences runners
-  ['teamwork', 'actionRunner'], //     parallelises runners
-  ['teamwork', 'actionScript'],
-  ['smartProcess', 'actionScript'], // processes drive sequences
-  ['smartProcess', 'actionRunner'],
-  ['skillHub', 'actionRunner'], //     provides skills the actions consume
-  ['skillHub', 'smartProcess'],
-  // Memory closes the loop
-  ['feedbackLoop', 'actionRunner'],
-  ['feedbackLoop', 'smartProcess'],
-  // Construye: build software (human apps / AI skills), deploy on infra
-  ['forge', 'glimpse'], //  builds the human-facing panels from the view
-  ['forge', 'skillHub'], // software-for-humans ↔ software-for-AIs
-  ['forge', 'sushimi'], //  deploys via SSH/infra
-];
-
-// Heartbeat is a TRIGGER, not a peer: it wakes and fires OUT to these executors
-// (plus Foresight — a wake can kick off a predictive analysis).
-const HEARTBEAT_TARGETS: ModuleName[] = ['actionRunner', 'actionScript', 'smartProcess', 'teamwork', 'foresight'];
-
-// ── edges (curated). `trigger` edges always point FROM heartbeat. ──────────────
-type Edge = { a: number; b: number; bridge: boolean; trigger: boolean };
-const EDGES: Edge[] = (() => {
-  const out: Edge[] = [];
-  const seen = new Set<string>();
-  const push = (a: number, b: number, trigger: boolean) => {
-    const key = `${a}-${b}`;
-    if (seen.has(key) || seen.has(`${b}-${a}`)) return;
-    seen.add(key);
-    out.push({ a, b, bridge: NODES[a].group !== NODES[b].group, trigger });
-  };
-  RELATIONS.forEach(([x, y]) => push(IDX[x], IDX[y], false));
-  HEARTBEAT_TARGETS.forEach((t) => push(IDX.heartbeat, IDX[t], true)); // a = heartbeat (source)
-  return out;
-})();
-const NORMAL_EDGE_IDX = EDGES.map((e, i) => (e.trigger ? -1 : i)).filter((i) => i >= 0);
-
-// ── heartbeat wakes: a few beats per loop; each fires a broadcast burst ─────────
-const HB = IDX.heartbeat;
-const HB_DUR = 58; // travel of a heartbeat pulse to its targets (slow, gentle)
-const WAKES = [20, 120, 220]; // 3 beats per loop (kept clear of the 300-frame seam)
-
-// ── the traffic: normal packets + heartbeat broadcast bursts (all loop-aware) ──
-type Packet = { e: number; dir: 1 | -1; t0: number; dur: number };
-const PACKETS: Packet[] = (() => {
-  const out: Packet[] = [];
-  // normal background traffic over the curated (non-trigger) edges
-  const N = 105;
-  for (let i = 0; i < N; i++) {
-    const e = NORMAL_EDGE_IDX[Math.floor(hash(i * 3.13) * NORMAL_EDGE_IDX.length)];
-    const dur = 50 + Math.floor(hash(i * 5.27) * 30); // 50–80 f to cross (slower, gentler)
-    const t0 = Math.floor(hash(i * 1.77) * LOOP); // uniform over the loop (no spin-up)
-    const dir: 1 | -1 = hash(i * 7.91) < 0.5 ? 1 : -1;
-    out.push({ e, dir, t0, dur });
-  }
-  // heartbeat: every wake, fire ONE packet down each trigger edge, all at once
-  EDGES.forEach((e, ei) => {
-    if (!e.trigger) return;
-    for (const w of WAKES) out.push({ e: ei, dir: 1, t0: w, dur: HB_DUR }); // dir 1 → from heartbeat (a)
-  });
-  return out;
-})();
-
-// arrivals per node → when each module lights up (its phase within the loop)
-const ARRIVALS: number[][] = NODES.map(() => []);
-PACKETS.forEach((p) => {
-  const edge = EDGES[p.e];
-  const dest = p.dir === 1 ? edge.b : edge.a;
-  ARRIVALS[dest].push(mod(p.t0 + p.dur, LOOP));
+// ── geometría de la polilínea (para el puntito guía) ────────────────────────────
+const VERTS: [number, number][] = stepArcCoords.map(centreAbs);
+const SEGS = VERTS.slice(1).map((p, i) => {
+  const a = VERTS[i];
+  const dx = p[0] - a[0];
+  const dy = p[1] - a[1];
+  const len = Math.hypot(dx, dy) || 1;
+  return { a, dx, dy, len, ux: dx / len, uy: dy / len };
 });
+const CUM: number[] = (() => {
+  const out = [0];
+  let acc = 0;
+  for (const g of SEGS) { acc += g.len; out.push(acc); }
+  return out;
+})();
+const PATH_LEN = CUM[CUM.length - 1];
 
-/** Normal module activation 0..1 — quick rise as work arrives, soft long decay. Loop-aware. */
-function activation(node: number, f: number): number {
-  let a = 0;
-  for (const fa of ARRIVALS[node]) {
-    const raw = mod(f - fa, LOOP);
-    let c = 0;
-    if (raw <= 40) c = 1 - raw / 40; // decay after arrival
-    else if (raw >= LOOP - 10) c = (raw - (LOOP - 10)) / 10; // approach before next arrival
-    if (c > a) a = c;
+/** Punto [x,y] sobre la polilínea a una longitud de arco `s` (clamp 0..PATH_LEN). */
+function pointAt(s: number): [number, number] {
+  let d = Math.max(0, Math.min(PATH_LEN, s));
+  for (const g of SEGS) {
+    if (d <= g.len) return [g.a[0] + g.ux * d, g.a[1] + g.uy * d];
+    d -= g.len;
   }
-  return a;
+  const last = SEGS[SEGS.length - 1];
+  return [last.a[0] + last.dx, last.a[1] + last.dy];
 }
 
-/** Heartbeat's own cardiac double-beat (lub-dub) at each wake. Loop-aware. */
-function heartbeatPulse(f: number): number {
-  let best = 0;
-  for (const w of WAKES) {
-    const d = mod(f - w, LOOP);
-    if (d > 13) continue;
-    const lub = Math.max(0, 1 - ((d - 1.5) / 2) ** 2);
-    const dub = Math.max(0, 1 - ((d - 6) / 2.2) ** 2) * 0.82;
-    const v = Math.min(1, lub + dub);
-    if (v > best) best = v;
-  }
-  return best;
+// ── helpers puros ───────────────────────────────────────────────────────────────
+const clamp01 = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x);
+/** smootherstep — sin tirón al arrancar ni al parar. */
+const smoother = (x: number) => { const t = clamp01(x); return t * t * t * (t * (t * 6 - 15) + 10); };
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+// ── ritmo (30 fps) ──────────────────────────────────────────────────────────────
+const START_F = 0; // la primera emergencia arranca en el frame 0 (reposo de costura ~1 f)
+const STAGGER = 13; // separación entre ítems consecutivos al emerger
+const RISE = 28; //    cuánto tarda un ítem en emerger del todo
+const T = (i: number) => START_F + i * STAGGER; // arranque de emergencia del ítem i
+// desaparición en el MISMO orden que la aparición (FIFO): el primero que emerge (disco
+// de inicio) es el primero en irse → ola continua de aparecer/desaparecer en la misma
+// dirección. Arranca casi en cuanto el grid se completa (build ~f93 → RECEDE_START 100).
+const RECEDE_START = 100;
+const STAGGER_OUT = 8;
+const FALL = 18;
+const RT = (i: number) => RECEDE_START + i * STAGGER_OUT; // arranque de desaparición (FIFO)
+
+/** Emergencia neta (0..1) del ítem i: brota escalonado y al final se repliega. */
+function growAt(frame: number, i: number): number {
+  const emerge = smoother((frame - T(i)) / RISE);
+  const recede = smoother((frame - RT(i)) / FALL);
+  return clamp01(emerge * (1 - recede));
 }
+
+// ── el puntito guía: arco sincronizado con la emergencia ────────────────────────
+// El ítem i está en el arco CUM[i] y emerge en T(i); el punto interpola entre ellos.
+function guideArc(frame: number): number {
+  if (frame <= T(0)) return 0;
+  if (frame >= T(ITEMS - 1)) return PATH_LEN;
+  const i = Math.min(ITEMS - 2, Math.floor((frame - START_F) / STAGGER));
+  return lerp(CUM[i], CUM[i + 1], smoother((frame - T(i)) / STAGGER));
+}
+/** Opacidad del puntito: aparece con el primer ítem, se va al terminar el barrido. */
+function guideOpacity(frame: number): number {
+  const inn = smoother((frame - START_F) / 8);
+  const out = 1 - smoother((frame - (T(ITEMS - 1) + 10)) / 22);
+  return clamp01(inn) * clamp01(out);
+}
+
+const ROTATE: Record<Dir, number> = { down: 0, up: 180, left: 90, right: -90 };
+const INSET = PLATE_INSET * (CELL / 128); // inset de placa escalado a la celda grande
 
 // ──────────────────────────────────────────────────────────────────────────────
 export const HeroIntroVideo: React.FC = () => {
   const frame = useCurrentFrame();
-  const ca = (frame / LOOP) * TAU; // master loop angle (one turn per loop)
+  const f = frame % LOOP;
 
-  // camera: a tiny circular drift + a slow breathing — all periodic (seamless loop)
-  const scale = 1 + 0.012 * (1 - Math.cos(ca)) * 0.5;
-  const camX = Math.sin(ca) * 5;
-  const camY = Math.sin(ca * 2) * 3;
+  const grows = Array.from({ length: ITEMS }, (_, i) => growAt(f, i)); // [start, ch0..3, goal]
+  const gArc = guideArc(f);
+  const gOp = guideOpacity(f);
+  const [gx, gy] = pointAt(gArc);
 
   return (
     <AbsoluteFill
       style={{
-        background: `radial-gradient(circle at 50% 47%, #fbfbff, ${lightTheme.surface} 58%, #e9eaf2)`,
+        background: '#f4f4fa',
         fontFamily: TEXT_FONT,
         overflow: 'hidden',
       }}
     >
-      <Fonts />
-
-      <AbsoluteFill style={{ transform: `translate(${camX}px, ${camY}px) scale(${scale})`, transformOrigin: '50% 47%' }}>
-        {/* ── no fixed mesh: each packet draws only a fading trail behind it ── */}
-        <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position: 'absolute', inset: 0 }}>
-          {PACKETS.map((p, i) => {
-            const tp = mod(frame - p.t0, LOOP);
-            if (tp > p.dur) return null;
-            const edge = EDGES[p.e];
-            const A = p.dir === 1 ? NODES[edge.a] : NODES[edge.b];
-            const B = p.dir === 1 ? NODES[edge.b] : NODES[edge.a];
-            const t = smooth(tp / p.dur);
-            const dx = B.x - A.x;
-            const dy = B.y - A.y;
-            const len = Math.hypot(dx, dy) || 1;
-            const nx = dx / len;
-            const ny = dy / len;
-            const head = t * len;
-            const tail = Math.max(0, head - TAIL_PX);
-            const hx = A.x + nx * head;
-            const hy = A.y + ny * head;
-            const qx = A.x + nx * tail;
-            const qy = A.y + ny * tail;
-            const r = edge.trigger ? 4.6 : 3.6; // heartbeat pulses read a touch bigger
-            // gentle fade-in/out at the ends so the dot doesn't pop at the nodes
-            const fade = clamp01(Math.min(tp, p.dur - tp) / 7);
-            const gid = `tg${i}`;
+      {/* ── el grid (bandeja permanente; las flechas EMERGEN dentro) ── */}
+      <div style={{ position: 'absolute', left: GRID_X, top: GRID_Y, width: COLUMNS * CELL, height: ROWS * CELL }}>
+        <Grid columns={COLUMNS} rows={ROWS} cell={CELL} theme={theme} frame frameRadius={40}>
+          {STEPS.map((step, i) => {
+            const [col, row] = step.at;
+            const g = grows[i + 1]; // 0 = disco de inicio
             return (
-              <g key={`p${i}`} opacity={fade}>
-                <linearGradient id={gid} x1={qx} y1={qy} x2={hx} y2={hy} gradientUnits="userSpaceOnUse">
-                  <stop offset="0" stopColor={KIT_BLUE} stopOpacity="0" />
-                  <stop offset="1" stopColor={KIT_BLUE} stopOpacity={edge.trigger ? 0.5 : 0.42} />
-                </linearGradient>
-                <line x1={qx} y1={qy} x2={hx} y2={hy} stroke={`url(#${gid})`} strokeWidth={edge.trigger ? 2.4 : 2} strokeLinecap="round" />
-                <circle cx={hx} cy={hy} r={r} fill={KIT_BLUE} />
-              </g>
+              <Cell
+                key={`${col}-${row}`}
+                col={col}
+                row={row}
+                inset={INSET}
+                distance={8 * g}
+                blur={16 * g}
+                style={{ transform: `scale(${0.9 + 0.1 * g})`, opacity: clamp01(g * 1.5) }}
+              >
+                <Chevron dir={ARROWS[i]} />
+              </Cell>
             );
           })}
-        </svg>
+        </Grid>
 
-        {/* ── the 16 real modules (no plate, no border) ── */}
-        {NODES.map((n, i) => {
-          const isHB = i === HB;
-          const a = isHB ? heartbeatPulse(frame) : activation(i, frame);
-          // gentle floating life — periodic in the loop (2 turns), phase-shifted per icon
-          const drift = Math.sin(ca * 2 + i * 1.3) * 3.6;
-          const driftX = Math.cos(ca * 2 + i * 0.9) * 2.8;
-          const s = 1 + (isHB ? 0.18 : 0.1) * a; // heartbeat beats a bit stronger
-          const labelOp = clamp01((a - 0.18) / 0.45);
-          return (
-            <div key={n.key} style={{ position: 'absolute', left: n.x, top: n.y + drift, width: 0, height: 0, transform: `translate(${driftX}px, 0)` }}>
-              <img
-                src={n.icon}
-                alt={n.name}
-                width={ICON}
-                height={ICON}
-                style={{
-                  position: 'absolute',
-                  left: -ICON / 2,
-                  top: -ICON / 2,
-                  display: 'block',
-                  opacity: 0.85 + 0.15 * a,
-                  transform: `scale(${s})${n.rotate ? ` rotate(${n.rotate}deg)` : ''}`,
-                  transformOrigin: '50% 50%',
-                  willChange: 'transform, opacity',
-                }}
-              />
-              {/* the module's name — appears only while it's working (no 16 fixed labels) */}
-              <span
-                style={{
-                  position: 'absolute',
-                  left: 0,
-                  top: ICON / 2 - 2,
-                  transform: 'translateX(-50%)',
-                  whiteSpace: 'nowrap',
-                  fontFamily: TEXT_FONT,
-                  fontWeight: 600,
-                  fontSize: 16,
-                  letterSpacing: 0.1,
-                  color: lightTheme.textStrong,
-                  opacity: labelOp,
-                }}
-              >
-                {n.name}
-              </span>
-            </div>
-          );
+        {/* discos de inicio (vacío) y meta (punto azul) — fuera del grid, también emergen */}
+        <Node centre={localCentre(START)} grow={grows[0]} variant="start" />
+        <Node centre={localCentre(GOAL)} grow={grows[ITEMS - 1]} variant="goal" />
+      </div>
+
+      {/* ── el puntito guía (DELANTE): diminuto y muy tenue, recorre la ruta ── */}
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+        {Array.from({ length: 8 }, (_, k) => {
+          const fr = k / 7; // 0 = cola, 1 = cabeza
+          const [x, y] = pointAt(gArc - (1 - fr) * (CELL * 0.5));
+          return <circle key={`t${k}`} cx={x} cy={y} r={1 + 2.2 * fr} fill={KIT_BLUE} opacity={gOp * fr * fr * 0.28} />;
         })}
-      </AbsoluteFill>
-
-      {/* a whisper of a neutral vignette for focus (not coloured) */}
-      <AbsoluteFill
-        style={{ background: 'radial-gradient(circle at 50% 47%, transparent 60%, rgba(120,134,160,0.12) 100%)', pointerEvents: 'none' }}
-      />
+        <circle cx={gx} cy={gy} r={CELL * 0.022} fill={KIT_BLUE} opacity={gOp * 0.55} />
+        <circle cx={gx} cy={gy} r={CELL * 0.009} fill="#ffffff" opacity={gOp * 0.7} />
+      </svg>
     </AbsoluteFill>
   );
 };
+
+/** Flecha del grid (gris, como la referencia). Proporción flecha/celda fiel al original
+ *  (Chevron 26 sobre celda 128 ≈ 0.2·CELL). */
+function Chevron({ dir }: { dir: Dir }) {
+  const size = CELL * 0.2;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={theme.textMuted}
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={{ transform: `rotate(${ROTATE[dir]}deg)` }}
+    >
+      <path d="M6 9l6 6 6-6" />
+    </svg>
+  );
+}
+
+/** Disco de inicio (anillo vacío) o meta (punto azul), del tamaño de una placa. Emerge con `grow`. */
+function Node({
+  centre,
+  grow,
+  variant,
+}: {
+  centre: [number, number];
+  grow: number;
+  variant: 'start' | 'goal';
+}) {
+  const g = grow;
+  const discSize = CELL - INSET * 2;
+  const box: CSSProperties = {
+    position: 'absolute',
+    left: centre[0] - CELL / 2,
+    top: centre[1] - CELL / 2,
+    width: CELL,
+    height: CELL,
+  };
+  const disc: CSSProperties = {
+    position: 'absolute',
+    inset: INSET,
+    display: 'grid',
+    placeItems: 'center',
+    transform: `scale(${0.9 + 0.1 * g})`,
+    opacity: clamp01(g * 1.5),
+    ...elevation(theme, { depth: 'raised', radius: 999, distance: 8 * g, blur: 16 * g }),
+  };
+
+  return (
+    <div style={box}>
+      <div style={disc}>
+        {variant === 'goal' ? (
+          <div
+            style={{
+              width: discSize * 0.42,
+              height: discSize * 0.42,
+              borderRadius: 999,
+              background: KIT_BLUE,
+              opacity: clamp01(g * 1.5),
+              boxShadow: `0 0 ${discSize * 0.12 * g}px ${KIT_BLUE}55`,
+            }}
+          />
+        ) : null}
+      </div>
+    </div>
+  );
+}
