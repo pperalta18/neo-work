@@ -53,6 +53,8 @@ import { RostrosVivosVideo, ROSTROS_VIVOS_DURATION } from './RostrosVivosVideo';
 import { TejidoArranqueVideo, TEJIDO_ARRANQUE_DURATION } from './TejidoArranqueVideo';
 import { ConectoresVideo, CONECTORES_DURATION } from './ConectoresVideo';
 import { PulseGridVideo, PULSE_GRID_DURATION } from './PulseGridVideo';
+import { LowerThirdVideo, LOWER_THIRD_DURATION, LOWER_THIRD_DEFAULTS } from './LowerThirdVideo';
+import { LowerThirdCellsVideo, LOWER_THIRD_CELLS_DURATION, LOWER_THIRD_CELLS_DEFAULTS } from './LowerThirdCellsVideo';
 import { SkillForgeVideo, SKILL_FORGE_DURATION_FRAMES } from './SkillForgeVideo';
 import { CreadorSkillsVideo, CREADOR_SKILLS_DURATION } from './CreadorSkillsVideo';
 import { GloboVivoVideo, GLOBO_VIVO_DURATION } from './GloboVivoVideo';
@@ -257,6 +259,63 @@ export const RemotionRoot: React.FC = () => {
         fps={FPS}
         width={1920}
         height={1080}
+      />
+      {/* Lower Third — "letrero de ponente": una tarjeta-grid neumórfica OSCURA
+          en el tercio inferior izq de un fotograma TRANSPARENTE (alfa). La tarjeta
+          se eleva, un par de flechas-chevron elevadas la barren de izq→der y, en su
+          estela, las hairlines se borran a un campo limpio donde se escriben nombre
+          y cargo tras una barra de acento azul. Render con ProRes 4444 (alfa) para
+          que la productora lo superponga sobre el vídeo del ponente:
+          `npm run render:lowerthird`. Reusar para otro ponente = cambiar name/role. */}
+      <Composition
+        id="LowerThird"
+        component={LowerThirdVideo}
+        durationInFrames={LOWER_THIRD_DURATION}
+        fps={FPS}
+        width={1920}
+        height={1080}
+        defaultProps={LOWER_THIRD_DEFAULTS}
+      />
+      {/* Lower Thirds (cells) — pastillas-elevación de SkillForge en modo oscuro,
+          sin grid: una fila de celdas neumórficas pequeñas y elegantes que emergen
+          escalonadas [icono · Nombre] › [icono · Cargo], abajo-izquierda, fondo
+          transparente (alfa). Una composición por ponente (mismo componente,
+          distintos defaultProps). Render: render:lt-miguel / lt-yusta / lt-usera. */}
+      <Composition
+        id="LowerThirdMiguel"
+        component={LowerThirdCellsVideo}
+        durationInFrames={LOWER_THIRD_CELLS_DURATION}
+        fps={FPS}
+        width={1920}
+        height={1080}
+        defaultProps={LOWER_THIRD_CELLS_DEFAULTS}
+      />
+      <Composition
+        id="LowerThirdYusta"
+        component={LowerThirdCellsVideo}
+        durationInFrames={LOWER_THIRD_CELLS_DURATION}
+        fps={FPS}
+        width={1920}
+        height={1080}
+        defaultProps={{ name: 'Pablo Yusta', role: 'Founder of AiKit', nameIcon: 'user', roleIcon: 'star' }}
+      />
+      <Composition
+        id="LowerThirdUsera"
+        component={LowerThirdCellsVideo}
+        durationInFrames={LOWER_THIRD_CELLS_DURATION}
+        fps={FPS}
+        width={1920}
+        height={1080}
+        defaultProps={{ name: 'Pablo Usera', role: 'Co-Founder of AiKit', nameIcon: 'user', roleIcon: 'star' }}
+      />
+      <Composition
+        id="LowerThirdAlex"
+        component={LowerThirdCellsVideo}
+        durationInFrames={LOWER_THIRD_CELLS_DURATION}
+        fps={FPS}
+        width={1920}
+        height={1080}
+        defaultProps={{ name: 'Alex Moreno', role: 'Event organizer', nameIcon: 'user', roleIcon: 'calendar' }}
       />
       {/* Skill Forge — la línea recta de elevaciones pasa por el módulo Skill Hub
           (Rive en bucle) y la siguiente elevación (pastilla de "puntos trabajando")
